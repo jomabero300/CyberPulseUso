@@ -4,6 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>0e3e8fa2-bb06-4bbd-96e7-8281daf79980</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +19,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="QuestPDF" Version="2026.9.1" />
-  </ItemGroup>
+  <Folder Include="Data\" /><Folder Include="Data\Scripts\" /><Folder Include="Controllers\Gene\" /><Folder Include="Repositories\Implementations\Gene\" /><Folder Include="Repositories\Interfaces\Gene\" /><Folder Include="UnitsOfWork\Implementations\Gene\" /><Folder Include="UnitsOfWork\Interfaces\Gene\" /><Folder Include="Repositories\" /><Folder Include="Repositories\Interfaces\" /><Folder Include="Repositories\Implementations\" /><Folder Include="UnitsOfWork\" /><Folder Include="UnitsOfWork\Interfaces\" /><Folder Include="UnitsOfWork\Implementations\" /><Folder Include="Helpers\" /></ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CyberPulseUso.Shared\CyberPulseUso.Shared.csproj" />

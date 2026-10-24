@@ -1,0 +1,9 @@
+﻿@CyberPulseUso.Backend_HostAddress = https://localhost:7093
+
+GET {{CyberPulseUso.Backend_HostAddress}}/api/accounts/Combo
+
+###
+
+GET {{CyberPulseUso.Backend_HostAddress}}/api/countries/Combo
+
+###
