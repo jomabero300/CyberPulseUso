@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="CyberPulseUso.Backend/CyberPulseUso.Backend.csproj" />
+  <Project Path="CyberPulseUso.Frontend/CyberPulseUso.Frontend.csproj" />
+  <Project Path="CyberPulseUso.Shared/CyberPulseUso.Shared.csproj" />
+</Solution>
