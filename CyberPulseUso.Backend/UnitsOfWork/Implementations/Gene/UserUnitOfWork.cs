@@ -23,6 +23,7 @@ public class UserUnitOfWork : IUserUnitOfWork
     public async Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPassword) => await _userRepository.ChangePasswordAsync(user, currentPassword, newPassword);
     public async Task CheckRoleAsync(string roleName) => await _userRepository.CheckRoleAsync(roleName);
     public async Task<IdentityResult> ConfirmEmailAsync(User user, string token) => await _userRepository.ConfirmEmailAsync(user, token);
+    //public async Task<IdentityResult> ConfirmEmailAsync(string email, string token) => await _userRepository.ConfirmEmailAsync(email, token);
     public async Task<string> GenerateEmailConfirmationTokenAsync(User user) => await _userRepository.GenerateEmailConfirmationTokenAsync(user);
     public async Task<string> GeneratePasswordResetTokenAsync(User user) => await _userRepository.GeneratePasswordResetTokenAsync(user);
     public async Task<IEnumerable<User>> GetAsync(UserType userType) => await _userRepository.GetAsync(userType);

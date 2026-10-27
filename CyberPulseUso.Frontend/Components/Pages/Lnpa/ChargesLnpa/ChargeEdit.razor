@@ -1,0 +1,12 @@
+﻿@if (chargeDTO is null)
+{
+    <Loading />
+}
+else
+{
+    <MudDialog>
+        <DialogContent>
+            <ChargeForm @ref="chargeFormRef" ChargeDTO="chargeDTO" OnValidSubmit="EditAsync" ReturnAction="Return" />
+        </DialogContent>
+    </MudDialog>
+}

@@ -1,0 +1,51 @@
+﻿<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
+
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+
+    <MudTextField Label="@Localizer["Name"]" @bind-Value="@ChargeDTO.Name" For="@(() => ChargeDTO.Name)" Variant="Variant.Outlined" Class="mb-3" />
+
+    <MudAutocomplete T="GroupDTO"
+                     Label=@Localizer["Group"]
+                     Placeholder=@Localizer["SelectAGroup"]
+                     SearchFunc="SearchGroup"
+                     Value="selectedGroup"
+                     ValueChanged="GroupChanged"
+                     ToStringFunc="@(e=> e==null?null : $"{e.Name}")"
+                     For="@(() => ChargeDTO.Group)">
+        <ItemTemplate Context="itemContext">
+            @itemContext.Name
+        </ItemTemplate>
+    </MudAutocomplete>
+
+
+    <MudAutocomplete T="StatuDTO"
+                     Label=@Localizer["Statu"]
+                     Disabled="_disable"
+                     Placeholder=@Localizer["SelectAStatu"]
+                     SearchFunc="SearchStatu"
+                     Value="selectedStatu"
+                     ValueChanged="StatuChanged"
+                     ToStringFunc="@(e=> e==null?null : $"{e.Name}")"
+                     For="@(() => ChargeDTO.Statu)">
+        <ItemTemplate Context="itemContext">
+            @itemContext.Name
+        </ItemTemplate>
+    </MudAutocomplete>
+
+    <MudButton Variant="Variant.Outlined"
+               class="mt-5"
+               StartIcon="@Icons.Material.Filled.ArrowBack"
+               Color="Color.Info"
+               OnClick="ReturnAction">
+        @Localizer["Return"]
+    </MudButton>
+
+    <MudButton Variant="Variant.Outlined"
+               class="mt-5"
+               StartIcon="@Icons.Material.Filled.Check"
+               Color="Color.Primary"
+               ButtonType="ButtonType.Submit">
+        @Localizer["SaveChanges"]
+    </MudButton>
+</EditForm>

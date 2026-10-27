@@ -1,0 +1,12 @@
+@if (user is null)
+{
+	<Loading />
+}
+else
+{
+	<MudDialog>
+		<DialogContent>
+			<UserTypeForm @ref="userTypeForm" user="user" OnValidSubmit="EditAsync" ReturnAction="Return" />
+		</DialogContent>
+	</MudDialog>
+}

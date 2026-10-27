@@ -22,6 +22,7 @@ public interface IUserRepository
     Task<IEnumerable<User>> GetAsync(string id);
     Task<string> GenerateEmailConfirmationTokenAsync(User user);
     Task<IdentityResult> ConfirmEmailAsync(User user, string token);
+    //Task<IdentityResult> ConfirmEmailAsync(string email, string token);
     Task<SignInResult> LoginAsync(LoginDTO model);
     Task ResetAccessFailedCountAsync(User user);
     Task LogoutAsync();

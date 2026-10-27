@@ -1,0 +1,69 @@
+﻿@page "/conventions"
+<AuthorizeView Roles="Admi">
+    <Authorized>
+
+@if (loading)
+{
+    <Loading />
+}
+else
+{
+    <MudTable Items="@Conventions"
+              @ref="table"
+              ServerData="LoadListAsync"
+              Dense="true"
+              Hover="true"
+              Striped="true"
+              FixedHeader="true"
+              FixedFooter="true"
+              Context="convention">
+        <ToolBarContent>
+            <div class="d-flex justify-content-between">
+                <MudText Typo="Typo.h6" Class="me-4"> @Localizer["Convention"]</MudText>
+                <MudButton Variant="Variant.Outlined"
+                           EndIcon="@Icons.Material.Filled.Add"
+                           Color="Color.Info" OnClick="@(() => ShowModalAsync())">
+                    @Localizer["New"]
+                </MudButton>
+            </div>
+            <MudSpacer />
+            <FilterComponent ApplyFilter="SetFilterValue" />
+        </ToolBarContent>
+        <HeaderContent>
+                    <MudTh>@Localizer["Name"]</MudTh>
+            <MudTh>@Localizer["Statu"]</MudTh>
+            <MudTh Class="text-center">@Localizer["Actions"]</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+                    <MudTd>@convention.Name</MudTd>
+                    <MudTd>@convention.Statu!.Name</MudTd>
+            <MudTd Class="text-center">
+                <MudTooltip Text="@Localizer["Edit"]">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Warning"
+                                       OnClick="@(() => ShowModalAsync(convention.Id, true))">
+                        <MudIcon Icon="@Icons.Material.Filled.Edit" />
+                    </MudButton>
+                </MudTooltip>
+                <MudTooltip Text="@Localizer["Delete"]">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Error"
+                                       OnClick="@(() => DeleteAsync(@convention))">
+                        <MudIcon Icon="@Icons.Material.Filled.Delete" />
+                    </MudButton>
+                </MudTooltip>
+            </MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText>@Localizer["NoRecords"]</MudText>
+        </NoRecordsContent>
+        <PagerContent>
+            <MudTablePager RowsPerPageString=@Localizer["RecordsNumber"]
+                           PageSizeOptions="pageSizeOptions"
+                           AllItemsText=@Localizer["All"]
+                           InfoFormat="@infoFormat" />
+        </PagerContent>
+    </MudTable>
+}
+    </Authorized>
+</AuthorizeView>

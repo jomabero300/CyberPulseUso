@@ -1,6 +1,40 @@
-﻿<Router AppAssembly="typeof(Program).Assembly" NotFoundPage="typeof(Pages.NotFound)">
+﻿<Router AppAssembly="typeof(Program).Assembly">
     <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
+        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
+            <Authorizing>
+                <p>Autorizando...</p>
+            </Authorizing>
+            <NotAuthorized>
+                <p>No estas autorizado para ver esta página</p>
+            </NotAuthorized>
+        </AuthorizeRouteView>
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
+    <NotFound>
+        <PageTitle>No encontrado</PageTitle>
+
+        <LayoutView Layout="@typeof(Layout.MainLayout)">
+            <div class="d-flex flex-column align-center justify-center pa-6">
+                <MudIcon Icon="@Icons.Material.Filled.SearchOff"
+                         Size="Size.Large"
+                         Color="Color.Warning" />
+
+                <MudText Typo="Typo.h5" Class="mt-4">
+                    Página no encontrada
+                </MudText>
+
+                <MudText Typo="Typo.body1" Class="mt-2">
+                    Lo sentimos, no hay nada en esta ruta.
+                </MudText>
+
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Href="/"
+                           Class="mt-4">
+                    Volver al inicio
+                </MudButton>
+            </div>
+        </LayoutView>
+    </NotFound>
+
 </Router>

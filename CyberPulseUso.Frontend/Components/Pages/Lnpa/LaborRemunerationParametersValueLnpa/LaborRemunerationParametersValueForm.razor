@@ -1,0 +1,71 @@
+﻿<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
+
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
+
+	<DataAnnotationsValidator />
+
+
+	<MudTextField Label="@Localizer["LaborRemunerationParametersValue"]"
+				  @bind-Value="@LaborRemunerationParametersValueDTO.Value"
+				  For="@(() => LaborRemunerationParametersValueDTO.Value)"
+				  class="mb-3" />
+
+
+	<MudAutocomplete T="LaborRemunerationParametersDTO"
+					 Label=@Localizer["LaborRemunerationParameters"]
+					 Placeholder=@Localizer["SelectALRP"]
+					 SearchFunc="SearchLRP"
+					 Value="selectedLRP"
+					 ValueChanged="LRPChanged"
+					 ToStringFunc="@(e=> e==null?null : $"{e.Name}")"
+					 For="@(() => LaborRemunerationParametersValueDTO.LaborRemunerationParameters)">
+		<ItemTemplate Context="itemContext">
+			@itemContext.Name
+		</ItemTemplate>
+	</MudAutocomplete>
+
+	<MudAutocomplete T="GroupDTO"
+					 Label=@Localizer["Group"]
+					 Placeholder=@Localizer["SelectAGroup"]
+					 SearchFunc="SearchGroup"
+					 Value="selectedGroup"
+					 ValueChanged="GroupChanged"
+					 ToStringFunc="@(e=> e==null?null : $"{e.Name}")"
+					 For="@(() => LaborRemunerationParametersValueDTO.Group)">
+			<ItemTemplate Context="itemContext">
+				@itemContext.Name
+			</ItemTemplate>
+		</MudAutocomplete>
+
+
+	<MudAutocomplete T="StatuDTO"
+					 Label=@Localizer["Statu"]
+					 Disabled="_disable"
+					 Placeholder=@Localizer["SelectAStatu"]
+					 SearchFunc="SearchStatu"
+					 Value="selectedStatu"
+					 ValueChanged="StatuChanged"
+					 ToStringFunc="@(e=> e==null?null : $"{e.Name}")"
+					 For="@(() => LaborRemunerationParametersValueDTO.Statu)">
+
+		<ItemTemplate Context="itemContext">
+			@itemContext.Name
+		</ItemTemplate>
+	</MudAutocomplete>
+
+	<MudDivider Class="my-2" DividerType="DividerType.Inset" />
+
+	<MudButton Variant="Variant.Outlined"
+			   StartIcon="@Icons.Material.Filled.ArrowBack"
+			   Color="Color.Info"
+			   OnClick="ReturnAction">
+		@Localizer["Return"]
+	</MudButton>
+
+	<MudButton Variant="Variant.Outlined"
+			   StartIcon="@Icons.Material.Filled.Check"
+			   Color="Color.Primary"
+			   ButtonType="ButtonType.Submit">
+		@Localizer["SaveChanges"]
+	</MudButton>
+</EditForm>

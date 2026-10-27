@@ -1,0 +1,12 @@
+﻿@if (conventionDTO is null)
+{
+	<Loading />
+}
+else
+{
+	<MudDialog>
+		<DialogContent>
+			<ConventionForm @ref="conventionForm" ConventionDTO="conventionDTO" OnValidSubmit="EditAsync" ReturnAction="Return" />
+		</DialogContent>
+	</MudDialog>
+}

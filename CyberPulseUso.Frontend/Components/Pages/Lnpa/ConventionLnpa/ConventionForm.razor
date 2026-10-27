@@ -1,0 +1,45 @@
+﻿<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
+
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
+
+	<DataAnnotationsValidator />
+
+	<MudTextField Label="@Localizer["Convention"]"
+				  @bind-Value="@ConventionDTO.Name"
+				  For="@(() => ConventionDTO.Name)"
+				  Variant="Variant.Outlined"
+				  class="mb-3" />
+
+	<MudAutocomplete T="StatuDTO"
+					 Label=@Localizer["Statu"]
+					 Disabled="_disable"
+					 Placeholder=@Localizer["SelectAStatu"]
+					 SearchFunc="SearchStatu"
+					 Value="selectedStatu"
+					 ValueChanged="StatuChanged"
+					 ToStringFunc="@(e=> e==null?null : $"{e.Name}")"
+					 For="@(() => ConventionDTO.Statu)">
+
+		<ItemTemplate Context="itemContext">
+			@itemContext.Name
+		</ItemTemplate>
+	</MudAutocomplete>
+
+	
+
+	<MudButton Variant="Variant.Outlined"
+               class="mt-5"
+			   StartIcon="@Icons.Material.Filled.ArrowBack"
+			   Color="Color.Info"
+			   OnClick="ReturnAction">
+		@Localizer["Return"]
+	</MudButton>
+
+	<MudButton Variant="Variant.Outlined"
+			   class="mt-5"
+			   StartIcon="@Icons.Material.Filled.Check"
+			   Color="Color.Primary"
+			   ButtonType="ButtonType.Submit">
+		@Localizer["SaveChanges"]
+	</MudButton>
+</EditForm>

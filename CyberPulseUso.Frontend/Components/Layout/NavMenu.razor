@@ -1,9 +1,31 @@
 ﻿
 <MudNavMenu>
-    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-    <MudNavLink Href="counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">Counter</MudNavLink>
-    
-    <MudNavLink Href="weather" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Weather</MudNavLink>
+    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">@Localizer["Home"]</MudNavLink>
+    <AuthorizeView Roles="SAdm,Admi">
+        <Authorized>
+             <MudNavGroup Title="General" Expanded="false">
+                <MudNavLink Href="users" Icon="@Icons.Material.Filled.People" IconColor="Color.Success"> @Localizer["Users"]</MudNavLink>
+                <MudNavLink Href="Categories" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Category"> @Localizer["Categories"]</MudNavLink>
+                <MudNavLink Href="groups" Icon="@Icons.Material.Filled.Group" IconColor="Color.Primary"> @Localizer["Groups"]</MudNavLink>
+                <MudNavLink Href="charges" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.CreditCard" IconColor="Color.Info"> @Localizer["Charges"]</MudNavLink>
+                <MudDivider Class="my-2" DividerType="DividerType.Inset" />
+                <MudNavLink Href="conventions" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.CreditCard" IconColor="Color.Warning"> @Localizer["Convention"]</MudNavLink>
+                <MudNavLink Href="ConventionValues" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Cottage" IconColor="Color.Primary"> @Localizer["ConventionValues"]</MudNavLink>
+                <MudDivider Class="my-2" DividerType="DividerType.Inset" />
+                <MudNavLink Href="laborremunerationparameterss" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Cottage" IconColor="Color.Primary"> @Localizer["LaborRemunerationParameterss"]</MudNavLink>
+                <MudNavLink Href="laborremunerationparametersvalues" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Cottage" IconColor="Color.Primary"> @Localizer["LaborRemunerationParametersValues"]</MudNavLink>
+
+             </MudNavGroup>
+        </Authorized>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="work">
+        <Authorized>
+            <MudNavGroup Title="Usuarios" Expanded="false">
+                <MudNavLink Href="Users" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.People" IconColor="Color.Success"> @Localizer["Users"]</MudNavLink>
+            </MudNavGroup>
+        </Authorized>
+    </AuthorizeView>
 
 </MudNavMenu>
 

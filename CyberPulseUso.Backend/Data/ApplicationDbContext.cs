@@ -1,7 +1,8 @@
-﻿using CyberPulseUso.Shared.Entities.Gene;
+using CyberPulseUso.Shared.Entities.Gene;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-
+
+using CyberPulseUso.Shared.Entities.Lnpa;
 namespace CyberPulseUso.Backend.Data;
 
 public class ApplicationDbContext : IdentityDbContext<User>
@@ -17,6 +18,14 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<Neighborhood> Neighborhoods { get; set; }
     public DbSet<State> States { get; set; }
     public DbSet<Statu> Status { get; set; }
+    public DbSet<LogAuditoria> LogAuditorias { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Charge> Charges { get; set; }
+    public DbSet<Convention> Conventions { get; set; }
+    public DbSet<ConventionValue> ConventionValues { get; set; }
+    public DbSet<Group> Groups { get; set; }
+    public DbSet<LaborRemunerationParameters> LaborRemunerationParameterses { get; set; }
+    public DbSet<LaborRemunerationParametersValue> LaborRemunerationParametersValues { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -42,6 +51,26 @@ public class ApplicationDbContext : IdentityDbContext<User>
 
         builder.Entity<Statu>()
             .HasIndex(x => new { x.Name, x.Nivel })
+            .IsUnique();
+
+        builder.Entity<Category>()
+            .HasIndex(x => x.Name)
+            .IsUnique();
+
+        builder.Entity<Convention>()
+            .HasIndex(x => x.Name)
+            .IsUnique();
+
+        builder.Entity<LaborRemunerationParameters>()
+            .HasIndex(x => x.Name)
+            .IsUnique();
+
+        builder.Entity<Charge>()
+            .HasIndex(x => new {x.GroupId,x.Name })
+            .IsUnique();
+
+        builder.Entity<Group>()
+            .HasIndex(x => new {x.CategoryId,x.Name })
             .IsUnique();
 
         DisableCascadingDelete(builder);

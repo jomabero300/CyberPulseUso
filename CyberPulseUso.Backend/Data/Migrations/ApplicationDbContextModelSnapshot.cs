@@ -98,6 +98,58 @@ namespace CyberPulseUso.Backend.Data.Migrations
                     b.ToTable("Ivas", "Gene");
                 });
 
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Gene.LogAuditoria", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("char(1)");
+
+                    b.Property<string>("AffectedColumns")
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<DateTime>("FechaRegistro")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("NewValues")
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("OldValues")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("PrimaryKey")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("varchar(3)");
+
+                    b.Property<int>("StockActual")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TableName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("varchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LogAuditorias", "Admi");
+                });
+
             modelBuilder.Entity("CyberPulseUso.Shared.Entities.Gene.Neighborhood", b =>
                 {
                     b.Property<int>("Id")
@@ -259,6 +311,205 @@ namespace CyberPulseUso.Backend.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", "Admi");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("varchar(80)");
+
+                    b.Property<int>("StatuId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("StatuId");
+
+                    b.ToTable("Categories", "Lnpa");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.Charge", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("varchar(80)");
+
+                    b.Property<int>("StatuId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StatuId");
+
+                    b.HasIndex("GroupId", "Name")
+                        .IsUnique();
+
+                    b.ToTable("Charges", "Lnpa");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.Convention", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("varchar(80)");
+
+                    b.Property<int>("StatuId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("StatuId");
+
+                    b.ToTable("Conventions", "Lnpa");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.ConventionValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ConventionId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("Prince")
+                        .HasColumnType("float");
+
+                    b.Property<int>("StatuId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConventionId");
+
+                    b.HasIndex("StatuId");
+
+                    b.ToTable("ConventionValues", "Lnpa");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.Group", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("varchar(80)");
+
+                    b.Property<int>("StatuId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StatuId");
+
+                    b.HasIndex("CategoryId", "Name")
+                        .IsUnique();
+
+                    b.ToTable("Groups", "Lnpa");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.LaborRemunerationParameters", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(170)
+                        .HasColumnType("varchar(170)");
+
+                    b.Property<int>("StatuId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("StatuId");
+
+                    b.ToTable("LaborRemunerationParameters", "Lnpa");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.LaborRemunerationParametersValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LRPId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatuId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Value")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("LRPId");
+
+                    b.HasIndex("StatuId");
+
+                    b.ToTable("LaborRemunerationParametersValues", "Lnpa");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -447,6 +698,123 @@ namespace CyberPulseUso.Backend.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.Category", b =>
+                {
+                    b.HasOne("CyberPulseUso.Shared.Entities.Gene.Statu", "Statu")
+                        .WithMany()
+                        .HasForeignKey("StatuId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Statu");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.Charge", b =>
+                {
+                    b.HasOne("CyberPulseUso.Shared.Entities.Lnpa.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CyberPulseUso.Shared.Entities.Gene.Statu", "Statu")
+                        .WithMany()
+                        .HasForeignKey("StatuId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("Statu");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.Convention", b =>
+                {
+                    b.HasOne("CyberPulseUso.Shared.Entities.Gene.Statu", "Statu")
+                        .WithMany()
+                        .HasForeignKey("StatuId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Statu");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.ConventionValue", b =>
+                {
+                    b.HasOne("CyberPulseUso.Shared.Entities.Lnpa.Convention", "Convention")
+                        .WithMany()
+                        .HasForeignKey("ConventionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CyberPulseUso.Shared.Entities.Gene.Statu", "Statu")
+                        .WithMany()
+                        .HasForeignKey("StatuId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Convention");
+
+                    b.Navigation("Statu");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.Group", b =>
+                {
+                    b.HasOne("CyberPulseUso.Shared.Entities.Lnpa.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CyberPulseUso.Shared.Entities.Gene.Statu", "Statu")
+                        .WithMany()
+                        .HasForeignKey("StatuId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Statu");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.LaborRemunerationParameters", b =>
+                {
+                    b.HasOne("CyberPulseUso.Shared.Entities.Gene.Statu", "Statu")
+                        .WithMany()
+                        .HasForeignKey("StatuId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Statu");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.LaborRemunerationParametersValue", b =>
+                {
+                    b.HasOne("CyberPulseUso.Shared.Entities.Lnpa.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CyberPulseUso.Shared.Entities.Lnpa.LaborRemunerationParameters", "LRP")
+                        .WithMany()
+                        .HasForeignKey("LRPId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CyberPulseUso.Shared.Entities.Gene.Statu", "Statu")
+                        .WithMany()
+                        .HasForeignKey("StatuId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("LRP");
+
+                    b.Navigation("Statu");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

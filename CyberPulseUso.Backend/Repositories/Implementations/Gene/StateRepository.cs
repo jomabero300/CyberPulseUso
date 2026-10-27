@@ -3,6 +3,7 @@
 using CyberPulseUso.Backend.Repositories.Interfaces.Gene;
 using CyberPulseUso.Shared.Entities.Gene;
 using CyberPulseUso.Shared.EntitiesDTO;
+using CyberPulseUso.Shared.EntitiesDTO.Gene;
 using CyberPulseUso.Shared.Responses;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,11 @@ public class StateRepository : GenericRepository<State>, IStateRepository
         _context = context;
     }
 
+    public Task<ActionResponse<State>> AddAsync(StateDTO entity)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<IEnumerable<State>> GetComboAsync(int id)
     {
         return await _context.States
@@ -25,4 +31,13 @@ public class StateRepository : GenericRepository<State>, IStateRepository
                                     .ToListAsync();
     }
 
+    public Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<ActionResponse<State>> UpdateAsync(StateDTO entity)
+    {
+        throw new NotImplementedException();
+    }
 }

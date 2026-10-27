@@ -1,0 +1,67 @@
+@page "/users"
+<AuthorizeView Roles="Admi, SAdm">
+    <Authorized>
+
+@if (loading)
+{
+    <Loading />
+}
+else
+{
+    <MudTable Items="@users"
+              @ref="table"
+              ServerData="LoadListAsync"
+              Dense="true"
+              Hover="true"
+              Striped="true"
+              FixedHeader="true"
+              FixedFooter="true"
+              Context="user">
+        <ToolBarContent>
+            <div class="d-flex justify-content-between">
+                <MudText Typo="Typo.h6" Class="me-4"> @Localizer["Users"]</MudText>
+            </div>
+            <MudSpacer />
+            <FilterComponent ApplyFilter="SetFilterValue" />
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh Class="text-center">@Localizer["Image"]</MudTh>
+            <MudTh Class="text-center">@Localizer["User"]</MudTh>
+            <MudTh Class="text-center">@Localizer["PhoneNumber"]</MudTh>
+            <MudTh Class="text-center">@Localizer["Email"]</MudTh>
+            <MudTh Class="text-center">@Localizer["Confirmed"]</MudTh>
+            <MudTh Class="text-center">@Localizer["UserType"]</MudTh>
+            <MudTh Class="text-center">@Localizer["Actions"]</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>
+                <MudImage Src="@user.PhotoFull" Width="70" Height="70" Style="border-radius: 50%;" />
+            </MudTd>
+            <MudTd>@user.FullName</MudTd>
+            <MudTd Class="text-center">@user.PhoneNumber</MudTd>
+            <MudTd Class="text-center">@user.Email</MudTd>
+            <MudTd Class="text-center">@Localizer[user.EmailConfirmed.ToString()]</MudTd>
+            <MudTd Class="text-center">@user.UserType.GetDisplayName()</MudTd>
+            <MudTd Class="text-center">
+                <MudTooltip Text="@Localizer["Edit"]">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Warning"
+                               OnClick="@(() => ShowModalAsync(user.Id, true))">
+                        <MudIcon Icon="@Icons.Material.Filled.Edit" />
+                    </MudButton>
+                </MudTooltip>
+            </MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText>@Localizer["NoRecords"]</MudText>
+        </NoRecordsContent>
+        <PagerContent>
+            <MudTablePager RowsPerPageString=@Localizer["RecordsNumber"]
+                           PageSizeOptions="pageSizeOptions"
+                           AllItemsText=@Localizer["All"]
+                           InfoFormat="@infoFormat" />
+        </PagerContent>
+    </MudTable>
+}
+    </Authorized>
+</AuthorizeView>

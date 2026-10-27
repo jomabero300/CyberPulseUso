@@ -7,3 +7,17 @@ GET {{CyberPulseUso.Backend_HostAddress}}/api/accounts/Combo
 GET {{CyberPulseUso.Backend_HostAddress}}/api/countries/Combo
 
 ###
+
+GET {{CyberPulseUso.Backend_HostAddress}}/api/accounts
+
+###
+
+POST {{CyberPulseUso.Backend_HostAddress}}/api/accounts/Login
+Content-Type: application/json
+
+{
+  "email":"jbellor@sena.edu.co",
+  "password":"Mbel123*"
+}
+
+###

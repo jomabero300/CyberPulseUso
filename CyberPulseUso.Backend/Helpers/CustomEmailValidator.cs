@@ -7,8 +7,11 @@ public class CustomEmailValidator : IUserValidator<User>
 {
     private readonly HashSet<string> _allowedEmailDomains = new(StringComparer.OrdinalIgnoreCase)
     {
-        "sena.edu.co",
-        "sedarauca.edu.co"
+        "gmail.com",
+        "yahoo.com",
+        "outlook.com",
+        "yopmail.com",
+        "sena.edu.co"
     };
 
     public Task<IdentityResult> ValidateAsync(UserManager<User> manager, User user)
@@ -19,7 +22,7 @@ public class CustomEmailValidator : IUserValidator<User>
             return Task.FromResult(IdentityResult.Failed(new IdentityError
             {
                 Code = "EmailDomainInvalid",
-                Description = "El correo electrÃ³nico es obligatorio y debe ser de un dominio vÃ¡lido."
+                Description = "El correo electrónico es obligatorio y debe ser de un dominio válido."
             }));
         }
 
@@ -33,7 +36,7 @@ public class CustomEmailValidator : IUserValidator<User>
             return Task.FromResult(IdentityResult.Failed(new IdentityError
             {
                 Code = "EmailDomainInvalid",
-                Description = "El correo electrÃ³nico debe ser de un dominio permitido (sena.edu.co o sedarauca.edu.co)."
+                Description = "El correo electrónico debe ser de un dominio permitido, Gmail,yahoo,outlook."
             }));
         }
 

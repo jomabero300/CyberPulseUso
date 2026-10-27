@@ -1,27 +1,34 @@
-﻿using CyberPulseUso.Backend.Data;
+using CyberPulseUso.Backend.Data;
 using CyberPulseUso.Backend.Helpers;
 using CyberPulseUso.Backend.Repositories.Implementations;
 using CyberPulseUso.Backend.Repositories.Implementations.Gene;
+using CyberPulseUso.Backend.Repositories.Implementations.Lnpa;
 using CyberPulseUso.Backend.Repositories.Interfaces;
 using CyberPulseUso.Backend.Repositories.Interfaces.Gene;
+using CyberPulseUso.Backend.Repositories.Interfaces.Lnpa;
 using CyberPulseUso.Backend.UnitsOfWork.Implementations;
 using CyberPulseUso.Backend.UnitsOfWork.Implementations.Gene;
+using CyberPulseUso.Backend.UnitsOfWork.Implementations.Lnpa;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Gene;
+using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Lnpa;
 using CyberPulseUso.Shared.Entities.Gene;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-
+using System.Text.Json.Serialization;
 const string CorsPolicy = "AllowSpecificOrigen";
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
+    .AddDataAnnotationsLocalization()
+    .AddViewLocalization();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
 builder.Services.AddCors(options =>
@@ -62,6 +69,33 @@ builder.Services.AddScoped<IStatuUnitOfWork, StatuUnitOfWork>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserUnitOfWork, UserUnitOfWork>();
+        builder.Services.AddScoped<IIvaRepository, IvaRepository>();
+        builder.Services.AddScoped<IIvaUnitOfWork, IvaUnitOfWork>(); 
+        builder.Services.AddScoped<ILogAuditoriaRepository, LogAuditoriaRepository>();
+        builder.Services.AddScoped<ILogAuditoriaUnitOfWork, LogAuditoriaUnitOfWork>(); 
+        builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+        builder.Services.AddScoped<ICategoryUnitOfWork, CategoryUnitOfWork>(); 
+        builder.Services.AddScoped<IChargeRepository, ChargeRepository>();
+        builder.Services.AddScoped<IChargeUnitOfWork, ChargeUnitOfWork>(); 
+        builder.Services.AddScoped<IConventionRepository, ConventionRepository>();
+        builder.Services.AddScoped<IConventionUnitOfWork, ConventionUnitOfWork>(); 
+        builder.Services.AddScoped<IConventionValueRepository, ConventionValueRepository>();
+        builder.Services.AddScoped<IConventionValueUnitOfWork, ConventionValueUnitOfWork>(); 
+        builder.Services.AddScoped<IGroupRepository, GroupRepository>();
+        builder.Services.AddScoped<IGroupUnitOfWork, GroupUnitOfWork>(); 
+        builder.Services.AddScoped<ILaborRemunerationParametersRepository, LaborRemunerationParametersRepository>();
+        builder.Services.AddScoped<ILaborRemunerationParametersUnitOfWork, LaborRemunerationParametersUnitOfWork>(); 
+        builder.Services.AddScoped<ILaborRemunerationParametersValueRepository, LaborRemunerationParametersValueRepository>();
+        builder.Services.AddScoped<ILaborRemunerationParametersValueUnitOfWork, LaborRemunerationParametersValueUnitOfWork>(); 
+
+
+
+
+
+
+
+
+
 
 builder.Services.AddScoped<IMailHelper, MailHelper>();
 

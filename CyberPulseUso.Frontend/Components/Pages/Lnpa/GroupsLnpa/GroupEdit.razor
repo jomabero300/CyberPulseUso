@@ -1,0 +1,12 @@
+﻿@if (groupDTO is null)
+{
+    <Loading />
+}
+else
+{
+    <MudDialog>
+        <DialogContent>
+            <GroupForm @ref="groupFormRef" GroupDTO="groupDTO" OnValidSubmit="EditAsync" ReturnAction="Return" />
+        </DialogContent>
+    </MudDialog>
+}

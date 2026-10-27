@@ -1,0 +1,12 @@
+﻿@if (laborRemunerationParametersDTO is null)
+{
+	<Loading />
+}
+else
+{
+	<MudDialog>
+		<DialogContent>
+			<LaborRemunerationParametersForm @ref="laborRemunerationParametersForm" LaborRemunerationParametersDTO="laborRemunerationParametersDTO" OnValidSubmit="EditAsync" ReturnAction="Return" />
+		</DialogContent>
+	</MudDialog>
+}

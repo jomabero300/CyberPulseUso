@@ -1,0 +1,12 @@
+﻿@if (categoryDTO is null)
+{
+    <Loading />
+}
+else
+{
+    <MudDialog>
+        <DialogContent>
+            <CategoryForm @ref="categoryFormRef" CategoryDTO="categoryDTO" OnValidSubmit="EditAsync" ReturnAction="Return" />
+        </DialogContent>
+    </MudDialog>
+}

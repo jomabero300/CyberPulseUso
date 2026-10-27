@@ -41,6 +41,7 @@ public class AccountsController : ControllerBase
         _userUnitOfWork = userUnitOfWork;
     }
 
+    
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("paginated")]
     public async Task<IActionResult> GetPaginatedAsync([FromQuery] PaginationDTO pagination)
@@ -93,10 +94,10 @@ public class AccountsController : ControllerBase
     }
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [HttpGet("UserType/{id}")]
-    public async Task<IActionResult> GetUserTypeAsync(string id)
+    [HttpGet("UserType")]
+    public async Task<IActionResult> GetUserTypeAsync([FromQuery] string id)
     {
-        if (!Guid.TryParse(id, out var userId)) return BadRequest("Identificador de usuario invÃ¡lido.");
+        if (!Guid.TryParse(id, out var userId)) return BadRequest("Identificador de usuario inválido.");
         var result = await _userUnitOfWork.GetUserAsync(userId);
         return result != null ? Ok(result) : NotFound();
     }
@@ -154,13 +155,33 @@ public class AccountsController : ControllerBase
     [HttpGet("ConfirmEmail")]
     public async Task<IActionResult> ConfirmEmailAsync([FromQuery] string userId, [FromQuery] string token)
     {
-        if (!Guid.TryParse(userId, out var parsedUserId)) return BadRequest("Identificador de usuario invÃ¡lido.");
+        if (!Guid.TryParse(userId, out var parsedUserId)) return BadRequest("Identificador de usuario inválido.");
         token = token.Replace(" ", "+");
         var user = await _userUnitOfWork.GetUserAsync(parsedUserId);
+
         if (user == null) return NotFound();
         if (user.EmailConfirmed) return BadRequest("ERR009");
+
+        user.Photo = await photoLastIndexOf(user.Photo);
+
         var result = await _userUnitOfWork.ConfirmEmailAsync(user, token);
+
         return result.Succeeded ? NoContent() : BadRequest(result.Errors.FirstOrDefault()?.Description);
+    }
+
+    private async Task<string?> photoLastIndexOf(string? photo)
+    {
+        char caracterBuscar = '\\';
+
+        // 1. Buscar el índice de la última aparición del carácter
+        int ultimoIndice = photo!.LastIndexOf(caracterBuscar);
+
+        if (ultimoIndice != -1)
+        {
+            // 2. Cortar desde el índice + 1 para eliminar el carácter y todo lo que está a su izquierda
+            photo = photo.Substring(ultimoIndice + 1);
+        }
+        return photo;
     }
 
     [HttpPost("Login")]
@@ -188,6 +209,26 @@ public class AccountsController : ControllerBase
         await _userUnitOfWork.UpdateUserAsync(id, userType);
         return NoContent();
     }
+
+
+    [HttpGet("TotalRecordsPaginated")]
+    public async Task<IActionResult> GetTotalRecordsAsync([FromQuery] PaginationDTO pagination)
+    {
+        if (!string.IsNullOrWhiteSpace(pagination.Email))
+        {
+            pagination.Email = User.Identity!.Name;
+        }
+
+        var response = await _userUnitOfWork.GetTotalRecordsAsync(pagination);
+
+        if (response.WasSuccess)
+        {
+            return Ok(response.Result);
+        }
+        return BadRequest();
+    }
+
+
 
     private async Task<ActionResponse<string>> SendConfirmationEmailAsync(User user, string language)
     {
