@@ -17,6 +17,7 @@ public partial class UserTypeEdit
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
     [Inject] private IStringLocalizer<Literals> Localizer { get; set; } = null!;
     [Parameter] public string Id { get; set; } = null!;
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -53,7 +54,8 @@ public partial class UserTypeEdit
 
             return;
         }
-        Return();
+
+        MudDialog.Close(DialogResult.Ok(true));
 
         Snackbar.Add(Localizer["RecordSavedOk"], Severity.Success);
 
@@ -63,6 +65,6 @@ public partial class UserTypeEdit
     {
         userTypeForm!.FormPostedSuccessfully = true;
 
-        NavigationManager.NavigateTo("/users");
+        MudDialog.Cancel();
     }
 }

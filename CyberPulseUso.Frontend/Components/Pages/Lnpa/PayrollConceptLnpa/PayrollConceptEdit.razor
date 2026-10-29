@@ -1,0 +1,12 @@
+﻿@if (payrollConceptDTO is null)
+{
+	<Loading />
+}
+else
+{
+	<MudDialog>
+		<DialogContent>
+			<PayrollConceptForm @ref="PayrollConceptForm" PayrollConceptDTO="payrollConceptDTO" OnValidSubmit="EditAsync" ReturnAction="Return" />
+		</DialogContent>
+	</MudDialog>
+}

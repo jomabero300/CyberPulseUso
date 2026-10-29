@@ -21,4 +21,5 @@ public class LaborRemunerationParameters
     public int StatuId { get; set; }
     public Statu? Statu { get; set; }
 
+    public ICollection<PayrollConcept>? PayrollConcepts { get; set; }
 }

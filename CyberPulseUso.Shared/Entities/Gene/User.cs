@@ -1,8 +1,10 @@
-﻿using CyberPulseUso.Shared.Enums;
+﻿using CyberPulseUso.Shared.Entities.Lnpa;
+using CyberPulseUso.Shared.Enums;
 using CyberPulseUso.Shared.Resources;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Principal;
 
 namespace CyberPulseUso.Shared.Entities.Gene;
 
@@ -55,10 +57,12 @@ public class User : IdentityUser
     [Display(Name = "User", ResourceType = typeof(Literals))]
     public string FullName => $"{FirstName} {LastName}";
 
+    public int? ChargeId { get; set; }
     public string PhotoFull =>
         string.IsNullOrEmpty(Photo)
             ? "/Images/NoImage.png"
             : Photo;
 
     public Country Country { get; set; } = null!;
+    public Charge? Charge { get; set; }
 }

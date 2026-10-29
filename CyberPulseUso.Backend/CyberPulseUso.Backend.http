@@ -21,3 +21,7 @@ Content-Type: application/json
 }
 
 ###
+
+GET {{CyberPulseUso.Backend_HostAddress}}/api/countries/Combo
+
+###

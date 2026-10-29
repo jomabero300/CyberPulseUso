@@ -79,6 +79,15 @@ namespace CyberPulseUso.Shared.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Accrued value.
+        /// </summary>
+        public static string AccruedValue {
+            get {
+                return ResourceManager.GetString("AccruedValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Action.
         /// </summary>
         public static string Action {
@@ -129,6 +138,15 @@ namespace CyberPulseUso.Shared.Resources {
         public static string AlertDate {
             get {
                 return ResourceManager.GetString("AlertDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Amount.
+        /// </summary>
+        public static string Amount {
+            get {
+                return ResourceManager.GetString("Amount", resourceCulture);
             }
         }
         
@@ -660,6 +678,15 @@ namespace CyberPulseUso.Shared.Resources {
         public static string DateStartMon {
             get {
                 return ResourceManager.GetString("DateStartMon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Deducted value.
+        /// </summary>
+        public static string DeductedValue {
+            get {
+                return ResourceManager.GetString("DeductedValue", resourceCulture);
             }
         }
         
@@ -1510,6 +1537,42 @@ namespace CyberPulseUso.Shared.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Payroll Concept.
+        /// </summary>
+        public static string PayrollConcept {
+            get {
+                return ResourceManager.GetString("PayrollConcept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Payroll Concepts.
+        /// </summary>
+        public static string PayrollConcepts {
+            get {
+                return ResourceManager.GetString("PayrollConcepts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Payroll Settlement.
+        /// </summary>
+        public static string PayrollSettlement {
+            get {
+                return ResourceManager.GetString("PayrollSettlement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Payroll settlements.
+        /// </summary>
+        public static string Payrollsettlements {
+            get {
+                return ResourceManager.GetString("Payrollsettlements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a %.
         /// </summary>
         public static string Percentage {
@@ -1614,6 +1677,15 @@ namespace CyberPulseUso.Shared.Resources {
         public static string ProcessConfirm {
             get {
                 return ResourceManager.GetString("ProcessConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Processes.
+        /// </summary>
+        public static string Processes {
+            get {
+                return ResourceManager.GetString("Processes", resourceCulture);
             }
         }
         
@@ -2032,6 +2104,15 @@ namespace CyberPulseUso.Shared.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a -- Select a charge --.
+        /// </summary>
+        public static string SelectACharge {
+            get {
+                return ResourceManager.GetString("SelectACharge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a -- Select a chip program --.
         /// </summary>
         public static string SelectAChipProgram {
@@ -2257,6 +2338,15 @@ namespace CyberPulseUso.Shared.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Setting.
+        /// </summary>
+        public static string Setting {
+            get {
+                return ResourceManager.GetString("Setting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Start date.
         /// </summary>
         public static string StartDate {
@@ -2460,6 +2550,15 @@ namespace CyberPulseUso.Shared.Resources {
         public static string UnitMeasurements {
             get {
                 return ResourceManager.GetString("UnitMeasurements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Unit Value.
+        /// </summary>
+        public static string UnitValue {
+            get {
+                return ResourceManager.GetString("UnitValue", resourceCulture);
             }
         }
         

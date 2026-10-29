@@ -955,4 +955,37 @@
   <data name="SelectALRP" xml:space="preserve">
     <value>-- Select a Remuneration --</value>
   </data>
+  <data name="PayrollConcept" xml:space="preserve">
+    <value>Payroll Concept</value>
+  </data>
+  <data name="PayrollConcepts" xml:space="preserve">
+    <value>Payroll Concepts</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="UnitValue" xml:space="preserve">
+    <value>Unit Value</value>
+  </data>
+  <data name="AccruedValue" xml:space="preserve">
+    <value>Accrued value</value>
+  </data>
+  <data name="DeductedValue" xml:space="preserve">
+    <value>Deducted value</value>
+  </data>
+  <data name="Payrollsettlements" xml:space="preserve">
+    <value>Payroll settlements</value>
+  </data>
+  <data name="PayrollSettlement" xml:space="preserve">
+    <value>Payroll Settlement</value>
+  </data>
+  <data name="SelectACharge" xml:space="preserve">
+    <value>-- Select a charge --</value>
+  </data>
+  <data name="Setting" xml:space="preserve">
+    <value>Setting</value>
+  </data>
+  <data name="Processes" xml:space="preserve">
+    <value>Processes</value>
+  </data>
 </root>

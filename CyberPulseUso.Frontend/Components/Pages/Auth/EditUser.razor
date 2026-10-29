@@ -28,6 +28,18 @@ else
                                       For="@(() => user.PhoneNumber)"
                                       InputType="InputType.Telephone" />
 
+                        <MudAutocomplete T="Charge"
+                                            Label=@Localizer["Charge"]
+                                            Placeholder=@Localizer["SelectACharge"]
+                                            SearchFunc="SearchCharges"
+                                            Value="selectedCharge"
+                                            ValueChanged="ChargeChanged"
+                                            ToStringFunc="@(e=> e==null?null : $"{e.Name}")">
+                            <ItemTemplate Context="itemContext">
+                                @itemContext.Name
+                            </ItemTemplate>
+                        </MudAutocomplete>
+
                     </MudCardContent>
                 </MudItem>
                 <MudItem xs="12" sm="6">
@@ -44,6 +56,7 @@ else
                             </ItemTemplate>
                         </MudAutocomplete>
                     </MudCardContent>
+
                     <MudItem xs="12" sm="6">
                         <InputImg Label=@Localizer["Image"] ImageSelected="ImageSelected" ImageURL="@imageUrl" />
                     </MudItem>

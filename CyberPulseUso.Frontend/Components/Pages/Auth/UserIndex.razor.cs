@@ -120,7 +120,7 @@ public partial class UserIndex
 
         var result = await dialog.Result;
 
-        if (result!.Canceled)
+        if (result is { Canceled: false })
         {
             await LoadTotalRecordsAsync();
 

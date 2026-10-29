@@ -19,11 +19,52 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="QuestPDF" Version="2026.9.1" />
-  <Folder Include="Data\" /><Folder Include="Data\Scripts\" /><Folder Include="Controllers\Gene\" /><Folder Include="Repositories\Implementations\Gene\" /><Folder Include="Repositories\Interfaces\Gene\" /><Folder Include="UnitsOfWork\Implementations\Gene\" /><Folder Include="UnitsOfWork\Interfaces\Gene\" /><Folder Include="Repositories\" /><Folder Include="Repositories\Interfaces\" /><Folder Include="Repositories\Implementations\" /><Folder Include="UnitsOfWork\" /><Folder Include="UnitsOfWork\Interfaces\" /><Folder Include="UnitsOfWork\Implementations\" /><Folder Include="Helpers\" /></ItemGroup>
+    <PackageReference Include="QuestPDF" Version="2026.9.1" /><Folder Include="Controllers\Gene\" /><Folder Include="Repositories\Implementations\Gene\" /><Folder Include="Repositories\Interfaces\Gene\" /><Folder Include="UnitsOfWork\Implementations\Gene\" /><Folder Include="UnitsOfWork\Interfaces\Gene\" /><Folder Include="Repositories\" /><Folder Include="Repositories\Interfaces\" /><Folder Include="Repositories\Implementations\" /><Folder Include="UnitsOfWork\" /><Folder Include="UnitsOfWork\Interfaces\" /><Folder Include="UnitsOfWork\Implementations\" /><Folder Include="Helpers\" /></ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CyberPulseUso.Shared\CyberPulseUso.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Data\Migrations\20261024163544_Initial.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="Data\Migrations\20261027180422_InitialLnpa.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="Data\Migrations\ApplicationDbContextModelSnapshot.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\Images\NoImage.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Data\Scripts\Cities.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Scripts\Countries.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Scripts\Neighborhoods.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Scripts\spNewValidityProducts.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Scripts\Sp_PayrollCencepts.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Scripts\States.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Scripts\UnitMeasurements.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

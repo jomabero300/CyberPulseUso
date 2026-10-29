@@ -26,6 +26,8 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<Group> Groups { get; set; }
     public DbSet<LaborRemunerationParameters> LaborRemunerationParameterses { get; set; }
     public DbSet<LaborRemunerationParametersValue> LaborRemunerationParametersValues { get; set; }
+    public DbSet<PayrollConcept> PayrollConcepts { get; set; }
+    public DbSet<PayrollSettlement> PayrollSettlements { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -73,7 +75,26 @@ public class ApplicationDbContext : IdentityDbContext<User>
             .HasIndex(x => new {x.CategoryId,x.Name })
             .IsUnique();
 
+        builder.Entity<PayrollConcept>()
+            .HasIndex(x => x.Name)
+            .IsUnique();
+
+        builder.Entity<User>()
+            .HasOne(x=>x.Charge)
+            .WithMany(x=>x.User)
+            .HasForeignKey(x=>x.ChargeId)
+            .IsRequired(false);
+
+
+        builder.Entity<PayrollConcept>()
+            .HasOne(x => x.LRP)
+            .WithMany(x => x.PayrollConcepts)
+            .HasForeignKey(x => x.LRPId)
+            .IsRequired(false);
+
+
         DisableCascadingDelete(builder);
+
     }
 
     private static void DisableCascadingDelete(ModelBuilder builder)

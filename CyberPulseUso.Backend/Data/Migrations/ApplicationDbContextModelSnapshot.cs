@@ -230,6 +230,9 @@ namespace CyberPulseUso.Backend.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ChargeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -299,6 +302,8 @@ namespace CyberPulseUso.Backend.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ChargeId");
 
                     b.HasIndex("CountryId");
 
@@ -512,6 +517,87 @@ namespace CyberPulseUso.Backend.Data.Migrations
                     b.ToTable("LaborRemunerationParametersValues", "Lnpa");
                 });
 
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.PayrollConcept", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("LRPId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("varchar(80)");
+
+                    b.Property<int>("StatuId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LRPId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("StatuId");
+
+                    b.ToTable("PayrollConcepts", "Lnpa");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.PayrollSettlement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("AccruedValue")
+                        .HasMaxLength(80)
+                        .HasColumnType("float");
+
+                    b.Property<int>("Amount")
+                        .HasMaxLength(80)
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChargeId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("DeductedValue")
+                        .HasMaxLength(80)
+                        .HasColumnType("float");
+
+                    b.Property<int>("PayrollConceptId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatuId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("UnitValue")
+                        .HasMaxLength(80)
+                        .HasColumnType("float");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChargeId");
+
+                    b.HasIndex("PayrollConceptId");
+
+                    b.HasIndex("StatuId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PayrollSettlements", "Lnpa");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -691,11 +777,18 @@ namespace CyberPulseUso.Backend.Data.Migrations
 
             modelBuilder.Entity("CyberPulseUso.Shared.Entities.Gene.User", b =>
                 {
+                    b.HasOne("CyberPulseUso.Shared.Entities.Lnpa.Charge", "Charge")
+                        .WithMany("User")
+                        .HasForeignKey("ChargeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("CyberPulseUso.Shared.Entities.Gene.Country", "Country")
                         .WithMany("Users")
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Charge");
 
                     b.Navigation("Country");
                 });
@@ -817,6 +910,59 @@ namespace CyberPulseUso.Backend.Data.Migrations
                     b.Navigation("Statu");
                 });
 
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.PayrollConcept", b =>
+                {
+                    b.HasOne("CyberPulseUso.Shared.Entities.Lnpa.LaborRemunerationParameters", "LRP")
+                        .WithMany("PayrollConcepts")
+                        .HasForeignKey("LRPId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("CyberPulseUso.Shared.Entities.Gene.Statu", "Statu")
+                        .WithMany()
+                        .HasForeignKey("StatuId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("LRP");
+
+                    b.Navigation("Statu");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.PayrollSettlement", b =>
+                {
+                    b.HasOne("CyberPulseUso.Shared.Entities.Lnpa.Charge", "Charge")
+                        .WithMany()
+                        .HasForeignKey("ChargeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CyberPulseUso.Shared.Entities.Lnpa.PayrollConcept", "PayrollConcept")
+                        .WithMany()
+                        .HasForeignKey("PayrollConceptId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CyberPulseUso.Shared.Entities.Gene.Statu", "Statu")
+                        .WithMany()
+                        .HasForeignKey("StatuId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CyberPulseUso.Shared.Entities.Gene.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Charge");
+
+                    b.Navigation("PayrollConcept");
+
+                    b.Navigation("Statu");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -883,6 +1029,16 @@ namespace CyberPulseUso.Backend.Data.Migrations
             modelBuilder.Entity("CyberPulseUso.Shared.Entities.Gene.State", b =>
                 {
                     b.Navigation("Cities");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.Charge", b =>
+                {
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.LaborRemunerationParameters", b =>
+                {
+                    b.Navigation("PayrollConcepts");
                 });
 #pragma warning restore 612, 618
         }

@@ -28,7 +28,7 @@ public class SeedDb
         await CheckCitiesAsync();
         await CheckNeighborhoodsAsync();
         await CheckRolesAsync();
-
+        await CheckSpPayrollAsync();
         await CheckUserAsync(
             "Manuel",
             "Bello",
@@ -36,6 +36,18 @@ public class SeedDb
             "3133670740",
             UserType.Admi,
             "17588236");
+    }
+
+    private async Task CheckSpPayrollAsync()
+    {
+        var sqlPath = Path.Combine(
+            "Data", "Scripts", "Sp_PayrollCencepts.sql");
+        if (File.Exists(sqlPath))
+        {
+            var sql = await File.ReadAllTextAsync(sqlPath);
+
+            await _context.Database.ExecuteSqlRawAsync(sql);
+        }
     }
 
     private async Task CheckStatusAsync()

@@ -14,6 +14,13 @@ namespace CyberPulseUso.Backend.Data.Migrations
             migrationBuilder.EnsureSchema(
                 name: "Lnpa");
 
+            migrationBuilder.AddColumn<int>(
+                name: "ChargeId",
+                schema: "Admi",
+                table: "AspNetUsers",
+                type: "int",
+                nullable: true);
+
             migrationBuilder.CreateTable(
                 name: "Categories",
                 schema: "Lnpa",
@@ -164,6 +171,36 @@ namespace CyberPulseUso.Backend.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PayrollConcepts",
+                schema: "Lnpa",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "varchar(80)", maxLength: 80, nullable: false),
+                    StatuId = table.Column<int>(type: "int", nullable: false),
+                    LRPId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PayrollConcepts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PayrollConcepts_LaborRemunerationParameters_LRPId",
+                        column: x => x.LRPId,
+                        principalSchema: "Lnpa",
+                        principalTable: "LaborRemunerationParameters",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PayrollConcepts_Status_StatuId",
+                        column: x => x.StatuId,
+                        principalSchema: "Gene",
+                        principalTable: "Status",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Charges",
                 schema: "Lnpa",
                 columns: table => new
@@ -231,6 +268,61 @@ namespace CyberPulseUso.Backend.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "PayrollSettlements",
+                schema: "Lnpa",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ChargeId = table.Column<int>(type: "int", nullable: false),
+                    PayrollConceptId = table.Column<int>(type: "int", nullable: false),
+                    Amount = table.Column<int>(type: "int", maxLength: 80, nullable: false),
+                    UnitValue = table.Column<double>(type: "float", maxLength: 80, nullable: false),
+                    AccruedValue = table.Column<double>(type: "float", maxLength: 80, nullable: false),
+                    DeductedValue = table.Column<double>(type: "float", maxLength: 80, nullable: false),
+                    StatuId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PayrollSettlements", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PayrollSettlements_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "Admi",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PayrollSettlements_Charges_ChargeId",
+                        column: x => x.ChargeId,
+                        principalSchema: "Lnpa",
+                        principalTable: "Charges",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PayrollSettlements_PayrollConcepts_PayrollConceptId",
+                        column: x => x.PayrollConceptId,
+                        principalSchema: "Lnpa",
+                        principalTable: "PayrollConcepts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PayrollSettlements_Status_StatuId",
+                        column: x => x.StatuId,
+                        principalSchema: "Gene",
+                        principalTable: "Status",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_ChargeId",
+                schema: "Admi",
+                table: "AspNetUsers",
+                column: "ChargeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Categories_Name",
@@ -326,14 +418,68 @@ namespace CyberPulseUso.Backend.Data.Migrations
                 schema: "Lnpa",
                 table: "LaborRemunerationParametersValues",
                 column: "StatuId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PayrollConcepts_LRPId",
+                schema: "Lnpa",
+                table: "PayrollConcepts",
+                column: "LRPId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PayrollConcepts_Name",
+                schema: "Lnpa",
+                table: "PayrollConcepts",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PayrollConcepts_StatuId",
+                schema: "Lnpa",
+                table: "PayrollConcepts",
+                column: "StatuId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PayrollSettlements_ChargeId",
+                schema: "Lnpa",
+                table: "PayrollSettlements",
+                column: "ChargeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PayrollSettlements_PayrollConceptId",
+                schema: "Lnpa",
+                table: "PayrollSettlements",
+                column: "PayrollConceptId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PayrollSettlements_StatuId",
+                schema: "Lnpa",
+                table: "PayrollSettlements",
+                column: "StatuId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PayrollSettlements_UserId",
+                schema: "Lnpa",
+                table: "PayrollSettlements",
+                column: "UserId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUsers_Charges_ChargeId",
+                schema: "Admi",
+                table: "AspNetUsers",
+                column: "ChargeId",
+                principalSchema: "Lnpa",
+                principalTable: "Charges",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Charges",
-                schema: "Lnpa");
+            migrationBuilder.DropForeignKey(
+                name: "FK_AspNetUsers_Charges_ChargeId",
+                schema: "Admi",
+                table: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "ConventionValues",
@@ -348,7 +494,19 @@ namespace CyberPulseUso.Backend.Data.Migrations
                 schema: "Admi");
 
             migrationBuilder.DropTable(
+                name: "PayrollSettlements",
+                schema: "Lnpa");
+
+            migrationBuilder.DropTable(
                 name: "Conventions",
+                schema: "Lnpa");
+
+            migrationBuilder.DropTable(
+                name: "Charges",
+                schema: "Lnpa");
+
+            migrationBuilder.DropTable(
+                name: "PayrollConcepts",
                 schema: "Lnpa");
 
             migrationBuilder.DropTable(
@@ -362,6 +520,16 @@ namespace CyberPulseUso.Backend.Data.Migrations
             migrationBuilder.DropTable(
                 name: "Categories",
                 schema: "Lnpa");
+
+            migrationBuilder.DropIndex(
+                name: "IX_AspNetUsers_ChargeId",
+                schema: "Admi",
+                table: "AspNetUsers");
+
+            migrationBuilder.DropColumn(
+                name: "ChargeId",
+                schema: "Admi",
+                table: "AspNetUsers");
         }
     }
 }

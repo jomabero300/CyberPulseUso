@@ -975,4 +975,37 @@
   <data name="SelectALRP" xml:space="preserve">
     <value>-- Seleccione una Remuneración --</value>
   </data>
+  <data name="PayrollConcept" xml:space="preserve">
+    <value>Nomina Concepto</value>
+  </data>
+  <data name="PayrollConcepts" xml:space="preserve">
+    <value>Nomina Conceptos</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Cantidad</value>
+  </data>
+  <data name="UnitValue" xml:space="preserve">
+    <value>Valor Unitario</value>
+  </data>
+  <data name="AccruedValue" xml:space="preserve">
+    <value>Valor devengado</value>
+  </data>
+  <data name="DeductedValue" xml:space="preserve">
+    <value>Valor deducido</value>
+  </data>
+  <data name="Payrollsettlements" xml:space="preserve">
+    <value>Nomina Liquidaciones</value>
+  </data>
+  <data name="PayrollSettlement" xml:space="preserve">
+    <value>Nomina Liquidación</value>
+  </data>
+  <data name="SelectACharge" xml:space="preserve">
+    <value>-- Seleccione un cargo --</value>
+  </data>
+  <data name="Setting" xml:space="preserve">
+    <value>Configuración</value>
+  </data>
+  <data name="Processes" xml:space="preserve">
+    <value>Procesos</value>
+  </data>
 </root>

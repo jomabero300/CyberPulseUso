@@ -1,6 +1,7 @@
 using CyberPulseUso.Frontend.Repositories;
 using CyberPulseUso.Frontend.Services;
 using CyberPulseUso.Shared.Entities.Gene;
+using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.EntitiesDTO.Gene;
 using CyberPulseUso.Shared.Resources;
 using Microsoft.AspNetCore.Authorization;
@@ -15,10 +16,12 @@ namespace CyberPulseUso.Frontend.Components.Pages.Auth;
 public partial class EditUser
 {
     private User? user;
-    private List<Country>? countries;
     private bool loading = true;
     private string? imageUrl;
+    private List<Country>? countries;
     private Country selectedCountry = new();
+    private List<Charge>? charges;
+    private Charge selectedCharge = new();
 
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private IDialogService DialogService { get; set; } = null!;
@@ -31,6 +34,7 @@ public partial class EditUser
     {
         await LoadUserAsync();
         await LoadCountiesAsync();
+        await LoadChargesAsync();
 
         selectedCountry = user!.Country!;
 
@@ -102,6 +106,45 @@ public partial class EditUser
             .Where(c => c.Name.Contains(searchText, StringComparison.InvariantCultureIgnoreCase))
             .ToList();
     }
+
+
+
+
+    private async Task LoadChargesAsync()
+    {
+        var responseHttp = await repository.GetAsync<List<Charge>>("/api/charges/combo");
+
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            Snackbar.Add(Localizer[message!], Severity.Error);
+            return;
+        }
+
+        charges = responseHttp.Response;
+    }
+    private void ChargeChanged(Charge charge)
+    {
+        selectedCharge = charge;
+    }
+    private async Task<IEnumerable<Charge>> SearchCharges(string searchText, CancellationToken cancellationToken)
+    {
+        await Task.Delay(5);
+
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            return charges!;
+        }
+
+        return charges!
+            .Where(c => c.Name!.Contains(searchText, StringComparison.InvariantCultureIgnoreCase))
+            .ToList();
+    }
+
+
+
+
+
     private async Task SaveUserAsync()
     {
         if (_sqlValidator.HasSqlInjection(user!.FirstName) ||
@@ -128,7 +171,7 @@ public partial class EditUser
 
         NavigationManager.NavigateTo("/");
     }
-
+    
     private void ReturnAction()
     {
         NavigationManager.NavigateTo("/");

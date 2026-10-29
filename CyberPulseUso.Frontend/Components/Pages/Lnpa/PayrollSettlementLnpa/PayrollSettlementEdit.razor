@@ -1,0 +1,12 @@
+﻿@if (payrollSettlementDTO is null)
+{
+	<Loading />
+}
+else
+{
+	<MudDialog>
+		<DialogContent>
+			<PayrollSettlementForm @ref="PayrollSettlementForm" PayrollSettlementDTO="payrollSettlementDTO" OnValidSubmit="EditAsync" ReturnAction="Return" />
+		</DialogContent>
+	</MudDialog>
+}

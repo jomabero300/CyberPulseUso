@@ -22,4 +22,6 @@ public class Charge
     [Required(ErrorMessageResourceName = "RequiredField", ErrorMessageResourceType = typeof(Literals))]
     public int StatuId { get; set; }
     public Statu? Statu { get; set; }
+
+    public ICollection<User>? User { get; set; }
 }
