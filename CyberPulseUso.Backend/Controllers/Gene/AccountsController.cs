@@ -210,7 +210,6 @@ public class AccountsController : ControllerBase
         return NoContent();
     }
 
-
     [HttpGet("TotalRecordsPaginated")]
     public async Task<IActionResult> GetTotalRecordsAsync([FromQuery] PaginationDTO pagination)
     {

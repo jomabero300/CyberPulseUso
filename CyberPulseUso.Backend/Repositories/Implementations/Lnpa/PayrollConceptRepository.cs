@@ -153,4 +153,5 @@ public class PayrollConceptRepository : GenericRepository<PayrollConcept>, IPayr
             targetProperty.SetValue(target, value);
         }
     }
+
 }

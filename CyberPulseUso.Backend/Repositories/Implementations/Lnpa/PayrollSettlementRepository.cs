@@ -3,10 +3,12 @@ using CyberPulseUso.Backend.Helpers;
 using CyberPulseUso.Backend.Repositories.Interfaces.Lnpa;
 using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.EntitiesDTO;
+using CyberPulseUso.Shared.EntitiesDTO.Gene;
 using CyberPulseUso.Shared.EntitiesDTO.Lnpa;
 using CyberPulseUso.Shared.Responses;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using System.Runtime.Intrinsics.X86;
 
 namespace CyberPulseUso.Backend.Repositories.Implementations.Lnpa;
 
@@ -51,7 +53,7 @@ public class PayrollSettlementRepository : GenericRepository<PayrollSettlement>,
     {
         IQueryable<PayrollSettlement> query = _context.Set<PayrollSettlement>().AsNoTracking();
         query = query.Include(x => x.Statu);
-                // El modelo no tiene una propiedad string 'Name'; se conserva el filtro recibido
+        // El modelo no tiene una propiedad string 'Name'; se conserva el filtro recibido
         // en PaginationDTO, pero no se aplica un filtro específico del modelo.
         query = query.OrderBy(x => x.Id);
         return new ActionResponse<IEnumerable<PayrollSettlement>>
@@ -91,7 +93,7 @@ public class PayrollSettlementRepository : GenericRepository<PayrollSettlement>,
     {
         IQueryable<PayrollSettlement> query = _context.Set<PayrollSettlement>().AsNoTracking();
         query = query.Include(x => x.Statu);
-                // El modelo no tiene una propiedad string 'Name'; se conserva el filtro recibido
+        // El modelo no tiene una propiedad string 'Name'; se conserva el filtro recibido
         // en PaginationDTO, pero no se aplica un filtro específico del modelo.
         var totalRecords = await query.CountAsync();
         return new ActionResponse<int> { WasSuccess = true, Result = totalRecords };
@@ -142,5 +144,114 @@ public class PayrollSettlementRepository : GenericRepository<PayrollSettlement>,
 
             targetProperty.SetValue(target, value);
         }
+    }
+
+    public async Task<ActionResponse<IEnumerable<PayrollSettlementDTO>>> GetLiqAsync(int id, string Id)
+    {
+        var list1 = await _context.Charges
+            .AsNoTracking()
+            .Where(c => c.Id == id)
+            .SelectMany(c => c.Group!.LaborRemunerationParametersValues!)
+            .SelectMany(v => v.LRP!.PayrollConcepts!
+                .Select(p => new
+                {
+                    ChargeId = id,
+                    PayrollConceptId = p.Id,
+                    PayrollConceptName = p.Name,
+                    UnitValue = v.Value,
+                    Statu = new
+                     {
+                         Id = v.Statu!.Id,
+                         Name = v.Statu.Name
+                     }
+                }))
+            .ToListAsync();
+
+
+        // 2. Ejecutamos la segunda consulta de forma independiente
+        var list2 = await _context.PayrollConcepts
+            .AsNoTracking()
+            .Include(x => x.Statu)
+            .Where(x => x.LRPId == null)
+            .ToListAsync();
+
+        // 3. Mapeamos y combinamos ambos resultados en memoria de C# usando LINQ
+        var combinedResult = list1.Select(x => new PayrollSettlementDTO
+        {
+            Id = 0,
+            UserId =Id,
+            ChargeId = id,
+            PayrollConceptId = x.PayrollConceptId,
+            Name = x.PayrollConceptName,
+            Amount = 0,
+            UnitValue = x.UnitValue,
+            AccruedValue = 0,
+            DeductedValue = 0,
+            StatuId = x.Statu.Id,
+            Statu = x.Statu != null ? new StatuDTO
+            {
+                Id = x.Statu.Id,
+                Name = x.Statu.Name ?? string.Empty
+            } : null
+        })
+        .Concat(list2.Select(x => new PayrollSettlementDTO
+        {
+            Id = 0,
+            UserId = Id,
+            ChargeId = id,
+            PayrollConceptId = x.Id,
+            Name = x.Name,
+            Amount = 0,
+            UnitValue = 0,
+            AccruedValue = 0,
+            DeductedValue = 0,
+            StatuId = x.StatuId,
+            Statu = x.Statu != null ? new StatuDTO
+            {
+                Id = x.Statu.Id,
+                Name = x.Statu.Name ?? string.Empty
+            } : null
+        }))
+        .OrderBy(x=>x.PayrollConceptId)
+        .ToList();
+
+
+        var unitValue = combinedResult.Where(x => x.PayrollConceptId == 1 || x.PayrollConceptId == 2).Sum(x => x.UnitValue);
+
+        var result = combinedResult.Select(x =>
+        {
+            if (x.PayrollConceptId == 5)
+            {
+                x.UnitValue = unitValue/7*0.75;
+            }
+
+            if (x.PayrollConceptId == 6)
+            {
+                x.UnitValue = unitValue/7*2.1;
+            }
+
+            if (x.PayrollConceptId == 11)
+            {
+                x.UnitValue = unitValue*0.9;
+            }
+
+            if (x.PayrollConceptId == 12)
+            {
+                x.UnitValue = unitValue;
+            }
+            if (x.PayrollConceptId == 13)
+            {
+                x.UnitValue = unitValue*2;
+            }
+
+            return x;
+        }).OrderBy(x => x.PayrollConceptId)
+        .ToList();
+
+        return new ActionResponse<IEnumerable<PayrollSettlementDTO>>
+        {
+            WasSuccess = true,
+            Result = combinedResult
+        };
     }
 }

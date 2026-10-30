@@ -1,0 +1,46 @@
+.payroll-dialog-title {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+}
+
+    .payroll-dialog-title ::deep .mud-typography {
+        margin: 0;
+    }
+
+.charge-title {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--mud-palette-primary);
+    white-space: nowrap;
+}
+
+.operator-title {
+    text-align: right;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.payroll-retentions {
+    grid-column: 1 / 4;
+    grid-row: 2;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 24px;
+    margin-top: 8px;
+}
+
+.retention-item {
+    min-width: 180px;
+    text-align: left;
+}
+
+.payroll-retentions ::deep .mud-typography {
+    margin: 0;
+}

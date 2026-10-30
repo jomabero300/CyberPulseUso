@@ -3,6 +3,7 @@ using CyberPulseUso.Frontend.Services;
 using CyberPulseUso.Shared.Entities.Gene;
 using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.EntitiesDTO.Gene;
+using CyberPulseUso.Shared.EntitiesDTO.Lnpa;
 using CyberPulseUso.Shared.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
@@ -37,6 +38,13 @@ public partial class EditUser
         await LoadChargesAsync();
 
         selectedCountry = user!.Country!;
+
+        if(user.ChargeId != null)
+        {
+            selectedCharge = charges!.FirstOrDefault(x => x.Id == user.ChargeId)!;
+            //user.Charge = selectedCharge;
+            //user.ChargeId = selectedCharge.Id;
+        }
 
         if (!string.IsNullOrWhiteSpace(user!.Photo))
         {
@@ -76,6 +84,7 @@ public partial class EditUser
         user!.Photo = imageBase64;
         imageUrl = null;
     }
+
     private async Task LoadCountiesAsync()
     {
         var responseHttp = await repository.GetAsync<List<Country>>("/api/countries/combo");
@@ -108,8 +117,6 @@ public partial class EditUser
     }
 
 
-
-
     private async Task LoadChargesAsync()
     {
         var responseHttp = await repository.GetAsync<List<Charge>>("/api/charges/combo");
@@ -126,6 +133,8 @@ public partial class EditUser
     private void ChargeChanged(Charge charge)
     {
         selectedCharge = charge;
+        user!.ChargeId = charge.Id;
+        user.Charge = charge;
     }
     private async Task<IEnumerable<Charge>> SearchCharges(string searchText, CancellationToken cancellationToken)
     {
@@ -140,9 +149,6 @@ public partial class EditUser
             .Where(c => c.Name!.Contains(searchText, StringComparison.InvariantCultureIgnoreCase))
             .ToList();
     }
-
-
-
 
 
     private async Task SaveUserAsync()

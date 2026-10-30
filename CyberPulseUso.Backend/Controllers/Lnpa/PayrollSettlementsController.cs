@@ -1,5 +1,6 @@
 using CyberPulseUso.Backend.Controllers.Gene;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces;
+using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Gene;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Lnpa;
 using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.EntitiesDTO;
@@ -16,11 +17,12 @@ namespace CyberPulseUso.Backend.Controllers.Lnpa;
 public class PayrollSettlementsController : GenericController<PayrollSettlement>
 {
     private readonly IPayrollSettlementUnitOfWork _modelUnitOfWork;
-
-    public PayrollSettlementsController(IGenericUnitOfWork<PayrollSettlement> unitOfWork, IPayrollSettlementUnitOfWork modelUnitOfWork)
+    private readonly IUserUnitOfWork _userUnitOfWork;
+    public PayrollSettlementsController(IGenericUnitOfWork<PayrollSettlement> unitOfWork, IPayrollSettlementUnitOfWork modelUnitOfWork, IUserUnitOfWork userUnitOfWork)
         : base(unitOfWork)
     {
         _modelUnitOfWork = modelUnitOfWork;
+        _userUnitOfWork = userUnitOfWork;
     }
 
     public override async Task<IActionResult> GetAsync(int id)
@@ -72,4 +74,26 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
     [AllowAnonymous]
     [HttpGet("Combo")]
     public async Task<IActionResult> GetComboAsync() => Ok(await _modelUnitOfWork.GetComboAsync());
+
+
+    [HttpGet("Sett")]
+    public async Task<IActionResult> GetLiqAsync()
+    {
+        var email = User.Identity?.Name;
+        if (string.IsNullOrWhiteSpace(email)) return Unauthorized();
+
+        var result = await _userUnitOfWork.GetUserAsync(email);
+        if (result.ChargeId == null) return BadRequest("El usuario no tiene un cargo asignado.");
+
+        var response = await _modelUnitOfWork.GetLiqAsync(result.ChargeId ?? 0,result.Id);
+
+        if (response.WasSuccess)
+        {
+
+            return Ok(response.Result);
+        }
+
+        return BadRequest();
+    }
+
 }

@@ -12,7 +12,10 @@ public interface IPayrollConceptRepository
     Task<ActionResponse<IEnumerable<PayrollConcept>>> GetAsync();
     Task<ActionResponse<PayrollConcept>> GetAsync(int id);
     Task<ActionResponse<IEnumerable<PayrollConcept>>> GetAsync(PaginationDTO pagination);
+
     Task<IEnumerable<PayrollConcept>> GetComboAsync();
     Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination);
     Task<ActionResponse<PayrollConcept>> UpdateAsync(PayrollConceptDTO entity);
+
+
 }

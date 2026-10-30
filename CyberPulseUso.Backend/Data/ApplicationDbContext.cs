@@ -81,7 +81,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
 
         builder.Entity<User>()
             .HasOne(x=>x.Charge)
-            .WithMany(x=>x.User)
+            .WithMany(x=>x.Users)
             .HasForeignKey(x=>x.ChargeId)
             .IsRequired(false);
 

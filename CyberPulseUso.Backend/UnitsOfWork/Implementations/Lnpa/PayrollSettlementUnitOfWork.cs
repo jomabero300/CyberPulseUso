@@ -25,4 +25,6 @@ public class PayrollSettlementUnitOfWork : GenericUnitOfWork<PayrollSettlement>,
     public Task<IEnumerable<PayrollSettlement>> GetComboAsync() => _repository.GetComboAsync();
     public Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination) => _repository.GetTotalRecordsAsync(pagination);
     public Task<ActionResponse<PayrollSettlement>> UpdateAsync(PayrollSettlementDTO entity) => _repository.UpdateAsync(entity);
+
+    public async Task<ActionResponse<IEnumerable<PayrollSettlementDTO>>> GetLiqAsync(int id,string Id) => await _repository.GetLiqAsync(id,Id);
 }

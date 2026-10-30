@@ -48,8 +48,8 @@ public class UserRepository : IUserRepository
     public async Task<string> GenerateEmailConfirmationTokenAsync(User user) => await _userManager.GenerateEmailConfirmationTokenAsync(user);
     public async Task<string> GeneratePasswordResetTokenAsync(User user) => await _userManager.GeneratePasswordResetTokenAsync(user);
     public async Task<IEnumerable<User>> GetAsync(UserType userType) => await _context.Users.AsNoTracking().Where(x => x.UserType == userType).OrderBy(x => x.FirstName).ToListAsync();
-    public async Task<User> GetUserAsync(Guid userId) { var user = await _context.Users.Include(x => x.Country).FirstOrDefaultAsync(x => x.Id == userId.ToString()); if (user != null && !string.IsNullOrWhiteSpace(user.Photo)) user.Photo = $"{_configuration["UrlBackend"]}{_configuration["FolderUsers"]}{user.Photo}"; return user!; }
-    public async Task<User> GetUserAsync(string email) { var user = await _context.Users.AsNoTracking().Include(x => x.Country).FirstOrDefaultAsync(x => x.Email == email); if (user != null && !string.IsNullOrWhiteSpace(user.Photo)) user.Photo = $"{_configuration["UrlBackend"]}{_configuration["FolderUsers"]}{user.Photo}"; return user!; }
+    public async Task<User> GetUserAsync(Guid userId) { var user = await _context.Users.Include(x => x.Country).Include(x => x.Charge).FirstOrDefaultAsync(x => x.Id == userId.ToString()); if (user != null && !string.IsNullOrWhiteSpace(user.Photo)) user.Photo = $"{_configuration["UrlBackend"]}{_configuration["FolderUsers"]}{user.Photo}"; return user!; }
+    public async Task<User> GetUserAsync(string email) { var user = await _context.Users.AsNoTracking().Include(x => x.Country).Include(x => x.Charge).FirstOrDefaultAsync(x => x.Email == email); if (user != null && !string.IsNullOrWhiteSpace(user.Photo)) user.Photo = $"{_configuration["UrlBackend"]}{_configuration["FolderUsers"]}{user.Photo}"; return user!; }
     public async Task<bool> IsUserInRoleAsync(User user, string roleName) => await _userManager.IsInRoleAsync(user, roleName);
     public async Task<SignInResult> LoginAsync(LoginDTO model) => await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
     public async Task LogoutAsync() => await _signInManager.SignOutAsync();
@@ -58,7 +58,7 @@ public class UserRepository : IUserRepository
     {
         var oldUser = await _context.Users.FirstOrDefaultAsync(x => x.Email == user.Email);
         if (oldUser == null) return IdentityResult.Failed(new IdentityError { Description = "Usuario no encontrado" });
-        oldUser.FirstName = user.FirstName; oldUser.LastName = user.LastName; oldUser.PhoneNumber = user.PhoneNumber;
+        oldUser.FirstName = user.FirstName; oldUser.LastName = user.LastName; oldUser.PhoneNumber = user.PhoneNumber; oldUser.ChargeId = user.ChargeId;
         if (!string.IsNullOrWhiteSpace(user.Photo) && !user.Photo.Contains(_configuration["FolderUsers"]!)) { var oldImage = !string.IsNullOrWhiteSpace(oldUser.Photo) ? $"{_env.WebRootPath}{_configuration["FolderUsers"]!}{oldUser.Photo}" : ""; oldUser.Photo = await HtmlUtilities.UploadImageAsync(user.Photo, $"{_env.WebRootPath}{_configuration["FolderUsers"]!}", oldImage); }
         return await _userManager.UpdateAsync(oldUser);
     }

@@ -11,7 +11,16 @@ public partial class PayrollSettlementEdit
 {
     private PayrollSettlementForm? PayrollSettlementForm;
 
-    private PayrollSettlementDTO payrollSettlementDTO = new();
+    private List<PayrollSettlementDTO> payrollSettlementDTO = new();
+
+    [Parameter] public double WithholdingPercentage { get; set; } 
+    [Parameter] public double HealthAndPensionDeductions { get; set; }
+
+    [Parameter] public string DialogTitle { get; set; } = string.Empty;
+    [Parameter] public string ChargeName { get; set; } = string.Empty;
+    [Parameter] public string OperatorName { get; set; } = string.Empty;
+
+
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
     [Inject] private IRepository Repository { get; set; } = null!;
     [Inject] private ISqlInjValRepository _sqlValidator { get; set; } = null!;
@@ -22,7 +31,7 @@ public partial class PayrollSettlementEdit
 
     protected override async Task OnInitializedAsync()
     {
-        var responseHttp = await Repository.GetAsync<PayrollSettlementDTO>($"/api/payrollsettlements/{Id}");
+        var responseHttp = await Repository.GetAsync<List<PayrollSettlementDTO>>($"/api/payrollsettlements/{Id}");
 
         if (responseHttp.Error)
         {
@@ -45,11 +54,11 @@ public partial class PayrollSettlementEdit
 
     private async Task EditAsync()
     {
-        if (_sqlValidator.HasSqlInjection(payrollSettlementDTO!.Amount.ToString()))
-        {
-            Snackbar.Add(Localizer["ERR010"], Severity.Error);
-            return;
-        }
+        //if (_sqlValidator.HasSqlInjection(payrollSettlementDTO!.Amount.ToString()))
+        //{
+        //    Snackbar.Add(Localizer["ERR010"], Severity.Error);
+        //    return;
+        //}
         var responseHttp = await Repository.PutAsync("api/payrollsettlements/full", payrollSettlementDTO);
 
         if (responseHttp.Error)

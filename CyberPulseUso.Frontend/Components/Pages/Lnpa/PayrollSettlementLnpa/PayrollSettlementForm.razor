@@ -2,44 +2,118 @@
 
 <EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
 
-	<DataAnnotationsValidator />
+    <DataAnnotationsValidator />
+    <div class="payroll-form-container">
+        <div class="payroll-table-container">
+            <MudTable Items="PayrollSettlementDTO"
+                      Dense="true"
+                      Hover="true"
+                      Striped="true"
+                      Bordered="false"
+                      Elevation="0"
+                      FixedHeader="true"
+                      Height="100%"
+                      Class="payroll-table"
+                      Context="model">
+                <ColGroup>
+                    <col style="width: 35%;" />
+                    <col style="width: 55px;" />
+                    <col style="width: 18%;" />
+                    <col style="width: 18%;" />
+                    <col style="width: 17%;" />
+                </ColGroup>
+                <HeaderContent>
+                    <MudTh Class="col-name">Concepto</MudTh>
+                    <MudTh Class="col-amount">Cantidad</MudTh>
+                    <MudTh Class="col-unit">Valor unitario</MudTh>
+                    <MudTh Class="col-accrued">Devengado</MudTh>
+                    <MudTh Class="col-deducted">Deducido</MudTh>
+                </HeaderContent>
 
+                <RowTemplate>
+                    <MudTd DataLabel="Concepto">
+                        <MudText Typo="Typo.body2">
+                            @model.Name
+                        </MudText>
+                    </MudTd>
+                    <MudTd DataLabel="Cantidad">
+                        <MudNumericField T="int"
+                                         Value="model.Amount"
+                                         ValueChanged="@(value => AmountChanged(model, value))"
+                                         Min="0"
+                                         Variant="Variant.Outlined"
+                                         Margin="Margin.Dense"
+                                         HideSpinButtons="true"
+                                         Class="excel-input"
+                                         Immediate="true" 
+                                         Style="width:45px;" />
+                    </MudTd>
 
+                    <MudTd DataLabel="Valor unitario" Style="text-align: right;">
+                        <MudText Typo="Typo.body2">
+                            @model.UnitValue.ToString("N2")
+                        </MudText>
+                    </MudTd>
 
-	<MudTextField Label="@Localizer["PayrollSettlement"]"
-				  @bind-Value="@PayrollSettlementDTO.Amount"
-				  For="@(() => PayrollSettlementDTO.Amount)"
-				  class="mb-3" />
+                    <MudTd DataLabel="Devengado" Style="text-align: right;">
+                        <MudText Typo="Typo.body2">
+                            @model.AccruedValue.ToString("N2")
+                        </MudText>
+                    </MudTd>
 
+                    <MudTd DataLabel="Deducido" Style="text-align: right;">
+                        <MudText Typo="Typo.body2">
+                            @model.DeductedValue.ToString("N2")
+                        </MudText>
+                    </MudTd>
+                 </RowTemplate>
 
-	<MudAutocomplete T="StatuDTO"
-					 Label=@Localizer["Statu"]
-					 Disabled="_disable"
-					 Placeholder=@Localizer["SelectAStatu"]
-					 SearchFunc="SearchStatu"
-					 Value="selectedStatu"
-					 ValueChanged="StatuChanged"
-					 ToStringFunc="@(e=> e==null?null : $"{e.Name}")"
-					 For="@(() => PayrollSettlementDTO.Statu)">
+            </MudTable>
+        </div>
+        <div class="payroll-total-container">
+            <table class="payroll-total-table">
+                <colgroup>
+                    <col />
+                    <col style="width:110px" />
+                    <col style="width:150px" />
+                    <col style="width:150px" />
+                    <col style="width:150px" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <td colspan="3"><strong>TOTAL</strong></td>
+                        <td class="text-right">
+                            <strong>@totalAccruedValue.ToString("N2")</strong>
+                        </td>
+                        <td class="text-right">
+                            <strong>@totalDeductedValue.ToString("N2")</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="total-payable-label">
+                            <strong>TOTAL A PAGAR</strong>
+                        </td>
+                        <td class="text-right total-payable-value">
+                            <strong>@totalToPay.ToString("N2")</strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="payroll-actions">
+            <MudButton Variant="Variant.Outlined"
+                        StartIcon="@Icons.Material.Filled.ArrowBack"
+                    Color="Color.Info"
+                OnClick="ReturnAction">
+                @Localizer["Return"]
+            </MudButton>
+            <MudButton Variant="Variant.Outlined"
+                StartIcon="@Icons.Material.Filled.Check"
+                Color="Color.Primary"
+                ButtonType="ButtonType.Submit">
+            @Localizer["SaveChanges"]
+            </MudButton>
 
-		<ItemTemplate Context="itemContext">
-			@itemContext.Name
-		</ItemTemplate>
-	</MudAutocomplete>
-
-	<MudButton Variant="Variant.Outlined"
-			   class="mt-5"
-			   StartIcon="@Icons.Material.Filled.ArrowBack"
-			   Color="Color.Info"
-			   OnClick="ReturnAction">
-		@Localizer["Return"]
-	</MudButton>
-
-	<MudButton Variant="Variant.Outlined"
-  			   class="mt-5"
-			   StartIcon="@Icons.Material.Filled.Check"
-			   Color="Color.Primary"
-			   ButtonType="ButtonType.Submit">
-		@Localizer["SaveChanges"]
-	</MudButton>
+        </div>
+    </div>
 </EditForm>

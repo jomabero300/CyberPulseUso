@@ -23,4 +23,6 @@ public class PayrollConcept
 
     public int? LRPId { get; set; }
     public LaborRemunerationParameters? LRP { get; set; }
+
+    public ICollection<PayrollSettlement>? payrollSettlements { get; set; }
 }

@@ -3,6 +3,7 @@ using CyberPulseUso.Backend.Helpers;
 using CyberPulseUso.Backend.Repositories.Interfaces.Lnpa;
 using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.EntitiesDTO;
+using CyberPulseUso.Shared.EntitiesDTO.Gene;
 using CyberPulseUso.Shared.EntitiesDTO.Lnpa;
 using CyberPulseUso.Shared.Responses;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,6 @@ public class LaborRemunerationParametersValueRepository : GenericRepository<Labo
             return new ActionResponse<LaborRemunerationParametersValue> { WasSuccess = false, Message = "ERR001" };
         return new ActionResponse<LaborRemunerationParametersValue> { WasSuccess = true, Result = entity };
     }
-
     public override async Task<ActionResponse<LaborRemunerationParametersValue>> DeleteAsync(int id)
     {
         var entity = await _context.Set<LaborRemunerationParametersValue>().AsNoTracking()
@@ -46,7 +46,6 @@ public class LaborRemunerationParametersValueRepository : GenericRepository<Labo
             return new ActionResponse<LaborRemunerationParametersValue> { WasSuccess = false, Message = "ERR002" };
         }
     }
-
     public override async Task<ActionResponse<IEnumerable<LaborRemunerationParametersValue>>> GetAsync(PaginationDTO pagination)
     {
         IQueryable<LaborRemunerationParametersValue> query = _context.Set<LaborRemunerationParametersValue>().AsNoTracking();
@@ -68,7 +67,6 @@ public class LaborRemunerationParametersValueRepository : GenericRepository<Labo
             Result = await query.Paginate(pagination).ToListAsync()
         };
     }
-
     public async Task<ActionResponse<LaborRemunerationParametersValue>> AddAsync(LaborRemunerationParametersValueDTO entity)
     {
         var model = new LaborRemunerationParametersValue();
@@ -88,13 +86,11 @@ public class LaborRemunerationParametersValueRepository : GenericRepository<Labo
             return new ActionResponse<LaborRemunerationParametersValue> { WasSuccess = false, Message = ex.Message };
         }
     }
-
     public async Task<IEnumerable<LaborRemunerationParametersValue>> GetComboAsync()
     {
         return await _context.Set<LaborRemunerationParametersValue>().AsNoTracking()
             .OrderBy(x => x.Id).ToListAsync();
     }
-
     public async Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination)
     {
         //IQueryable<LaborRemunerationParametersValue> query = _context.Set<LaborRemunerationParametersValue>().AsNoTracking();
@@ -120,7 +116,6 @@ public class LaborRemunerationParametersValueRepository : GenericRepository<Labo
 
         return new ActionResponse<int> { WasSuccess = true, Result = totalRecords };
     }
-
     public async Task<ActionResponse<LaborRemunerationParametersValue>> UpdateAsync(LaborRemunerationParametersValueDTO entity)
     {
         var model = await _context.Set<LaborRemunerationParametersValue>().FindAsync(entity.Id);
@@ -142,7 +137,6 @@ public class LaborRemunerationParametersValueRepository : GenericRepository<Labo
             return new ActionResponse<LaborRemunerationParametersValue> { WasSuccess = false, Message = ex.Message };
         }
     }
-
     private static void CopyMatchingProperties(object source, object target, bool isUpdate)
     {
         var sourceProperties = source.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);

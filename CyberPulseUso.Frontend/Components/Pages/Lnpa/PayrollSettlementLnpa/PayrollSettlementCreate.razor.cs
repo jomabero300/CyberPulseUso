@@ -10,7 +10,16 @@ namespace CyberPulseUso.Frontend.Components.Pages.Lnpa.PayrollSettlementLnpa;
 public partial class PayrollSettlementCreate
 {
     private PayrollSettlementForm? PayrollSettlementForm;
-    private PayrollSettlementDTO payrollSettlementDTO = new();
+    private List<PayrollSettlementDTO> payrollSettlementDTO = new();
+
+    [Parameter] public double WithholdingPercentage { get; set; } 
+    [Parameter] public double HealthAndPensionDeductions { get; set; } 
+
+    [Parameter] public string DialogTitle { get; set; } = string.Empty;
+    [Parameter] public string ChargeName { get; set; } = string.Empty;
+    [Parameter] public string OperatorName { get; set; } = string.Empty;
+
+
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
     [Inject] private IRepository Repository { get; set; } = null!;
     [Inject] private ISqlInjValRepository _sqlValidator { get; set; } = null!;
@@ -20,11 +29,11 @@ public partial class PayrollSettlementCreate
 
     private async Task CreateAsync()
     {
-        if (_sqlValidator.HasSqlInjection(payrollSettlementDTO!.Amount.ToString()))
-        {
-            Snackbar.Add(Localizer["ERR010"], Severity.Error);
-            return;
-        }
+        //if (_sqlValidator.HasSqlInjection(payrollSettlementDTO!.Amount.ToString()))
+        //{
+        //    Snackbar.Add(Localizer["ERR010"], Severity.Error);
+        //    return;
+        //}
         var responseHttp = await Repository.PostAsync("/api/payrollsettlements/full", payrollSettlementDTO);
 
         if (responseHttp.Error)

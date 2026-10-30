@@ -1,0 +1,168 @@
+/* =========================================
+   TABLA DE LIQUIDACIÓN
+   ========================================= */
+/* Tipografía general */
+.payroll-table {
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: -0.15px;
+}
+
+/* Distribución de columnas */
+.payroll-table ::deep table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+/* Celdas: reducir altura y espacios */
+.payroll-table ::deep .mud-table-cell {
+    padding: 0px 4px !important;
+    height: 20px !important;
+    min-height: 20px !important;
+    line-height: 1 !important;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    font-size: 10px !important;
+    font-weight: 400;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+/* Encabezados */
+    .payroll-table ::deep .mud-table-head .mud-table-cell {
+        padding: 2px 4px !important;
+        height: 23px !important;
+        font-size: 10px !important;
+        font-weight: 600;
+        letter-spacing: 0.1px;
+        text-transform: uppercase;
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background-color: var(--mud-palette-surface);
+    }
+    /* Reducir altura del contenido MudText */
+    .payroll-table ::deep .mud-typography {
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 1 !important;
+        font-size: 10px !important;
+    }
+/* =========================================
+   CAMPO CANTIDAD
+   ========================================= */
+    .payroll-table ::deep .excel-input .mud-input,
+    .payroll-table ::deep .excel-input input {
+        min-height: 19px !important;
+        height: 19px !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        font-size: 10px !important;
+    }
+.payroll-table ::deep .excel-input,
+.payroll-table ::deep .excel-input .mud-input-control,
+.payroll-table ::deep .excel-input .mud-input-control-input-container {
+    width: 45px !important;
+    min-width: 45px !important;
+    max-width: 45px !important;
+    margin: 0 !important;
+    box-sizing: border-box;
+}
+
+    .payroll-table ::deep .excel-input .mud-input {
+        width: 45px !important;
+        min-width: 45px !important;
+        min-height: 23px !important;
+        height: 23px !important;
+    }
+
+    .payroll-table ::deep .excel-input input {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 23px !important;
+        padding: 1px 3px !important;
+        text-align: right;
+        font-size: 11px !important;
+        box-sizing: border-box;
+    }
+
+/* Otros campos numéricos */
+.payroll-table ::deep input {
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    font-size: 11px !important;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+}
+
+/* =========================================
+   CONTENEDOR Y DESPLAZAMIENTO
+   ========================================= */
+
+.payroll-form-container {
+    display: flex;
+    flex-direction: column;
+    height: 60vh;
+    min-height: 350px;
+    max-height: 700px;
+    overflow: hidden;
+}
+
+.payroll-table-container {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+    .payroll-table-container ::deep .mud-table-container {
+        overflow: visible;
+    }
+
+/* =========================================
+   TOTALES
+   ========================================= */
+
+.payroll-total-container {
+    flex: 0 0 auto;
+    background-color: var(--mud-palette-surface);
+    border-top: 1px solid var(--mud-palette-divider);
+}
+
+.payroll-total-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+    .payroll-total-table td {
+        padding: 8px 6px;
+        font-size: 12px;
+        border: none;
+    }
+
+    .payroll-total-table .text-right {
+        text-align: right;
+        padding-right: 25px !important;
+    }
+.payroll-total-label,
+.total-payable-label {
+    text-align: right;
+    padding-right: 25px !important;
+}
+.total-payable-value {
+    font-weight: 700;
+}
+/* =========================================
+   BOTONES
+   ========================================= */
+
+.payroll-actions {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0 4px;
+    background-color: var(--mud-palette-surface);
+    border-top: 1px solid var(--mud-palette-divider);
+}

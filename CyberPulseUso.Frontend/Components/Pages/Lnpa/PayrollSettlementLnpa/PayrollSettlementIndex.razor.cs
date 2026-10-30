@@ -103,23 +103,48 @@ public partial class PayrollSettlementIndex
     }
     private async Task ShowModalAsync(int id = 0, bool isEdit = false)
     {
-        var options = new DialogOptions() { CloseOnEscapeKey = true, CloseButton = false, BackdropClick = false };
+        var options = new DialogOptions() { CloseOnEscapeKey = true, CloseButton = false, BackdropClick = false, MaxWidth = MaxWidth.Medium };
 
         IDialogReference? dialog;
+
+
+        var title = isEdit
+            ? $"{Localizer["Edit"]} {Localizer["PayrollSettlement"]}"
+            : $"{Localizer["New"]} {Localizer["PayrollSettlement"]}";
+
 
         if (isEdit)
         {
 
             var parameters = new DialogParameters
-            {
-                { "Id", id }
-            };
-            dialog = await DialogService.ShowAsync<PayrollSettlementEdit>($"{Localizer["Edit"]} {Localizer["PayrollSettlement"]}", parameters, options);
+                {
+                    { "Id", id },
+                    { "DialogTitle", title },
+                    { "ChargeName", "Operador Tòcnico"  },
+                    { "OperatorName", "JOSE MANUEL BELLO ROMERO " },
+                    { "WithholdingPercentage",5d},
+                    { "HealthAndPensionDeductions",3d}
+                };
+
+
+
+            dialog = await DialogService.ShowAsync<PayrollSettlementEdit>(title, parameters, options);
         }
         else
         {
-            dialog = await DialogService.ShowAsync<PayrollSettlementCreate>($"{Localizer["New"]} {Localizer["PayrollSettlement"]}", options);
+
+            var parameters = new DialogParameters
+                {
+                    { "DialogTitle", title },
+                    { "ChargeName", "Operador Tòcnico" },
+                    { "OperatorName", "JOSE MANUEL BELLO ROMERO"},
+                    { "WithholdingPercentage",5d},
+                    { "HealthAndPensionDeductions",3d}
+                };
+
+            dialog = await DialogService.ShowAsync<PayrollSettlementCreate>(title, parameters, options);
         }
+    
 
         var result = await dialog.Result;
 

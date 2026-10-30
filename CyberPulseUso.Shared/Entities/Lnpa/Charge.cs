@@ -23,5 +23,5 @@ public class Charge
     public int StatuId { get; set; }
     public Statu? Statu { get; set; }
 
-    public ICollection<User>? User { get; set; }
+    public ICollection<User>? Users { get; set; }
 }

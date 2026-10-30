@@ -1,5 +1,4 @@
-﻿using CyberPulseUso.Backend.Data;
-using CyberPulseUso.Backend.Helpers;
+﻿using CyberPulseUso.Backend.Helpers;
 using CyberPulseUso.Backend.Repositories.Interfaces;
 using CyberPulseUso.Shared.EntitiesDTO;
 using CyberPulseUso.Shared.Responses;

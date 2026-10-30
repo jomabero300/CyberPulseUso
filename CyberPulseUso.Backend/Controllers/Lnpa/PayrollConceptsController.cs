@@ -1,9 +1,11 @@
 using CyberPulseUso.Backend.Controllers.Gene;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces;
+using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Gene;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Lnpa;
 using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.EntitiesDTO;
 using CyberPulseUso.Shared.EntitiesDTO.Lnpa;
+using DocumentFormat.OpenXml.Presentation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -72,4 +74,5 @@ public class PayrollConceptsController : GenericController<PayrollConcept>
     [AllowAnonymous]
     [HttpGet("Combo")]
     public async Task<IActionResult> GetComboAsync() => Ok(await _modelUnitOfWork.GetComboAsync());
+
 }

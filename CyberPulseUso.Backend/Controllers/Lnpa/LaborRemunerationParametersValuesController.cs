@@ -1,5 +1,6 @@
 using CyberPulseUso.Backend.Controllers.Gene;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces;
+using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Gene;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Lnpa;
 using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.EntitiesDTO;
@@ -16,6 +17,7 @@ namespace CyberPulseUso.Backend.Controllers.Lnpa;
 public class LaborRemunerationParametersValuesController : GenericController<LaborRemunerationParametersValue>
 {
     private readonly ILaborRemunerationParametersValueUnitOfWork _modelUnitOfWork;
+    
 
     public LaborRemunerationParametersValuesController(IGenericUnitOfWork<LaborRemunerationParametersValue> unitOfWork, ILaborRemunerationParametersValueUnitOfWork modelUnitOfWork)
         : base(unitOfWork)

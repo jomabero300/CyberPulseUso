@@ -22,5 +22,8 @@ public class Group
     public int StatuId { get; set; }
     public Statu? Statu { get; set; }
     public Category? Category { get; set; }
+    public ICollection<LaborRemunerationParametersValue>? LaborRemunerationParametersValues { get; set; }
+    public ICollection<Charge>? Charges { get; set; }
+
 
 }

@@ -25,4 +25,5 @@ public class LaborRemunerationParametersValueUnitOfWork : GenericUnitOfWork<Labo
     public Task<IEnumerable<LaborRemunerationParametersValue>> GetComboAsync() => _repository.GetComboAsync();
     public Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination) => _repository.GetTotalRecordsAsync(pagination);
     public Task<ActionResponse<LaborRemunerationParametersValue>> UpdateAsync(LaborRemunerationParametersValueDTO entity) => _repository.UpdateAsync(entity);
+
 }

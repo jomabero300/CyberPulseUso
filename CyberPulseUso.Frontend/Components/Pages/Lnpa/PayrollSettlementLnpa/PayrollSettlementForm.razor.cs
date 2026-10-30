@@ -16,13 +16,17 @@ public partial class PayrollSettlementForm
 
     private StatuDTO selectedStatu = new();
     private List<StatuDTO>? status;
-
-
-
     private bool loading;
     private bool _disable;
 
-    [EditorRequired, Parameter] public PayrollSettlementDTO PayrollSettlementDTO { get; set; } = null!;
+
+    //private const double WithholdingPercentage = 10d;
+
+    private double totalAccruedValue;
+    private double totalDeductedValue;
+    private double totalToPay => totalAccruedValue - totalDeductedValue;
+
+    [EditorRequired, Parameter] public List<PayrollSettlementDTO> PayrollSettlementDTO { get; set; } = null!;
     [EditorRequired, Parameter] public EventCallback OnValidSubmit { get; set; }
     [EditorRequired, Parameter] public EventCallback ReturnAction { get; set; }
 
@@ -30,6 +34,10 @@ public partial class PayrollSettlementForm
     [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
     [Inject] private IStringLocalizer<Literals> Localizer { get; set; } = null!;
     public bool FormPostedSuccessfully { get; set; } = false;
+    [Parameter] public double WithholdingPercentage { get; set; } 
+    [Parameter] public double HealthAndPensionDeductions { get; set; }
+
+
     protected override void OnInitialized()
     {
         editContext = new(PayrollSettlementDTO);
@@ -39,20 +47,7 @@ public partial class PayrollSettlementForm
     {
         loading = true;
 
-        await LoadStatusAsync();
-
-        if (PayrollSettlementDTO.Id > 0)
-        {
-            selectedStatu = status!.FirstOrDefault(x => x.Id == PayrollSettlementDTO.StatuId)!;
-        }
-        else
-        {
-            _disable = true;
-            selectedStatu = status!.FirstOrDefault(x => x.Name == "Activo")!;
-        }
-
-        PayrollSettlementDTO.Statu = selectedStatu;
-        PayrollSettlementDTO.StatuId = selectedStatu.Id;
+        await LoadPayrollSettlementsAsync();
 
         loading = false;
     }
@@ -83,10 +78,9 @@ public partial class PayrollSettlementForm
         context.PreventNavigation();
     }
 
-
-    private async Task LoadStatusAsync()
+    private async Task LoadPayrollSettlementsAsync()
     {
-        var responseHttp = await Repository.GetAsync<List<StatuDTO>>("/api/status/combo/0");
+        var responseHttp = await Repository.GetAsync<List<PayrollSettlementDTO>>("/api/PayrollSettlements/Sett");
 
         if (responseHttp.Error)
         {
@@ -95,24 +89,67 @@ public partial class PayrollSettlementForm
             return;
         }
 
-        status = responseHttp.Response;
+        PayrollSettlementDTO = responseHttp.Response!;
+        CalculateTotals();
     }
-    private async Task<IEnumerable<StatuDTO>> SearchStatu(string searchText, CancellationToken cancellationToken)
+
+
+    private void AmountChanged(PayrollSettlementDTO item, int value)
     {
-        await Task.Delay(5);
-        if (string.IsNullOrWhiteSpace(searchText))
+        item.Amount = value;
+
+        // Recalcular el valor devengado del registro
+        item.AccruedValue = item.Amount * item.UnitValue;
+
+        //// Notificar el cambio al EditContext
+        //editContext.NotifyFieldChanged(
+        //    new FieldIdentifier(item, nameof(item.Amount)));
+        CalculateTotals();
+        StateHasChanged();
+    }
+
+    private void CalculateTotals()
+    {
+        if (PayrollSettlementDTO is null)
+            return;
+
+        // Total devengado
+        totalAccruedValue = PayrollSettlementDTO?.Sum(x => x.AccruedValue) ?? 0d;
+
+        // Buscar el concepto de retención en la fuente
+        var withholdingConcept = PayrollSettlementDTO!.FirstOrDefault(x => x.PayrollConceptId == 16);
+
+        if (withholdingConcept is not null)
         {
-            return status!;
+            // Calcular retención en la fuente
+            withholdingConcept.DeductedValue =
+                (totalAccruedValue * WithholdingPercentage) / 100;
         }
 
-        return status!
-            .Where(x => x.Name.Contains(searchText, StringComparison.InvariantCultureIgnoreCase))
-            .ToList();
-    }
-    private void StatuChanged(StatuDTO entity)
-    {
-        selectedStatu = entity;
-        PayrollSettlementDTO.StatuId = entity.Id;
-        PayrollSettlementDTO.Statu = entity;
+        //aportes a dalud y pension
+        var HealthConcept = PayrollSettlementDTO!.FirstOrDefault(x => x.PayrollConceptId == 17);
+        var PensionConcept = PayrollSettlementDTO!.FirstOrDefault(x => x.PayrollConceptId == 18);
+
+        if (HealthConcept is not null)
+        {
+            // Calcular retención en la fuente
+            HealthConcept!.DeductedValue =
+                totalAccruedValue * HealthAndPensionDeductions / 100d;
+            PensionConcept!.DeductedValue =
+                totalAccruedValue * HealthAndPensionDeductions / 100d;
+        }
+
+        //DESCUENTO CUOTA SINDICAL 2%
+        var UnionDuesDeduction = PayrollSettlementDTO!.FirstOrDefault(x => x.PayrollConceptId == 19);
+        //SALARIO BÁSICO DIARIO ACTUAL (Dia)
+        var CurrentDayliBbaseSalary = PayrollSettlementDTO!.FirstOrDefault(x => x.PayrollConceptId == 1);
+
+        UnionDuesDeduction!.DeductedValue = ((CurrentDayliBbaseSalary!.Amount * CurrentDayliBbaseSalary.UnitValue) * 1) / 100;
+
+        //DESCUENTO SOLIDARIDAD 2%
+        var SolidarityDiscount = PayrollSettlementDTO!.FirstOrDefault(x => x.PayrollConceptId == 20);
+        SolidarityDiscount!.DeductedValue = ((CurrentDayliBbaseSalary!.Amount * CurrentDayliBbaseSalary.UnitValue) * 1) / 100;
+        // Total deducido
+        totalDeductedValue = PayrollSettlementDTO?.Sum(x => x.DeductedValue) ?? 0d;
     }
 }
