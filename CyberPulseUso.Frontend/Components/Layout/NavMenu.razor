@@ -21,9 +21,9 @@
         </Authorized>
     </AuthorizeView>
 
-    <AuthorizeView Roles="work,SAdm">
+    <AuthorizeView Roles="SAdm,Admi,work">
         <Authorized>
-            <MudNavGroup Title="@Localizer["Processes"]" Expanded="false">
+            <MudNavGroup Title="@Localizer["Processes"]" Expanded="false" Icon="@Icons.Material.Filled.Memory">
                 <MudNavLink Href="payrollsettlements" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Payment" IconColor="Color.Warning"> @Localizer["Payrollsettlements"]</MudNavLink>
             </MudNavGroup>
         </Authorized>

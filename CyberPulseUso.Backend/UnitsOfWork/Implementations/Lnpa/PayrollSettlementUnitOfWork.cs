@@ -21,10 +21,13 @@ public class PayrollSettlementUnitOfWork : GenericUnitOfWork<PayrollSettlement>,
     public override Task<ActionResponse<PayrollSettlement>> GetAsync(int id) => _repository.GetAsync(id);
     public override Task<ActionResponse<IEnumerable<PayrollSettlement>>> GetAsync(PaginationDTO pagination) => _repository.GetAsync(pagination);
     public override Task<ActionResponse<PayrollSettlement>> DeleteAsync(int id) => _repository.DeleteAsync(id);
-    public Task<ActionResponse<PayrollSettlement>> AddAsync(PayrollSettlementDTO entity) => _repository.AddAsync(entity);
+    public Task<ActionResponse<IEnumerable<PayrollSettlement>>> AddAsync(IEnumerable<PayrollSettlementDTO> entity) => _repository.AddAsync(entity);
     public Task<IEnumerable<PayrollSettlement>> GetComboAsync() => _repository.GetComboAsync();
     public Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination) => _repository.GetTotalRecordsAsync(pagination);
-    public Task<ActionResponse<PayrollSettlement>> UpdateAsync(PayrollSettlementDTO entity) => _repository.UpdateAsync(entity);
 
     public async Task<ActionResponse<IEnumerable<PayrollSettlementDTO>>> GetLiqAsync(int id,string Id) => await _repository.GetLiqAsync(id,Id);
+
+    public async Task<ActionResponse<IEnumerable<PayrollSettlementDTO>>> GetAsync(DateTime fecha, int Id, string id) => await _repository.GetAsync(fecha, Id, id);
+
+    public async Task<ActionResponse<List<PayrollSettlement>>> UpdateAsync(List<PayrollSettlementDTO> entity) => await _repository.UpdateAsync(entity);
 }

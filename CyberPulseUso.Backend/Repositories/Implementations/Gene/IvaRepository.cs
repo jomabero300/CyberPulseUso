@@ -20,7 +20,9 @@ public class IvaRepository : GenericRepository<Iva>, IIvaRepository
     {
         var queryable = _context.Ivas.AsNoTracking().Include(x => x.Statu).AsQueryable();
         if (!string.IsNullOrWhiteSpace(pagination.Filter)) queryable = queryable.Where(x => x.Name.ToLower().Contains(pagination.Filter.ToLower()) || x.Statu!.Name.ToLower().Contains(pagination.Filter.ToLower()) || x.Worth.ToString().ToLower().Contains(pagination.Filter.ToLower()));
-        return new ActionResponse<IEnumerable<Iva>> { WasSuccess = true, Result = await queryable.OrderBy(x => x.Name).Paginate(pagination).ToListAsync() };
+        return new ActionResponse<IEnumerable<Iva>> { 
+            WasSuccess = true, 
+            Result = await queryable.OrderBy(x => x.Name).Paginate(pagination).ToListAsync() };
     }
     public override async Task<ActionResponse<Iva>> DeleteAsync(int id)
     {

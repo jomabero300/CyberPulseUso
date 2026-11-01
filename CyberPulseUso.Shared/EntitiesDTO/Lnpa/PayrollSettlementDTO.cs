@@ -8,6 +8,10 @@ public class PayrollSettlementDTO
 {
     public int Id { get; set; }
 
+    [Display(Name = "Date", ResourceType = typeof(Literals))]
+    [Required(ErrorMessageResourceName = "RequiredField", ErrorMessageResourceType = typeof(Literals))]
+    public DateTime Date { get; set; }
+
     public string? UserId { get; set; }
 
     public int ChargeId { get; set; }

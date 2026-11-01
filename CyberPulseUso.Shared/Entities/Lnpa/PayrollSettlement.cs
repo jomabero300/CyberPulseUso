@@ -10,6 +10,10 @@ public class PayrollSettlement
 {
     public int Id { get; set; }
 
+    [Display(Name = "Date", ResourceType = typeof(Literals))]
+    [Required(ErrorMessageResourceName = "RequiredField", ErrorMessageResourceType = typeof(Literals))]
+    public DateTime Date { get; set; }
+
     [Display(Name = "User", ResourceType = typeof(Literals))]
     [Required(ErrorMessageResourceName = "RequiredField", ErrorMessageResourceType = typeof(Literals))]
     public string? UserId { get; set; }

@@ -31,9 +31,25 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
         return response.WasSuccess ? Ok(response.Result) : BadRequest(response.Message);
     }
 
+    [HttpGet("full/{fecha}/{id}/{UserId}")]
+    public async Task<IActionResult> GetAsync(DateTime fecha, int id,string UserId)
+    {
+        var response = await _modelUnitOfWork.GetAsync(fecha, id, UserId);
+        return response.WasSuccess ? Ok(response.Result) : BadRequest(response.Message);
+    }
+
     [HttpGet("paginated")]
     public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
     {
+        if (User.IsInRole("work"))
+        {
+            var email = User.Identity?.Name;
+            if (string.IsNullOrWhiteSpace(email)) return Unauthorized();
+            var result = await _userUnitOfWork.GetUserAsync(email);
+            if (result.ChargeId == null) return BadRequest("El usuario no tiene un cargo asignado.");
+            pagination.Email = result.Id;
+        }
+        
         var response = await _modelUnitOfWork.GetAsync(pagination);
         return response.WasSuccess ? Ok(response.Result) : BadRequest(response.Message);
     }
@@ -46,14 +62,14 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
     }
 
     [HttpPost("full")]
-    public async Task<IActionResult> PostAsync([FromBody] PayrollSettlementDTO entity)
+    public async Task<IActionResult> PostAsync([FromBody] List<PayrollSettlementDTO> entity)
     {
         var response = await _modelUnitOfWork.AddAsync(entity);
         return response.WasSuccess ? Ok(response.Result) : BadRequest(response.Message);
     }
 
     [HttpPut("full")]
-    public async Task<IActionResult> PutAsync([FromBody] PayrollSettlementDTO entity)
+    public async Task<IActionResult> PutAsync([FromBody] List<PayrollSettlementDTO> entity)
     {
         var response = await _modelUnitOfWork.UpdateAsync(entity);
         return response.WasSuccess ? Ok(response.Result) : BadRequest(response.Message);
@@ -62,6 +78,15 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
     [HttpGet("TotalRecordsPaginated")]
     public async Task<IActionResult> GetTotalRecordsAsync([FromQuery] PaginationDTO pagination)
     {
+        if (User.IsInRole("work"))
+        { 
+            var email = User.Identity?.Name;
+            if (string.IsNullOrWhiteSpace(email)) return Unauthorized();
+            var result = await _userUnitOfWork.GetUserAsync(email);
+            if (result.ChargeId == null) return BadRequest("El usuario no tiene un cargo asignado.");
+            pagination.Email = result.Id;
+        }
+
         var response = await _modelUnitOfWork.GetTotalRecordsAsync(pagination);
 
         if (response.WasSuccess)

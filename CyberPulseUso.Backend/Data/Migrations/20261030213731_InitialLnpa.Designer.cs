@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CyberPulseUso.Backend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20261029014738_InitialLnpa")]
+    [Migration("20261030213731_InitialLnpa")]
     partial class InitialLnpa
     {
         /// <inheritdoc />
@@ -570,6 +570,9 @@ namespace CyberPulseUso.Backend.Data.Migrations
                     b.Property<int>("ChargeId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<double>("DeductedValue")
                         .HasMaxLength(80)
                         .HasColumnType("float");
@@ -781,7 +784,7 @@ namespace CyberPulseUso.Backend.Data.Migrations
             modelBuilder.Entity("CyberPulseUso.Shared.Entities.Gene.User", b =>
                 {
                     b.HasOne("CyberPulseUso.Shared.Entities.Lnpa.Charge", "Charge")
-                        .WithMany("User")
+                        .WithMany("Users")
                         .HasForeignKey("ChargeId")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -810,7 +813,7 @@ namespace CyberPulseUso.Backend.Data.Migrations
             modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.Charge", b =>
                 {
                     b.HasOne("CyberPulseUso.Shared.Entities.Lnpa.Group", "Group")
-                        .WithMany()
+                        .WithMany("Charges")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -889,7 +892,7 @@ namespace CyberPulseUso.Backend.Data.Migrations
             modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.LaborRemunerationParametersValue", b =>
                 {
                     b.HasOne("CyberPulseUso.Shared.Entities.Lnpa.Group", "Group")
-                        .WithMany()
+                        .WithMany("LaborRemunerationParametersValues")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -940,7 +943,7 @@ namespace CyberPulseUso.Backend.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("CyberPulseUso.Shared.Entities.Lnpa.PayrollConcept", "PayrollConcept")
-                        .WithMany()
+                        .WithMany("payrollSettlements")
                         .HasForeignKey("PayrollConceptId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1036,12 +1039,24 @@ namespace CyberPulseUso.Backend.Data.Migrations
 
             modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.Charge", b =>
                 {
-                    b.Navigation("User");
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.Group", b =>
+                {
+                    b.Navigation("Charges");
+
+                    b.Navigation("LaborRemunerationParametersValues");
                 });
 
             modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.LaborRemunerationParameters", b =>
                 {
                     b.Navigation("PayrollConcepts");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.PayrollConcept", b =>
+                {
+                    b.Navigation("payrollSettlements");
                 });
 #pragma warning restore 612, 618
         }

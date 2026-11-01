@@ -7,14 +7,16 @@ namespace CyberPulseUso.Backend.Repositories.Interfaces.Lnpa;
 
 public interface IPayrollSettlementRepository
 {
-    Task<ActionResponse<PayrollSettlement>> AddAsync(PayrollSettlementDTO entity);
+    Task<ActionResponse<IEnumerable<PayrollSettlement>>> AddAsync(IEnumerable<PayrollSettlementDTO> entity);
     Task<ActionResponse<PayrollSettlement>> DeleteAsync(int id);
     Task<ActionResponse<IEnumerable<PayrollSettlement>>> GetAsync();
     Task<ActionResponse<PayrollSettlement>> GetAsync(int id);
     Task<ActionResponse<IEnumerable<PayrollSettlement>>> GetAsync(PaginationDTO pagination);
     Task<IEnumerable<PayrollSettlement>> GetComboAsync();
     Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination);
-    Task<ActionResponse<PayrollSettlement>> UpdateAsync(PayrollSettlementDTO entity);
-
+    //Task<ActionResponse<PayrollSettlement>> UpdateAsync(PayrollSettlementDTO entity);
+    Task<ActionResponse<List<PayrollSettlement>>> UpdateAsync(List<PayrollSettlementDTO> entity);
     Task<ActionResponse<IEnumerable<PayrollSettlementDTO>>> GetLiqAsync(int id,string Id);
+    Task<ActionResponse<IEnumerable<PayrollSettlementListDTO>>> GetAsync(string Id);
+    Task<ActionResponse<IEnumerable<PayrollSettlementDTO>>> GetAsync(DateTime fecha, int Id,string id);
 }

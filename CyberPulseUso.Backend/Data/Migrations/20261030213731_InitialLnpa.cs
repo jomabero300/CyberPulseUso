@@ -276,6 +276,7 @@ namespace CyberPulseUso.Backend.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ChargeId = table.Column<int>(type: "int", nullable: false),
                     PayrollConceptId = table.Column<int>(type: "int", nullable: false),

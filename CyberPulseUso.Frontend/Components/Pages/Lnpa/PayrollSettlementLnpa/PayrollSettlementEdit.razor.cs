@@ -12,14 +12,15 @@ public partial class PayrollSettlementEdit
     private PayrollSettlementForm? PayrollSettlementForm;
 
     private List<PayrollSettlementDTO> payrollSettlementDTO = new();
-
-    [Parameter] public double WithholdingPercentage { get; set; } 
-    [Parameter] public double HealthAndPensionDeductions { get; set; }
-
+    
+    [Parameter] public DateTime Date { get; set; }
+    [Parameter] public int ChargeId { get; set; }
+    [Parameter] public string UserId { get; set; }
     [Parameter] public string DialogTitle { get; set; } = string.Empty;
     [Parameter] public string ChargeName { get; set; } = string.Empty;
     [Parameter] public string OperatorName { get; set; } = string.Empty;
-
+    [Parameter] public double WithholdingPercentage { get; set; } 
+    [Parameter] public double HealthAndPensionDeductions { get; set; }
 
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
     [Inject] private IRepository Repository { get; set; } = null!;
@@ -27,11 +28,11 @@ public partial class PayrollSettlementEdit
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
     [Inject] private IStringLocalizer<Literals> Localizer { get; set; } = null!;
-    [Parameter] public int Id { get; set; }
-
     protected override async Task OnInitializedAsync()
     {
-        var responseHttp = await Repository.GetAsync<List<PayrollSettlementDTO>>($"/api/payrollsettlements/{Id}");
+        string fechaFormateada = Date.ToString("yyyy-MM-ddTHH:mm:ss");
+        int id = ChargeId;
+        var responseHttp = await Repository.GetAsync<List<PayrollSettlementDTO>>($"/api/payrollsettlements/full/{fechaFormateada}/{id}/{UserId}");
 
         if (responseHttp.Error)
         {

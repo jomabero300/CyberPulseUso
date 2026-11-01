@@ -1,3 +1,4 @@
+using CyberPulseUso.Frontend.Components.Pages.Lnpa.CategorysLnpa;
 using CyberPulseUso.Frontend.Components.Pages.Shared;
 using CyberPulseUso.Frontend.Repositories;
 using CyberPulseUso.Shared.Entities.Lnpa;
@@ -101,7 +102,7 @@ public partial class PayrollSettlementIndex
 
         await table.ReloadServerData();
     }
-    private async Task ShowModalAsync(int id = 0, bool isEdit = false)
+    private async Task ShowModalAsync(int id = 0,string _date="", string UserId="" ,bool isEdit = false)
     {
         var options = new DialogOptions() { CloseOnEscapeKey = true, CloseButton = false, BackdropClick = false, MaxWidth = MaxWidth.Medium };
 
@@ -115,18 +116,17 @@ public partial class PayrollSettlementIndex
 
         if (isEdit)
         {
-
             var parameters = new DialogParameters
                 {
-                    { "Id", id },
+                    { "UserId", UserId },
+                    { "Date", DateTime.Parse(_date) },
+                    { "ChargeId", id},
                     { "DialogTitle", title },
                     { "ChargeName", "Operador Tòcnico"  },
                     { "OperatorName", "JOSE MANUEL BELLO ROMERO " },
                     { "WithholdingPercentage",5d},
                     { "HealthAndPensionDeductions",3d}
                 };
-
-
 
             dialog = await DialogService.ShowAsync<PayrollSettlementEdit>(title, parameters, options);
         }
@@ -148,7 +148,7 @@ public partial class PayrollSettlementIndex
 
         var result = await dialog.Result;
 
-        if (result!.Canceled)
+        if (result is { Canceled: false })
         {
             await LoadTotalRecordsAsync();
 

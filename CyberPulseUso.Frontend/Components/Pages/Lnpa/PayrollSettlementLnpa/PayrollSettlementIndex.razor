@@ -1,6 +1,6 @@
 ﻿@page "/payrollsettlements"
 
-<AuthorizeView Roles="Admi,SAdm,work">
+<AuthorizeView Roles="Admi,SAdm,work" Context="auth">
     <Authorized>
 
         @if (loading)
@@ -19,30 +19,49 @@
                       FixedFooter="true"
                       Context="model">
                 <ToolBarContent>
-                    <div class="d-flex justify-content-between">
-                        <MudText Typo="Typo.h6" Class="me-4"> @Localizer["PayrollSettlement"]</MudText>
-                        <MudButton Variant="Variant.Outlined"
-                                   EndIcon="@Icons.Material.Filled.Add"
-                                   Color="Color.Info" OnClick="@(() => ShowModalAsync())">
-                            @Localizer["New"]
-                        </MudButton>
-                    </div>
+                    @if (auth.User.IsInRole("work"))
+                    {
+                        <div class="d-flex justify-content-between">
+                            <MudText Typo="Typo.h6" Class="me-4">@Localizer["Categories"]</MudText>
+                            <MudButton Variant="Variant.Outlined"
+                                       EndIcon="@Icons.Material.Filled.Add"
+                                       Color="Color.Info" OnClick="@(() => ShowModalAsync())">
+                                @Localizer["New"]
+                            </MudButton>
+                        </div>
+                    }
+
+                
                     <MudSpacer />
                     <FilterComponent ApplyFilter="SetFilterValue" />
                 </ToolBarContent>
                 <HeaderContent>
-                    <MudTh>@Localizer["PayrollSettlement"]</MudTh>
-                    <MudTh>@Localizer["Statu"]</MudTh>
-                    <MudTh Class="text-center">@Localizer["Actions"]</MudTh>
+                    @if (!auth.User.IsInRole("work"))
+                    {
+                        <MudTh Style="text-align: center;">@Localizer["User"]</MudTh>
+                    }
+                    <MudTh Style="text-align: center;">@Localizer["Charge"]</MudTh>
+                    <MudTh Style="text-align: center;">@Localizer["Date"]</MudTh>
+                    <MudTh Style="text-align: center;">@Localizer["AccruedValue"]</MudTh>
+                    <MudTh Style="text-align: center;">@Localizer["DeductedValue"]</MudTh>
+                    <MudTh Style="text-align: center;">@Localizer["Total"]</MudTh>
+                    <MudTh Style="text-align: center;">@Localizer["Actions"]</MudTh>
                 </HeaderContent>
                 <RowTemplate>
-                    <MudTd>@model.Amount</MudTd>
-                    <MudTd>@model.Statu!.Name</MudTd>
-                    <MudTd Class="text-center">
+                    @if (!auth.User.IsInRole("work"))
+                    {
+                        <MudTd>@model.User!.FullName</MudTd>
+                    }
+                    <MudTd> @model.Charge!.Name</MudTd>
+                    <MudTd Style="text-align: center;">@model.Date.ToString("dd/MM/yyyy HH:mm")</MudTd>
+                    <MudTd Style="text-align: right;">@model.AccruedValue.ToString("N2")</MudTd>
+                    <MudTd Style="text-align: right;">@model.DeductedValue.ToString("N2")</MudTd>
+                    <MudTd Style="text-align: right;">@((model.AccruedValue - model.DeductedValue).ToString("N2"))</MudTd>
+                    <MudTd Style="text-align: center;" Class="text-center align-middle">
                         <MudTooltip Text="@Localizer["Edit"]">
                             <MudButton Variant="Variant.Filled"
                                        Color="Color.Warning"
-                                       OnClick="@(() => ShowModalAsync(model.Id, true))">
+                                       OnClick="@(() => ShowModalAsync(model.ChargeId, model.Date.ToString(),model.UserId!, true))">
                                 <MudIcon Icon="@Icons.Material.Filled.Edit" />
                             </MudButton>
                         </MudTooltip>

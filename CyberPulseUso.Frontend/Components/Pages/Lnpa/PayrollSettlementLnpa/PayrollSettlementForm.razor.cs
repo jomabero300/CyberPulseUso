@@ -43,14 +43,6 @@ public partial class PayrollSettlementForm
         editContext = new(PayrollSettlementDTO);
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        loading = true;
-
-        await LoadPayrollSettlementsAsync();
-
-        loading = false;
-    }
     private async Task OnBeforeInternalNavigation(LocationChangingContext context)
     {
         var formwasEditad = editContext.IsModified();
@@ -88,11 +80,10 @@ public partial class PayrollSettlementForm
             await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
             return;
         }
-
-        PayrollSettlementDTO = responseHttp.Response!;
+        PayrollSettlementDTO.Clear();
+        PayrollSettlementDTO.AddRange(responseHttp.Response!);
         CalculateTotals();
     }
-
 
     private void AmountChanged(PayrollSettlementDTO item, int value)
     {
