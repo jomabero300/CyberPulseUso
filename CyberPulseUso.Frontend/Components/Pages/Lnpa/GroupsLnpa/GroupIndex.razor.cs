@@ -2,9 +2,9 @@
 using CyberPulseUso.Frontend.Repositories;
 using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.Resources;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
+using Microsoft.JSInterop;
 using MudBlazor;
 using System.Net;
 
@@ -19,6 +19,7 @@ public partial class GroupIndex
     private readonly int[] pageSizeOptions = { 10, 25, 50, int.MaxValue };
     private int totalRecords = 0;
     private bool loading;
+    
     private const string baseUrl = "api/groups";
     private string infoFormat = "{first_item}-{last_item} => {all_items}";
 
@@ -27,6 +28,7 @@ public partial class GroupIndex
     [Inject] private IDialogService DialogService { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
+    [Inject] IJSRuntime JS { get; set; } = null!;
 
     [Parameter, SupplyParameterFromForm] public string Filter { get; set; } = string.Empty;
 
@@ -39,7 +41,7 @@ public partial class GroupIndex
     {
         loading = true;
         var url = $"{baseUrl}/TotalRecordsPaginated";
-        if (!string.IsNullOrWhiteSpace(Filter)) 
+        if (!string.IsNullOrWhiteSpace(Filter))
         {
             url += $"?filter={Filter}";
 
@@ -63,11 +65,11 @@ public partial class GroupIndex
 
         var url = $"{baseUrl}/paginated/?page={page}&recordsnumber={pageSize}";
 
-        if (!string.IsNullOrWhiteSpace(Filter)) 
-        { 
-            url += $"&filter={Filter}"; 
+        if (!string.IsNullOrWhiteSpace(Filter))
+        {
+            url += $"&filter={Filter}";
         }
-        
+
         var responseHttp = await repository.GetAsync<List<Group>>(url);
         if (responseHttp.Error)
         {
@@ -138,4 +140,25 @@ public partial class GroupIndex
         await table.ReloadServerData();
         Snackbar.Add(Localizer["RecordDeletedOk"], Severity.Success);
     }
+
+    private async Task ExportAsync(string type)
+    {
+        var response = await repository.GetBytesAsync($"api/groups/report/{type}");
+
+        if (response.Error || response.Response == null)
+        {
+            return;
+        }
+
+        if (type == "pdf")
+        {
+            await JS.InvokeVoidAsync("displayPdf", response.Response);
+        }
+        else
+        {
+            string nombreArchivo = $"Grupos_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+            await JS.InvokeVoidAsync("downloadFileFromBytes", response.Response, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", nombreArchivo);
+        }
+    }
+
 }

@@ -17,7 +17,7 @@ public class ChargeUnitOfWork : GenericUnitOfWork<Charge>, IChargeUnitOfWork
     {
         _repository = modelRepository;
     }
-
+    public override Task<ActionResponse<IEnumerable<Charge>>> GetAsync() => _repository.GetAsync();
     public override Task<ActionResponse<Charge>> GetAsync(int id) => _repository.GetAsync(id);
     public override Task<ActionResponse<IEnumerable<Charge>>> GetAsync(PaginationDTO pagination) => _repository.GetAsync(pagination);
     public override Task<ActionResponse<Charge>> DeleteAsync(int id) => _repository.DeleteAsync(id);

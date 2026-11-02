@@ -17,7 +17,7 @@ public class CategoryUnitOfWork : GenericUnitOfWork<Category>, ICategoryUnitOfWo
     {
         _repository = modelRepository;
     }
-
+    public override async Task<ActionResponse<IEnumerable<Category>>> GetAsync()=>await _repository.GetAsync();
     public override Task<ActionResponse<Category>> GetAsync(int id) => _repository.GetAsync(id);
     public override Task<ActionResponse<IEnumerable<Category>>> GetAsync(PaginationDTO pagination) => _repository.GetAsync(pagination);
     public override Task<ActionResponse<Category>> DeleteAsync(int id) => _repository.DeleteAsync(id);

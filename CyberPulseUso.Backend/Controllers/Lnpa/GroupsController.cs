@@ -1,4 +1,5 @@
 using CyberPulseUso.Backend.Controllers.Gene;
+using CyberPulseUso.Backend.Helpers;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Lnpa;
 using CyberPulseUso.Shared.Entities.Lnpa;
@@ -16,11 +17,12 @@ namespace CyberPulseUso.Backend.Controllers.Lnpa;
 public class GroupsController : GenericController<Group>
 {
     private readonly IGroupUnitOfWork _modelUnitOfWork;
-
-    public GroupsController(IGenericUnitOfWork<Group> unitOfWork, IGroupUnitOfWork modelUnitOfWork)
+    private readonly IWebHostEnvironment _env;
+    public GroupsController(IGenericUnitOfWork<Group> unitOfWork, IGroupUnitOfWork modelUnitOfWork, IWebHostEnvironment env)
         : base(unitOfWork)
     {
         _modelUnitOfWork = modelUnitOfWork;
+        _env = env;
     }
 
     public override async Task<IActionResult> GetAsync(int id)
@@ -69,11 +71,49 @@ public class GroupsController : GenericController<Group>
         return BadRequest();
     }
 
-
     [HttpGet("Combo")]
     public async Task<IActionResult> GetComboAsync() =>Ok(await _modelUnitOfWork.GetComboAsync());
     
     [HttpGet("Combo/{id:int}")]
     public async Task<IActionResult> GetComboAsync(int id) => Ok(await _modelUnitOfWork.GetComboAsync(id));
 
+    [HttpGet("Report/{type}")]
+    public async Task<IActionResult> GetAsync(string type)
+    {
+        var response = await _modelUnitOfWork.GetAsync();
+
+        if(!response.WasSuccess)
+        {
+            return BadRequest(response.Message);
+        }
+        if(response.Result == null || !response.Result.Any())
+        {
+            return BadRequest("No hay datos para generar el reporte.");
+        }
+        if (type.ToLower() == "pdf")
+        {
+            string rutaPath = _env.WebRootPath;
+
+            var pdf = GeneReports.GroupPdf([.. response.Result!], rutaPath);
+
+            return File(pdf, "application/pdf", "ProductosPdf.pdf");
+        }
+        else 
+        {
+            var excelData = response.Result.Select(x => new GroupExcelDTO
+            {
+                Codigo = x.Id,
+                Grupo = x.Name,
+                Categoria = x.Category?.Name,
+                Estado = x.Statu?.Name
+            }).ToList();
+
+            byte[] fileBytes = GeneExcel.GenerarReporte(excelData, "Grupos");
+            string nombreArchivo = $"Reporte_Empleados_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+            string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+            return File(fileBytes, contentType, nombreArchivo);
+            //return BadRequest("Tipo de reporte no soportado.");
+        }
+    }
 }

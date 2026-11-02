@@ -1,4 +1,5 @@
 using CyberPulseUso.Backend.Controllers.Gene;
+using CyberPulseUso.Backend.Helpers;
 using CyberPulseUso.Backend.UnitsOfWork.Implementations.Lnpa;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Lnpa;
@@ -17,11 +18,13 @@ namespace CyberPulseUso.Backend.Controllers.Lnpa;
 public class CategoriesController : GenericController<Category>
 {
     private readonly ICategoryUnitOfWork _modelUnitOfWork;
+    private readonly IWebHostEnvironment _env;
 
-    public CategoriesController(IGenericUnitOfWork<Category> unitOfWork, ICategoryUnitOfWork modelUnitOfWork)
+    public CategoriesController(IGenericUnitOfWork<Category> unitOfWork, ICategoryUnitOfWork modelUnitOfWork, IWebHostEnvironment env)
         : base(unitOfWork)
     {
         _modelUnitOfWork = modelUnitOfWork;
+        _env = env;
     }
 
     public override async Task<IActionResult> GetAsync(int id)
@@ -72,4 +75,42 @@ public class CategoriesController : GenericController<Category>
 
     [HttpGet("Combo")]
     public async Task<IActionResult> GetComboAsync() => Ok(await _modelUnitOfWork.GetComboAsync());
+    [HttpGet("Report/{type}")]
+    public async Task<IActionResult> GetAsync(string type)
+    {
+        var response = await _modelUnitOfWork.GetAsync();
+
+        if (!response.WasSuccess)
+        {
+            return BadRequest(response.Message);
+        }
+        if (response.Result == null || !response.Result.Any())
+        {
+            return BadRequest("No hay datos para generar el reporte.");
+        }
+        if (type.ToLower() == "pdf")
+        {
+            string rutaPath = _env.WebRootPath;
+
+            var pdf = GeneReports.CategoryPdf([.. response.Result], rutaPath, "Categorías");
+
+            return File(pdf, "application/pdf", "CategoriasPdf.pdf");
+        }
+        else
+        {
+            var excelData = response.Result.Select(x => new CategoryExcelDTO
+            {
+                Codigo = x.Id,
+                Name = x.Name,
+                Estado = x.Statu?.Name
+            }).ToList();
+
+            byte[] fileBytes = GeneExcel.GenerarReporte(excelData, "Categorias");
+            string nombreArchivo = $"Categorias_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+            string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+            return File(fileBytes, contentType, nombreArchivo);
+        }
+    }
+
 }

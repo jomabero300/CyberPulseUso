@@ -19,6 +19,13 @@ public class ConventionRepository : GenericRepository<Convention>, IConventionRe
         _context = context;
     }
 
+    public override async Task<ActionResponse<IEnumerable<Convention>>> GetAsync()
+    {
+        var query = await _context.Set<Convention>().Include(x => x.Statu).AsNoTracking().OrderBy(x => x.Name).ToListAsync();
+
+        return new ActionResponse<IEnumerable<Convention>> { WasSuccess = true, Result = query };
+
+    }
     public override async Task<ActionResponse<Convention>> GetAsync(int id)
     {
         var entity = await _context.Set<Convention>().AsNoTracking()

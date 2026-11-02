@@ -17,7 +17,7 @@ public class ConventionUnitOfWork : GenericUnitOfWork<Convention>, IConventionUn
     {
         _repository = modelRepository;
     }
-
+    public override async Task<ActionResponse<IEnumerable<Convention>>> GetAsync()=>await _repository.GetAsync();
     public override Task<ActionResponse<Convention>> GetAsync(int id) => _repository.GetAsync(id);
     public override Task<ActionResponse<IEnumerable<Convention>>> GetAsync(PaginationDTO pagination) => _repository.GetAsync(pagination);
     public override Task<ActionResponse<Convention>> DeleteAsync(int id) => _repository.DeleteAsync(id);

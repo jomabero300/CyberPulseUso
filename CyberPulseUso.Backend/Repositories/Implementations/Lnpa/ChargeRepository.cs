@@ -19,6 +19,15 @@ public class ChargeRepository : GenericRepository<Charge>, IChargeRepository
         _context = context;
     }
 
+
+    public override async Task<ActionResponse<IEnumerable<Charge>>> GetAsync()
+    {
+        var query = await _context.Set<Charge>().Include(x=>x.Group).Include(x => x.Statu).AsNoTracking().OrderBy(x => x.Name).ToListAsync();
+
+        return new ActionResponse<IEnumerable<Charge>> { WasSuccess = true, Result = query };
+
+    }
+
     public override async Task<ActionResponse<Charge>> GetAsync(int id)
     {
         var entity = await _context.Set<Charge>().AsNoTracking()

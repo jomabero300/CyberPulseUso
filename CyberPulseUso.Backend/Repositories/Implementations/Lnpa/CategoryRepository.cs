@@ -19,6 +19,14 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
         _context = context;
     }
 
+    public override async Task<ActionResponse<IEnumerable<Category>>> GetAsync()
+    {
+        var query = await _context.Set<Category>().Include(x => x.Statu).AsNoTracking().OrderBy(x => x.Name).ToListAsync();
+
+        return new ActionResponse<IEnumerable<Category>> { WasSuccess = true, Result = query };
+
+    }
+
     public override async Task<ActionResponse<Category>> GetAsync(int id)
     {
         var entity = await _context.Set<Category>().AsNoTracking()

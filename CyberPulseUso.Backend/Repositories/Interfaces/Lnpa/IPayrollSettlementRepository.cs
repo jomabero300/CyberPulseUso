@@ -14,7 +14,6 @@ public interface IPayrollSettlementRepository
     Task<ActionResponse<IEnumerable<PayrollSettlement>>> GetAsync(PaginationDTO pagination);
     Task<IEnumerable<PayrollSettlement>> GetComboAsync();
     Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination);
-    //Task<ActionResponse<PayrollSettlement>> UpdateAsync(PayrollSettlementDTO entity);
     Task<ActionResponse<List<PayrollSettlement>>> UpdateAsync(List<PayrollSettlementDTO> entity);
     Task<ActionResponse<IEnumerable<PayrollSettlementDTO>>> GetLiqAsync(int id,string Id);
     Task<ActionResponse<IEnumerable<PayrollSettlementListDTO>>> GetAsync(string Id);

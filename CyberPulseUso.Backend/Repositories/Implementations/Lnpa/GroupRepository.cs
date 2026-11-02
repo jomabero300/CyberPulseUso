@@ -5,6 +5,7 @@ using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.EntitiesDTO;
 using CyberPulseUso.Shared.EntitiesDTO.Lnpa;
 using CyberPulseUso.Shared.Responses;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -18,7 +19,12 @@ public class GroupRepository : GenericRepository<Group>, IGroupRepository
     {
         _context = context;
     }
-
+    public override async Task<ActionResponse<IEnumerable<Group>>> GetAsync()
+    {
+        var query = await _context.Set<Group>().Include(x => x.Statu).Include(x => x.Category).AsNoTracking().OrderBy(x => x.Name).ToListAsync();
+        
+        return new ActionResponse<IEnumerable<Group>> { WasSuccess = true, Result = query };
+    }
     public override async Task<ActionResponse<Group>> GetAsync(int id)
     {
         var entity = await _context.Set<Group>().AsNoTracking()

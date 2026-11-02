@@ -1,4 +1,5 @@
 using CyberPulseUso.Backend.Controllers.Gene;
+using CyberPulseUso.Backend.Helpers;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Lnpa;
 using CyberPulseUso.Shared.Entities.Lnpa;
@@ -16,11 +17,12 @@ namespace CyberPulseUso.Backend.Controllers.Lnpa;
 public class ConventionValuesController : GenericController<ConventionValue>
 {
     private readonly IConventionValueUnitOfWork _modelUnitOfWork;
-
-    public ConventionValuesController(IGenericUnitOfWork<ConventionValue> unitOfWork, IConventionValueUnitOfWork modelUnitOfWork)
+    private readonly IWebHostEnvironment _env;
+    public ConventionValuesController(IGenericUnitOfWork<ConventionValue> unitOfWork, IConventionValueUnitOfWork modelUnitOfWork, IWebHostEnvironment env)
         : base(unitOfWork)
     {
         _modelUnitOfWork = modelUnitOfWork;
+        _env = env;
     }
 
     public override async Task<IActionResult> GetAsync(int id)

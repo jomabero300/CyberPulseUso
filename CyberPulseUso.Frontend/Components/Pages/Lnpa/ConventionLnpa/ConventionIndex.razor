@@ -27,6 +27,36 @@ else
                 </MudButton>
             </div>
             <MudSpacer />
+                    <div class="d-flex justify-center align-center font-sans" style="height: 200px;">
+                        @if (_isProcessing)
+                        {
+                            <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+                        }
+                        else
+                        {
+                            <MudIconButton Icon="@Icons.Material.Filled.PictureAsPdf"
+                                           Color="Color.Primary"
+                                           aria-label="Exportar PDF"
+                                           Variant="Variant.Outlined"
+                                           OnClick="@(() => ExportAsync("pdf"))" />
+                        }
+                    </div>
+
+                    <div class="d-flex justify-center align-center font-sans" style="height: 200px;">
+                        @if (_isProcessing2)
+                        {
+                            <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+                        }
+                        else
+                        {
+                            <MudIconButton Icon="@Icons.Material.Filled.GridOn"
+                                           Color="Color.Success"
+                                           aria-label="Exportar Excel"
+                                           OnClick="@(() => ExportAsync("excel"))" />
+
+                        }
+                    </div>
+            <MudSpacer />
             <FilterComponent ApplyFilter="SetFilterValue" />
         </ToolBarContent>
         <HeaderContent>
