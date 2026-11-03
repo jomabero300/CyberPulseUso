@@ -1,5 +1,6 @@
 using CyberPulseUso.Backend.Controllers.Gene;
 using CyberPulseUso.Backend.Helpers;
+using CyberPulseUso.Backend.Helpers.Reports.Lnpa;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Lnpa;
 using CyberPulseUso.Shared.Entities.Lnpa;
@@ -90,7 +91,7 @@ public class ConventionsController : GenericController<Convention>
         {
             string rutaPath = _env.WebRootPath;
 
-            var pdf = GeneReports.ConventionPdf([.. response.Result], rutaPath, "Convenciones");
+            var pdf = ConventionReport.ConventionPdf([.. response.Result], rutaPath);
 
             return File(pdf, "application/pdf", "ConvencionesPdf.pdf");
         }

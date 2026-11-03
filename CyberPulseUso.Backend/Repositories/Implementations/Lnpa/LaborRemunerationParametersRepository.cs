@@ -19,6 +19,13 @@ public class LaborRemunerationParametersRepository : GenericRepository<LaborRemu
         _context = context;
     }
 
+    public override async Task<ActionResponse<IEnumerable<LaborRemunerationParameters>>> GetAsync()
+    {
+        var query = await _context.Set<LaborRemunerationParameters>().AsNoTracking().Include(x => x.Statu).OrderBy(x => x.Name).ToListAsync();
+
+        return new ActionResponse<IEnumerable<LaborRemunerationParameters>> { WasSuccess = true, Result = query };
+
+    }
     public override async Task<ActionResponse<LaborRemunerationParameters>> GetAsync(int id)
     {
         var entity = await _context.Set<LaborRemunerationParameters>().AsNoTracking()

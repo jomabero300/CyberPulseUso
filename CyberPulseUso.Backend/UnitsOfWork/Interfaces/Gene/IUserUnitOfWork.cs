@@ -9,6 +9,7 @@ namespace CyberPulseUso.Backend.UnitsOfWork.Interfaces.Gene;
 
 public interface IUserUnitOfWork
 {
+
     Task<ActionResponse<IEnumerable<User>>> GetAsync(PaginationDTO pagination);
     Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination);
     Task<string> GeneratePasswordResetTokenAsync(User user);

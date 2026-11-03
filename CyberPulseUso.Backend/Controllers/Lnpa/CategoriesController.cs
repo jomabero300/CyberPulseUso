@@ -1,5 +1,6 @@
 using CyberPulseUso.Backend.Controllers.Gene;
 using CyberPulseUso.Backend.Helpers;
+using CyberPulseUso.Backend.Helpers.Reports.Lnpa;
 using CyberPulseUso.Backend.UnitsOfWork.Implementations.Lnpa;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Lnpa;
@@ -92,7 +93,7 @@ public class CategoriesController : GenericController<Category>
         {
             string rutaPath = _env.WebRootPath;
 
-            var pdf = GeneReports.CategoryPdf([.. response.Result], rutaPath, "Categorías");
+            var pdf = CategoryReport.CategoryPdf([.. response.Result], rutaPath);
 
             return File(pdf, "application/pdf", "CategoriasPdf.pdf");
         }

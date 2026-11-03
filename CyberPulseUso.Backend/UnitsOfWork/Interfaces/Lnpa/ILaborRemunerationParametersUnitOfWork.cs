@@ -1,3 +1,4 @@
+using CyberPulseUso.Shared.Entities.Gene;
 using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.EntitiesDTO;
 using CyberPulseUso.Shared.EntitiesDTO.Lnpa;

@@ -23,12 +23,13 @@ public class UserUnitOfWork : IUserUnitOfWork
     public async Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPassword) => await _userRepository.ChangePasswordAsync(user, currentPassword, newPassword);
     public async Task CheckRoleAsync(string roleName) => await _userRepository.CheckRoleAsync(roleName);
     public async Task<IdentityResult> ConfirmEmailAsync(User user, string token) => await _userRepository.ConfirmEmailAsync(user, token);
-    //public async Task<IdentityResult> ConfirmEmailAsync(string email, string token) => await _userRepository.ConfirmEmailAsync(email, token);
     public async Task<string> GenerateEmailConfirmationTokenAsync(User user) => await _userRepository.GenerateEmailConfirmationTokenAsync(user);
     public async Task<string> GeneratePasswordResetTokenAsync(User user) => await _userRepository.GeneratePasswordResetTokenAsync(user);
     public async Task<IEnumerable<User>> GetAsync(UserType userType) => await _userRepository.GetAsync(userType);
     public async Task<IEnumerable<User>> GetAsync(string id) => await _userRepository.GetAsync(id);
     public async Task<ActionResponse<IEnumerable<User>>> GetAsync(PaginationDTO pagination) => await _userRepository.GetAsync(pagination);
+
+  
     public async Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination) => await _userRepository.GetTotalRecordsAsync(pagination);
     public async Task<User> GetUserAsync(Guid userId) => await _userRepository.GetUserAsync(userId);
     public async Task<User> GetUserAsync(string email) => await _userRepository.GetUserAsync(email);

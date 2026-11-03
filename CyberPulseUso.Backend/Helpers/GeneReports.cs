@@ -46,265 +46,272 @@ public class GeneReports
         });
     }
 
-    //GUPOSS
-    public static byte[] GroupPdf(List<Group> entity, string rutaPath, string Title)
-    {
-        QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
-        var document = Document.Create(container =>
-        {
 
-            container
-                .Page(page =>
-                {
-                    page.Margin(30);
-                    page.Header().Element(container => ComposeHeader(container, rutaPath, Title));
-                    page.Content().Element(container => GroupContent(container, entity));
-                    page.Footer().Element(container => ComposeFooter(container, 1));
-                });
+    ////CATEGORIAS
+    //public static byte[] CategoryPdf(List<Category> entity, string rutaPath, string Title)
+    //{
+    //    QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+    //    var document = Document.Create(container =>
+    //    {
 
-        });
+    //        container
+    //            .Page(page =>
+    //            {
+    //                page.Margin(30);
+    //                page.Header().Element(container => ComposeHeader(container, rutaPath, Title));
+    //                page.Content().Element(container => CategoryContent(container, entity));
+    //                page.Footer().Element(container => ComposeFooter(container, 1));
+    //            });
 
-
-        return document.GeneratePdf();
-    }
-    private static void GroupContent(IContainer container, List<Group> entity)
-    {
-        container.PaddingVertical(40).Column(columna =>
-        {
-            columna.Spacing(5);
-            columna.Item().Element(container => GroupTabla(container, entity));
-        });
-    }
-    private static void GroupTabla(IContainer container, List<Group> entity)
-    {
-        container.Table(tabla =>
-        {
-            var tamañoDeLetra = 0.6f;
-
-            tabla.ColumnsDefinition(columnas =>
-            {
-                columnas.RelativeColumn(30);
-                columnas.RelativeColumn();
-            });
-            tabla.Header(cabecera =>
-            {
-                cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignCenter().Text("Código");
-                cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text("Nombre");
-
-                static IContainer EstiloCelda(IContainer contenedor)
-                {
-                    return contenedor.DefaultTextStyle(x => x.SemiBold()).PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Black);
-                }
-            });
-
-            foreach (var item in entity)
-            {
-                tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Id.ToString());
-                tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Name);
-
-                IContainer EstiloCelda(IContainer contenedor)
-                {
-                    return contenedor.BorderBottom(1).BorderColor(Colors.Grey.Lighten1).PaddingVertical(5);
-                }
-            }
-        });
-    }
-
-    //CATEGORIAS
-    public static byte[] CategoryPdf(List<Category> entity, string rutaPath, string Title)
-    {
-        QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
-        var document = Document.Create(container =>
-        {
-
-            container
-                .Page(page =>
-                {
-                    page.Margin(30);
-                    page.Header().Element(container => ComposeHeader(container, rutaPath, Title));
-                    page.Content().Element(container => CategoryContent(container, entity));
-                    page.Footer().Element(container => ComposeFooter(container, 1));
-                });
-
-        });
+    //    });
 
 
-        return document.GeneratePdf();
-    }
-    private static void CategoryContent(IContainer container, List<Category> entity)
-    {
-        container.PaddingVertical(40).Column(columna =>
-        {
-            columna.Spacing(5);
-            columna.Item().Element(container => CategoryTabla(container, entity));
-        });
-    }
-    private static void CategoryTabla(IContainer container, List<Category> entity)
-    {
-        container.Table(tabla =>
-        {
-            var tamañoDeLetra = 0.6f;
+    //    return document.GeneratePdf();
+    //}
+    //private static void CategoryContent(IContainer container, List<Category> entity)
+    //{
+    //    container.PaddingVertical(10).Column(columna =>
+    //    {
+    //        columna.Spacing(5);
+    //        columna.Item().Element(container => CategoryTabla(container, entity));
+    //    });
+    //}
+    //private static void CategoryTabla(IContainer container, List<Category> entity)
+    //{
+    //    container.Table(tabla =>
+    //    {
+    //        var tamañoDeLetra = 0.6f;
 
-            tabla.ColumnsDefinition(columnas =>
-            {
-                columnas.RelativeColumn(20);
-                columnas.RelativeColumn();
-                columnas.RelativeColumn(20);
-            });
-            tabla.Header(cabecera =>
-            {
-                cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text("Código");
-                cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text("Nombre");
-                cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text("Estado");
+    //        tabla.ColumnsDefinition(columnas =>
+    //        {
+    //            columnas.ConstantColumn(50);
+    //            columnas.RelativeColumn();
+    //            columnas.ConstantColumn(80);
+    //        });
+    //        tabla.Header(cabecera =>
+    //        {
+    //            cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignCenter().Text("Código");
+    //            cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignCenter().Text("Nombre");
+    //            cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignCenter().Text("Estado");
 
-                static IContainer EstiloCelda(IContainer contenedor)
-                {
-                    return contenedor.DefaultTextStyle(x => x.SemiBold()).PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Black);
-                }
-            });
+    //            static IContainer EstiloCelda(IContainer contenedor)
+    //            {
+    //                return contenedor.DefaultTextStyle(x => x.SemiBold()).PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Black);
+    //            }
+    //        });
 
-            foreach (var item in entity)
-            {
-                tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Id.ToString());
-                tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Name);
-                tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Statu?.Name);
+    //        foreach (var item in entity)
+    //        {
+    //            tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignCenter().Text(item.Id.ToString());
+    //            tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Name);
+    //            tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Statu?.Name);
 
-                IContainer EstiloCelda(IContainer contenedor)
-                {
-                    return contenedor.BorderBottom(1).BorderColor(Colors.Grey.Lighten1).PaddingVertical(5);
-                }
-            }
-        });
-    }
+    //            IContainer EstiloCelda(IContainer contenedor)
+    //            {
+    //                return contenedor.BorderBottom(1).BorderColor(Colors.Grey.Lighten1).PaddingVertical(5);
+    //            }
+    //        }
+    //    });
+    //}
 
     //CARGOS
-    public static byte[] ChargePdf(List<Charge> entity, string rutaPath, string Title)
-    {
-        QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
-        var document = Document.Create(container =>
-        {
-            container
-                .Page(page =>
-                {
-                    page.Margin(30);
-                    page.Header().Element(container => ComposeHeader(container, rutaPath, Title));
-                    page.Content().Element(container => ChargeContent(container, entity));
-                    page.Footer().Element(container => ComposeFooter(container, 1));
-                });
-        });
+    //public static byte[] ChargePdf(List<Charge> entity, string rutaPath, string Title)
+    //{
+    //    QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+    //    var document = Document.Create(container =>
+    //    {
+    //        container
+    //            .Page(page =>
+    //            {
+    //                page.Margin(30);
+    //                page.Header().Element(container => ComposeHeader(container, rutaPath, Title));
+    //                page.Content().Element(container => ChargeContent(container, entity));
+    //                page.Footer().Element(container => ComposeFooter(container, 1));
+    //            });
+    //    });
 
-        return document.GeneratePdf();
-    }
-    private static void ChargeContent(IContainer container, List<Charge> entity)
-    {
-        container.PaddingVertical(40).Column(columna =>
-        {
-            columna.Spacing(5);
-            columna.Item().Element(container => ChargeTabla(container, entity));
-        });
-    }
-    private static void ChargeTabla(IContainer container, List<Charge> entity)
-    {
-        container.Table(tabla =>
-        {
-            var tamañoDeLetra = 0.6f;
+    //    return document.GeneratePdf();
+    //}
+    //private static void ChargeContent(IContainer container, List<Charge> entity)
+    //{
+    //    container.PaddingVertical(10).Column(columna =>
+    //    {
+    //        columna.Spacing(5);
+    //        columna.Item().Element(container => ChargeTabla(container, entity));
+    //    });
+    //}
+    //private static void ChargeTabla(IContainer container, List<Charge> entity)
+    //{
+    //    container.Table(tabla =>
+    //    {
+    //        var tamañoDeLetra = 0.6f;
 
-            tabla.ColumnsDefinition(columnas =>
-            {
-                columnas.RelativeColumn();
-                columnas.RelativeColumn();
-                columnas.RelativeColumn();
-                columnas.RelativeColumn();
-            });
-            tabla.Header(cabecera =>
-            {
-                cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text("Código");
-                cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text("Nombre");
-                cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text("Grupo");
-                cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text("Estado");
+    //        tabla.ColumnsDefinition(columnas =>
+    //        {
+    //            columnas.ConstantColumn(50);
+    //            columnas.RelativeColumn();
+    //            columnas.ConstantColumn(80);
+    //            columnas.ConstantColumn(50);
+    //        });
+    //        tabla.Header(cabecera =>
+    //        {
+    //            cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text("Código");
+    //            cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text("Nombre");
+    //            cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text("Grupo");
+    //            cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text("Estado");
 
-                static IContainer EstiloCelda(IContainer contenedor)
-                {
-                    return contenedor.DefaultTextStyle(x => x.SemiBold()).PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Black);
-                }
-            });
+    //            static IContainer EstiloCelda(IContainer contenedor)
+    //            {
+    //                return contenedor.DefaultTextStyle(x => x.SemiBold()).PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Black);
+    //            }
+    //        });
 
-            foreach (var item in entity)
-            {
-                tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Id.ToString());
-                tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Name);
-                tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Group?.Name);
-                tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Statu?.Name);
+    //        foreach (var item in entity)
+    //        {
+    //            tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Id.ToString());
+    //            tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Name);
+    //            tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Group?.Name);
+    //            tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Statu?.Name);
 
-                IContainer EstiloCelda(IContainer contenedor)
-                {
-                    return contenedor.BorderBottom(1).BorderColor(Colors.Grey.Lighten1).PaddingVertical(5);
-                }
-            }
-        });
-    }
+    //            IContainer EstiloCelda(IContainer contenedor)
+    //            {
+    //                return contenedor.BorderBottom(1).BorderColor(Colors.Grey.Lighten1).PaddingVertical(5);
+    //            }
+    //        }
+    //    });
+    //}
 
     //Convenciones
-    public static byte[] ConventionPdf(List<Convention> entity, string rutaPath, string Title)
-    {
-        QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
-        var document = Document.Create(container =>
-        {
-            container
-                .Page(page =>
-                {
-                    page.Margin(30);
-                    page.Header().Element(container => ComposeHeader(container, rutaPath, Title));
-                    page.Content().Element(container => ConventionContent(container, entity));
-                    page.Footer().Element(container => ComposeFooter(container, 1));
-                });
-        });
+    //public static byte[] ConventionPdf(List<Convention> entity, string rutaPath, string Title)
+    //{
+    //    QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+    //    var document = Document.Create(container =>
+    //    {
+    //        container
+    //            .Page(page =>
+    //            {
+    //                page.Margin(30);
+    //                page.Header().Element(container => ComposeHeader(container, rutaPath, Title));
+    //                page.Content().Element(container => ConventionContent(container, entity));
+    //                page.Footer().Element(container => ComposeFooter(container, 1));
+    //            });
+    //    });
 
-        return document.GeneratePdf();
-    }
-    private static void ConventionContent(IContainer container, List<Convention> entity)
-    {
-        container.PaddingVertical(40).Column(columna =>
-        {
-            columna.Spacing(5);
-            columna.Item().Element(container => ConventionTabla(container, entity));
-        });
-    }
-    private static void ConventionTabla(IContainer container, List<Convention> entity)
-    {
-        container.Table(tabla =>
-        {
-            var tamañoDeLetra = 0.6f;
+    //    return document.GeneratePdf();
+    //}
+    //private static void ConventionContent(IContainer container, List<Convention> entity)
+    //{
+    //    container.PaddingVertical(10).Column(columna =>
+    //    {
+    //        columna.Spacing(5);
+    //        columna.Item().Element(container => ConventionTabla(container, entity));
+    //    });
+    //}
+    //private static void ConventionTabla(IContainer container, List<Convention> entity)
+    //{
+    //    container.Table(tabla =>
+    //    {
+    //        var tamañoDeLetra = 0.6f;
 
-            tabla.ColumnsDefinition(columnas =>
-            {
-                columnas.RelativeColumn();
-                columnas.RelativeColumn();
-                columnas.RelativeColumn();
-            });
-            tabla.Header(cabecera =>
-            {
-                cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text("Código");
-                cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text("Nombre");
-                cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text("Estado");
+    //        tabla.ColumnsDefinition(columnas =>
+    //        {
+    //            columnas.ConstantColumn(50);
+    //            columnas.RelativeColumn();
+    //            columnas.ConstantColumn(50);
+    //        });
+    //        tabla.Header(cabecera =>
+    //        {
+    //            cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignCenter().Text("Código");
+    //            cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignCenter().Text("Nombre");
+    //            cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignCenter().Text("Estado");
 
-                static IContainer EstiloCelda(IContainer contenedor)
-                {
-                    return contenedor.DefaultTextStyle(x => x.SemiBold()).PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Black);
-                }
-            });
+    //            static IContainer EstiloCelda(IContainer contenedor)
+    //            {
+    //                return contenedor.DefaultTextStyle(x => x.SemiBold()).PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Black);
+    //            }
+    //        });
 
-            foreach (var item in entity)
-            {
-                tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Id.ToString());
-                tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Name);
-                tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Statu?.Name);
+    //        foreach (var item in entity)
+    //        {
+    //            tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignCenter().Text(item.Id.ToString());
+    //            tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Name);
+    //            tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Statu?.Name);
 
-                IContainer EstiloCelda(IContainer contenedor)
-                {
-                    return contenedor.BorderBottom(1).BorderColor(Colors.Grey.Lighten1).PaddingVertical(5);
-                }
-            }
-        });
-    }
+    //            IContainer EstiloCelda(IContainer contenedor)
+    //            {
+    //                return contenedor.BorderBottom(1).BorderColor(Colors.Grey.Lighten1).PaddingVertical(5);
+    //            }
+    //        }
+    //    });
+    //}
+
+    //Convenciones Valor
+    //public static byte[] ConventionValuePdf(List<ConventionValue> entity, string rutaPath, string Title)
+    //{
+    //    QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+    //    var document = Document.Create(container =>
+    //    {
+    //        container
+    //            .Page(page =>
+    //            {
+    //                page.Margin(30);
+    //                page.Header().Element(container => ComposeHeader(container, rutaPath, Title));
+    //                page.Content().Element(container => ConventionValueContent(container, entity));
+    //                page.Footer().Element(container => ComposeFooter(container, 1));
+    //            });
+    //    });
+
+    //    return document.GeneratePdf();
+    //}
+    //private static void ConventionValueContent(IContainer container, List<ConventionValue> entity)
+    //{
+    //    container.PaddingVertical(10).Column(columna =>
+    //    {
+    //        columna.Spacing(5);
+    //        columna.Item().Element(container => ConventionValueTabla(container, entity));
+    //    });
+    //}
+    //private static void ConventionValueTabla(IContainer container, List<ConventionValue> entity)
+    //{
+    //    container.Table(tabla =>
+    //    {
+    //        var tamañoDeLetra = 0.6f;
+
+    //        tabla.ColumnsDefinition(columnas =>
+    //        {
+    //            columnas.ConstantColumn(50);
+    //            columnas.RelativeColumn();
+    //            columnas.ConstantColumn(40);
+    //            columnas.ConstantColumn(50);
+    //            columnas.ConstantColumn(50);
+    //        });
+    //        tabla.Header(cabecera =>
+    //        {
+    //            cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignCenter().Text("Código");
+    //            cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignCenter().Text("Convención");
+    //            cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignCenter().Text("Fecha");
+    //            cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignCenter().Text("Valor");
+    //            cabecera.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignCenter().Text("Estado");
+
+    //            static IContainer EstiloCelda(IContainer contenedor)
+    //            {
+    //                return contenedor.DefaultTextStyle(x => x.SemiBold()).PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Black);
+    //            }
+    //        });
+
+    //        foreach (var item in entity)
+    //        {
+    //            tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignCenter().Text(item.Id.ToString());
+    //            tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignLeft().Text(item.Convention!.Name);
+    //            tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignCenter().Text(item.Date.ToString("dd/MMM/yyyy"));
+    //            tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignRight().Text(item.Prince.ToString("N2"));
+    //            tabla.Cell().Scale(tamañoDeLetra).Element(EstiloCelda).AlignRight().Text(item.Statu!.Name);
+
+    //            IContainer EstiloCelda(IContainer contenedor)
+    //            {
+    //                return contenedor.BorderBottom(1).BorderColor(Colors.Grey.Lighten1).PaddingVertical(5);
+    //            }
+    //        }
+    //    });
+    //}
 }

@@ -9,10 +9,16 @@
 				  Value="@user.FullName"
 				  For="@(() => user.FullName)"
 				  class="mb-3" />
-	@* Value="@($"{user.FirstName} {user.LastName}")" *@
+
+@* 	<MudSelect T="UserType" @bind-Value="@user.UserType" Label="Tipo">
+		@foreach (UserType tipo in Enum.GetValues(typeof(UserType)))
+		{
+			<MudSelectItem Value="@tipo">@tipo.GetDisplayName()</MudSelectItem>
+		}
+	</MudSelect> *@
 
 	<MudSelect T="UserType" @bind-Value="@user.UserType" Label="Tipo">
-		@foreach (UserType tipo in Enum.GetValues(typeof(UserType)))
+		@foreach (UserType tipo in TiposVisibles())
 		{
 			<MudSelectItem Value="@tipo">@tipo.GetDisplayName()</MudSelectItem>
 		}

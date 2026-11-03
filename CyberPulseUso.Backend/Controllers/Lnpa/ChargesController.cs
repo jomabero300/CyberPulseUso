@@ -1,5 +1,6 @@
 using CyberPulseUso.Backend.Controllers.Gene;
 using CyberPulseUso.Backend.Helpers;
+using CyberPulseUso.Backend.Helpers.Reports.Lnpa;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Lnpa;
 using CyberPulseUso.Shared.Entities.Lnpa;
@@ -91,7 +92,7 @@ public class ChargesController : GenericController<Charge>
         {
             string rutaPath = _env.WebRootPath;
 
-            var pdf = GeneReports.ChargePdf([.. response.Result], rutaPath, "Cargos");
+            var pdf = ChargeReport.ChargePdf([.. response.Result], rutaPath);
 
             return File(pdf, "application/pdf", "CargosPdf.pdf");
         }

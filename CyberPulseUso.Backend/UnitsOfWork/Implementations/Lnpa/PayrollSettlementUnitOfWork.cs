@@ -4,6 +4,7 @@ using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Lnpa;
 using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.EntitiesDTO;
 using CyberPulseUso.Shared.EntitiesDTO.Lnpa;
+using CyberPulseUso.Shared.EntitiesDTO.Lnpa.Reports;
 using CyberPulseUso.Shared.Responses;
 
 namespace CyberPulseUso.Backend.UnitsOfWork.Implementations.Lnpa;
@@ -30,4 +31,6 @@ public class PayrollSettlementUnitOfWork : GenericUnitOfWork<PayrollSettlement>,
     public async Task<ActionResponse<IEnumerable<PayrollSettlementDTO>>> GetAsync(DateTime fecha, int Id, string id) => await _repository.GetAsync(fecha, Id, id);
 
     public async Task<ActionResponse<List<PayrollSettlement>>> UpdateAsync(List<PayrollSettlementDTO> entity) => await _repository.UpdateAsync(entity);
+
+    public async Task<ActionResponse<LiquidacionReportModel>> GetAsync(DateTime fecha, int Id, string id, bool esta) => await _repository.GetAsync(fecha, Id, id, esta);
 }

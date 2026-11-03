@@ -22,8 +22,6 @@ public partial class CategoryIndex
     private bool _isProcessing2 = false;
     private const string baseUrl = "api/categories";
     private string infoFormat = "{first_item}-{last_item} => {all_items}";
-    private bool _processing;
-    private bool _processing2;
 
     [Inject] private IRepository repository { get; set; } = null!;
     [Inject] private IStringLocalizer<Literals> Localizer { get; set; } = null!;

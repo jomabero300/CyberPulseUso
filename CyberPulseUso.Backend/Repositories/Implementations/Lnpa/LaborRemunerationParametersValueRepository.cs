@@ -20,6 +20,12 @@ public class LaborRemunerationParametersValueRepository : GenericRepository<Labo
         _context = context;
     }
 
+    public override async Task<ActionResponse<IEnumerable<LaborRemunerationParametersValue>>> GetAsync()
+    {
+        var query = await _context.Set<LaborRemunerationParametersValue>().AsNoTracking().Include(x => x.LRP).Include(x => x.Group).Include(x => x.Statu).OrderBy(x => x.LRP!.Name).ToListAsync();
+
+        return new ActionResponse<IEnumerable<LaborRemunerationParametersValue>> { WasSuccess = true, Result = query };
+    }
     public override async Task<ActionResponse<LaborRemunerationParametersValue>> GetAsync(int id)
     {
         var entity = await _context.Set<LaborRemunerationParametersValue>().AsNoTracking()

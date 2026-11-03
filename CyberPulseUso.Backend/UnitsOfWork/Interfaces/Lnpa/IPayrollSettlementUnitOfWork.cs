@@ -1,6 +1,7 @@
 using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.EntitiesDTO;
 using CyberPulseUso.Shared.EntitiesDTO.Lnpa;
+using CyberPulseUso.Shared.EntitiesDTO.Lnpa.Reports;
 using CyberPulseUso.Shared.Responses;
 
 namespace CyberPulseUso.Backend.UnitsOfWork.Interfaces.Lnpa;
@@ -18,4 +19,6 @@ public interface IPayrollSettlementUnitOfWork
     Task<ActionResponse<List<PayrollSettlement>>> UpdateAsync(List<PayrollSettlementDTO> entity);
     Task<ActionResponse<IEnumerable<PayrollSettlementDTO>>> GetLiqAsync(int id,string Id);
     Task<ActionResponse<IEnumerable<PayrollSettlementDTO>>> GetAsync(DateTime fecha, int Id, string id);
+
+    Task<ActionResponse<LiquidacionReportModel>> GetAsync(DateTime fecha, int Id, string id, bool esta);
 }

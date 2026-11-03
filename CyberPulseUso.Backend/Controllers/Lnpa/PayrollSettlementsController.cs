@@ -1,4 +1,7 @@
+using Azure;
 using CyberPulseUso.Backend.Controllers.Gene;
+using CyberPulseUso.Backend.Helpers.Reports.Lnpa;
+using CyberPulseUso.Backend.Helpers.Reports.Lnpa.Liquidacion;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Gene;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Lnpa;
@@ -18,11 +21,13 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
 {
     private readonly IPayrollSettlementUnitOfWork _modelUnitOfWork;
     private readonly IUserUnitOfWork _userUnitOfWork;
-    public PayrollSettlementsController(IGenericUnitOfWork<PayrollSettlement> unitOfWork, IPayrollSettlementUnitOfWork modelUnitOfWork, IUserUnitOfWork userUnitOfWork)
+    private readonly IWebHostEnvironment _env;
+    public PayrollSettlementsController(IGenericUnitOfWork<PayrollSettlement> unitOfWork, IPayrollSettlementUnitOfWork modelUnitOfWork, IUserUnitOfWork userUnitOfWork, IWebHostEnvironment env)
         : base(unitOfWork)
     {
         _modelUnitOfWork = modelUnitOfWork;
         _userUnitOfWork = userUnitOfWork;
+        _env = env;
     }
 
     public override async Task<IActionResult> GetAsync(int id)
@@ -32,7 +37,7 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
     }
 
     [HttpGet("full/{fecha}/{id}/{UserId}")]
-    public async Task<IActionResult> GetAsync(DateTime fecha, int id,string UserId)
+    public async Task<IActionResult> GetAsync(DateTime fecha, int id, string UserId)
     {
         var response = await _modelUnitOfWork.GetAsync(fecha, id, UserId);
         return response.WasSuccess ? Ok(response.Result) : BadRequest(response.Message);
@@ -49,7 +54,7 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
             if (result.ChargeId == null) return BadRequest("El usuario no tiene un cargo asignado.");
             pagination.Email = result.Id;
         }
-        
+
         var response = await _modelUnitOfWork.GetAsync(pagination);
         return response.WasSuccess ? Ok(response.Result) : BadRequest(response.Message);
     }
@@ -79,7 +84,7 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
     public async Task<IActionResult> GetTotalRecordsAsync([FromQuery] PaginationDTO pagination)
     {
         if (User.IsInRole("work"))
-        { 
+        {
             var email = User.Identity?.Name;
             if (string.IsNullOrWhiteSpace(email)) return Unauthorized();
             var result = await _userUnitOfWork.GetUserAsync(email);
@@ -100,7 +105,6 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
     [HttpGet("Combo")]
     public async Task<IActionResult> GetComboAsync() => Ok(await _modelUnitOfWork.GetComboAsync());
 
-
     [HttpGet("Sett")]
     public async Task<IActionResult> GetLiqAsync()
     {
@@ -110,7 +114,7 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
         var result = await _userUnitOfWork.GetUserAsync(email);
         if (result.ChargeId == null) return BadRequest("El usuario no tiene un cargo asignado.");
 
-        var response = await _modelUnitOfWork.GetLiqAsync(result.ChargeId ?? 0,result.Id);
+        var response = await _modelUnitOfWork.GetLiqAsync(result.ChargeId ?? 0, result.Id);
 
         if (response.WasSuccess)
         {
@@ -121,4 +125,13 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
         return BadRequest();
     }
 
+    [HttpPost("generarpdf/{fecha}/{id}/{userid}")]
+    public async Task<IActionResult> GenerarPdf(DateTime fecha, int id, string userid)
+    {
+        var response = await _modelUnitOfWork.GetAsync(fecha, id, userid, true);
+
+        var pdf = LiquidacionDocument.GenerarReportePdf(response.Result!);
+
+        return File(pdf, "application/pdf", "PayrollPdf.pdf");
+    }
 }

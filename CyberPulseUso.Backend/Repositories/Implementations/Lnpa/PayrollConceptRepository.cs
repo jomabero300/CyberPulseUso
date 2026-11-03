@@ -19,6 +19,14 @@ public class PayrollConceptRepository : GenericRepository<PayrollConcept>, IPayr
         _context = context;
     }
 
+
+    public override async Task<ActionResponse<IEnumerable<PayrollConcept>>> GetAsync()
+    {
+        var query = await _context.Set<PayrollConcept>().Include(x => x.Statu).AsNoTracking().OrderBy(x => x.Name).ToListAsync();
+
+        return new ActionResponse<IEnumerable<PayrollConcept>> { WasSuccess = true, Result = query };
+
+    }
     public override async Task<ActionResponse<PayrollConcept>> GetAsync(int id)
     {
         var entity = await _context.Set<PayrollConcept>().AsNoTracking()

@@ -27,6 +27,7 @@ else
                 </MudButton>
             </div>
             <MudSpacer />
+                <div class="d-flex gap-4">
                     <div class="d-flex justify-center align-center font-sans" style="height: 200px;">
                         @if (_isProcessing)
                         {
@@ -52,10 +53,12 @@ else
                             <MudIconButton Icon="@Icons.Material.Filled.GridOn"
                                            Color="Color.Success"
                                            aria-label="Exportar Excel"
+                                           Variant="Variant.Outlined"
                                            OnClick="@(() => ExportAsync("excel"))" />
 
                         }
                     </div>
+                </div>
             <MudSpacer />
             <FilterComponent ApplyFilter="SetFilterValue" />
         </ToolBarContent>

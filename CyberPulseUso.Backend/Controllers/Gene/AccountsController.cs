@@ -46,6 +46,11 @@ public class AccountsController : ControllerBase
     [HttpGet("paginated")]
     public async Task<IActionResult> GetPaginatedAsync([FromQuery] PaginationDTO pagination)
     {
+        if (User.IsInRole("SAdm") == true)
+        {
+            pagination.otro = UserType.SAdm.ToString();
+        }
+
         var response = await _userUnitOfWork.GetAsync(pagination);
         return response.WasSuccess ? Ok(response.Result) : BadRequest(response.Message);
     }
@@ -212,10 +217,10 @@ public class AccountsController : ControllerBase
 
     [HttpGet("TotalRecordsPaginated")]
     public async Task<IActionResult> GetTotalRecordsAsync([FromQuery] PaginationDTO pagination)
-    {
-        if (!string.IsNullOrWhiteSpace(pagination.Email))
+    {        
+        if (User.IsInRole("SAdm") == true)
         {
-            pagination.Email = User.Identity!.Name;
+            pagination.otro = UserType.SAdm.ToString();
         }
 
         var response = await _userUnitOfWork.GetTotalRecordsAsync(pagination);

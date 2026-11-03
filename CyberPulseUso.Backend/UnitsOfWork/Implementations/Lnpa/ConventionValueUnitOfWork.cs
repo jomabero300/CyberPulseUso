@@ -17,7 +17,7 @@ public class ConventionValueUnitOfWork : GenericUnitOfWork<ConventionValue>, ICo
     {
         _repository = modelRepository;
     }
-
+    public override async Task<ActionResponse<IEnumerable<ConventionValue>>> GetAsync() => await _repository.GetAsync();
     public override Task<ActionResponse<ConventionValue>> GetAsync(int id) => _repository.GetAsync(id);
     public override Task<ActionResponse<IEnumerable<ConventionValue>>> GetAsync(PaginationDTO pagination) => _repository.GetAsync(pagination);
     public override Task<ActionResponse<ConventionValue>> DeleteAsync(int id) => _repository.DeleteAsync(id);

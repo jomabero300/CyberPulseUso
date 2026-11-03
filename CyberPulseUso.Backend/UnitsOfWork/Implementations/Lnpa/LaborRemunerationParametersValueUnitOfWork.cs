@@ -18,6 +18,8 @@ public class LaborRemunerationParametersValueUnitOfWork : GenericUnitOfWork<Labo
         _repository = modelRepository;
     }
 
+    public override async Task<ActionResponse<IEnumerable<LaborRemunerationParametersValue>>> GetAsync() => await _repository.GetAsync();
+
     public override Task<ActionResponse<LaborRemunerationParametersValue>> GetAsync(int id) => _repository.GetAsync(id);
     public override Task<ActionResponse<IEnumerable<LaborRemunerationParametersValue>>> GetAsync(PaginationDTO pagination) => _repository.GetAsync(pagination);
     public override Task<ActionResponse<LaborRemunerationParametersValue>> DeleteAsync(int id) => _repository.DeleteAsync(id);

@@ -17,7 +17,7 @@ public class PayrollConceptUnitOfWork : GenericUnitOfWork<PayrollConcept>, IPayr
     {
         _repository = modelRepository;
     }
-
+    public override async Task<ActionResponse<IEnumerable<PayrollConcept>>> GetAsync() => await _repository.GetAsync();
     public override Task<ActionResponse<PayrollConcept>> GetAsync(int id) => _repository.GetAsync(id);
     public override Task<ActionResponse<IEnumerable<PayrollConcept>>> GetAsync(PaginationDTO pagination) => _repository.GetAsync(pagination);
     public override Task<ActionResponse<PayrollConcept>> DeleteAsync(int id) => _repository.DeleteAsync(id);

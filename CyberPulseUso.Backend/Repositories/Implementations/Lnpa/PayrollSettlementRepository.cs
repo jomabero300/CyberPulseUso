@@ -6,6 +6,7 @@ using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.EntitiesDTO;
 using CyberPulseUso.Shared.EntitiesDTO.Gene;
 using CyberPulseUso.Shared.EntitiesDTO.Lnpa;
+using CyberPulseUso.Shared.EntitiesDTO.Lnpa.Reports;
 using CyberPulseUso.Shared.Responses;
 using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Office2010.Excel;
@@ -508,39 +509,77 @@ public class PayrollSettlementRepository : GenericRepository<PayrollSettlement>,
 
     public async Task<ActionResponse<IEnumerable<PayrollSettlementDTO>>> GetAsync(DateTime fecha, int Id, string id)
     {
-        var _datos = await _context.PayrollSettlements.AsNoTracking().Include(x=>x.PayrollConcept).Include(x=>x.Statu)
-                                                    .Where(x => 
-                                                    x.ChargeId == Id && 
-                                                    x.Date.Year == fecha.Year && 
-                                                    x.Date.Month == fecha.Month && 
-                                                    x.Date.Day == fecha.Day && 
-                                                    x.Date.Hour == fecha.Hour && 
-                                                    x.Date.Minute == fecha.Minute && 
+        var _datos = await _context.PayrollSettlements.AsNoTracking().Include(x => x.PayrollConcept).Include(x => x.Statu)
+                                                    .Where(x =>
+                                                    x.ChargeId == Id &&
+                                                    x.Date.Year == fecha.Year &&
+                                                    x.Date.Month == fecha.Month &&
+                                                    x.Date.Day == fecha.Day &&
+                                                    x.Date.Hour == fecha.Hour &&
+                                                    x.Date.Minute == fecha.Minute &&
                                                     x.UserId == id)
                                                     .ToListAsync();
-
-
         var result = _datos.Select(x => new PayrollSettlementDTO
         {
-            Id=x.Id,
-            Date=x.Date,
-            UserId=x.UserId,
-            ChargeId=x.ChargeId,
-            PayrollConceptId=x.PayrollConceptId,
-            Name=x.PayrollConcept!.Name,
-            Amount=x.Amount,
-            UnitValue=x.UnitValue,
-            AccruedValue=x.AccruedValue,
-            DeductedValue=x.DeductedValue,
-            StatuId=x.StatuId,
-            Statu=new StatuDTO { Id=x.StatuId,Name=x.Statu!.Name}
+            Id = x.Id,
+            Date = x.Date,
+            UserId = x.UserId,
+            ChargeId = x.ChargeId,
+            PayrollConceptId = x.PayrollConceptId,
+            Name = x.PayrollConcept!.Name,
+            Amount = x.Amount,
+            UnitValue = x.UnitValue,
+            AccruedValue = x.AccruedValue,
+            DeductedValue = x.DeductedValue,
+            StatuId = x.StatuId,
+            Statu = new StatuDTO { Id = x.StatuId, Name = x.Statu!.Name }
         }).ToList();
 
         return new ActionResponse<IEnumerable<PayrollSettlementDTO>>
         {
             WasSuccess = true,
-            Result = result.OrderBy(x=>x.PayrollConceptId).ToList()
+            Result = result.OrderBy(x => x.PayrollConceptId).ToList()
+        };
+    }
+    public async Task<ActionResponse<LiquidacionReportModel>> GetAsync(DateTime fecha, int Id, string id, bool esta)
+    {
+        var _result= await _context.PayrollSettlements.AsNoTracking()
+                                         .Include(x => x.Charge).ThenInclude(x => x!.Group)
+                                         .Include(x => x.User)
+                                         .Include(x => x.PayrollConcept)
+                                         .Include(x => x.Statu)
+                    .Where(x =>
+                    x.ChargeId == Id &&
+                    x.Date.Year == fecha.Year &&
+                    x.Date.Month == fecha.Month &&
+                    x.Date.Day == fecha.Day &&
+                    x.Date.Hour == fecha.Hour &&
+                    x.Date.Minute == fecha.Minute &&
+                    x.UserId == id)
+                    .ToListAsync();
+
+        var result = new LiquidacionReportModel()
+        {
+            Cargo=_result.First().Charge!.Name!,
+            Fecha=_result.First().Date,
+            Grupo=_result.First().Charge!.Group!.Name!,
+            RealizadoPor= _result.First().User!.FullName,
+            RetencionFuente=2,
+            RetencionSaludPension=1,
+            Items= _result.Select(x => new ItemLiquidacion {
+                PayrollConceptId=x.PayrollConceptId,
+                Cantidad=x.Amount,
+                Concepto=x.PayrollConcept!.Name!,
+                ValorUnitario=x.UnitValue,
+                Deducido=x.DeductedValue,
+                DevengadoTotal=x.AccruedValue
+            }).ToList()
         };
 
+        return new ActionResponse<LiquidacionReportModel>
+        {
+            WasSuccess = true,
+            Result = result
+        };
     }
 }

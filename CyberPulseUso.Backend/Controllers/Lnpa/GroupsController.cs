@@ -1,5 +1,6 @@
 using CyberPulseUso.Backend.Controllers.Gene;
 using CyberPulseUso.Backend.Helpers;
+using CyberPulseUso.Backend.Helpers.Reports.Lnpa;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Lnpa;
 using CyberPulseUso.Shared.Entities.Lnpa;
@@ -94,9 +95,9 @@ public class GroupsController : GenericController<Group>
         {
             string rutaPath = _env.WebRootPath;
 
-            var pdf = GeneReports.GroupPdf([.. response.Result!], rutaPath);
+            var pdf = GroupReport.GroupPdf([.. response.Result!], rutaPath);
 
-            return File(pdf, "application/pdf", "ProductosPdf.pdf");
+            return File(pdf, "application/pdf", "GruposPdf.pdf");
         }
         else 
         {

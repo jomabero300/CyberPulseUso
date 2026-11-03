@@ -19,7 +19,9 @@ public partial class GroupIndex
     private readonly int[] pageSizeOptions = { 10, 25, 50, int.MaxValue };
     private int totalRecords = 0;
     private bool loading;
-    
+    private bool _isProcessing = false;
+    private bool _isProcessing2 = false;
+
     private const string baseUrl = "api/groups";
     private string infoFormat = "{first_item}-{last_item} => {all_items}";
 
@@ -29,7 +31,7 @@ public partial class GroupIndex
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
     [Inject] IJSRuntime JS { get; set; } = null!;
-
+    
     [Parameter, SupplyParameterFromForm] public string Filter { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
@@ -143,7 +145,24 @@ public partial class GroupIndex
 
     private async Task ExportAsync(string type)
     {
+
+        if (type == "pdf")
+        {
+            _isProcessing = true;
+        }
+        else
+        {
+            _isProcessing2 = true;
+        }
+
+
         var response = await repository.GetBytesAsync($"api/groups/report/{type}");
+
+        if (response.Error || response.Response == null)
+        {
+            return;
+        }
+
 
         if (response.Error || response.Response == null)
         {
@@ -159,6 +178,17 @@ public partial class GroupIndex
             string nombreArchivo = $"Grupos_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
             await JS.InvokeVoidAsync("downloadFileFromBytes", response.Response, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", nombreArchivo);
         }
+
+        if (type == "pdf")
+        {
+            _isProcessing = false;
+        }
+        else
+        {
+            _isProcessing2 = false;
+        }
+
+
     }
 
 }

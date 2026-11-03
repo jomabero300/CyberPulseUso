@@ -1,10 +1,10 @@
-using CyberPulseUso.Frontend.Components.Pages.Lnpa.CategorysLnpa;
 using CyberPulseUso.Frontend.Components.Pages.Shared;
 using CyberPulseUso.Frontend.Repositories;
 using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.Resources;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
+using Microsoft.JSInterop;
 using MudBlazor;
 using System.Net;
 
@@ -25,6 +25,7 @@ public partial class PayrollSettlementIndex
     [Inject] private IDialogService DialogService { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
+    [Inject] IJSRuntime JS { get; set; } = null!;
 
     [Parameter, SupplyParameterFromForm] public string Filter { get; set; } = string.Empty;
     protected override async Task OnInitializedAsync()
@@ -102,7 +103,7 @@ public partial class PayrollSettlementIndex
 
         await table.ReloadServerData();
     }
-    private async Task ShowModalAsync(int id = 0,string _date="", string UserId="" ,bool isEdit = false)
+    private async Task ShowModalAsync(int id = 0, string _date = "", string UserId = "", bool isEdit = false)
     {
         var options = new DialogOptions() { CloseOnEscapeKey = true, CloseButton = false, BackdropClick = false, MaxWidth = MaxWidth.Medium };
 
@@ -144,7 +145,6 @@ public partial class PayrollSettlementIndex
 
             dialog = await DialogService.ShowAsync<PayrollSettlementCreate>(title, parameters, options);
         }
-    
 
         var result = await dialog.Result;
 
@@ -175,7 +175,6 @@ public partial class PayrollSettlementIndex
 
 
         var responseHttp = await repository.DeleteAsync($"{baseUrl}/full/{entity.Id}");
-
         if (responseHttp.Error)
         {
             if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
@@ -196,4 +195,18 @@ public partial class PayrollSettlementIndex
 
         Snackbar.Add(Localizer["RecordDeletedOk"], Severity.Success);
     }
+
+    private async Task GeneReportAsync(PayrollSettlement entity)
+    {
+
+        var response = await repository.GetBytesAsync($"/api/payrollsettlements/generarpdf/{entity.Date}/{entity.ChargeId}/{entity.UserId}");
+
+        if (response.Error || response.Response == null)
+        {
+            return;
+        }
+
+        await JS.InvokeVoidAsync("displayPdf", response.Response);
+    }
+
 }

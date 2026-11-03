@@ -33,6 +33,7 @@
 
                 
                     <MudSpacer />
+
                     <FilterComponent ApplyFilter="SetFilterValue" />
                 </ToolBarContent>
                 <HeaderContent>
@@ -58,20 +59,30 @@
                     <MudTd Style="text-align: right;">@model.DeductedValue.ToString("N2")</MudTd>
                     <MudTd Style="text-align: right;">@((model.AccruedValue - model.DeductedValue).ToString("N2"))</MudTd>
                     <MudTd Style="text-align: center;" Class="text-center align-middle">
-                        <MudTooltip Text="@Localizer["Edit"]">
-                            <MudButton Variant="Variant.Filled"
-                                       Color="Color.Warning"
-                                       OnClick="@(() => ShowModalAsync(model.ChargeId, model.Date.ToString(),model.UserId!, true))">
-                                <MudIcon Icon="@Icons.Material.Filled.Edit" />
-                            </MudButton>
-                        </MudTooltip>
-                        <MudTooltip Text="@Localizer["Delete"]">
-                            <MudButton Variant="Variant.Filled"
-                                       Color="Color.Error"
-                                       OnClick="@(() => DeleteAsync(@model))">
-                                <MudIcon Icon="@Icons.Material.Filled.Delete" />
-                            </MudButton>
-                        </MudTooltip>
+                    <MudTooltip Text="@Localizer["Edit"]">
+                        <MudButton Variant="Variant.Filled"
+                                    Color="Color.Warning"
+                                    Size="Size.Small"
+                                    OnClick="@(() => ShowModalAsync(model.ChargeId, model.Date.ToString(),model.UserId!, true))">
+                            <MudIcon Icon="@Icons.Material.Filled.Edit" />
+                        </MudButton>
+                    </MudTooltip>
+                    <MudTooltip Text="@Localizer["Delete"]">
+                        <MudButton Variant="Variant.Filled"
+                                    Color="Color.Error"
+                                    Size="Size.Small"
+                                    OnClick="@(() => DeleteAsync(@model))">
+                            <MudIcon Icon="@Icons.Material.Filled.Delete" />
+                        </MudButton>
+                    </MudTooltip>
+                    <MudTooltip Text="@Localizer["Pdf"]">
+                        <MudButton Variant="Variant.Filled"
+                                    Color="Color.Error"
+                                    Size="Size.Small"
+                                    OnClick="@(() => GeneReportAsync(model))">
+                            <MudIcon Icon="@Icons.Material.Filled.PictureAsPdf" />
+                        </MudButton>
+                    </MudTooltip>
                     </MudTd>
                 </RowTemplate>
                 <NoRecordsContent>

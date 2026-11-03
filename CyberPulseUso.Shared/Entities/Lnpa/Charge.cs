@@ -24,4 +24,5 @@ public class Charge
     public Statu? Statu { get; set; }
 
     public ICollection<User>? Users { get; set; }
+    public ICollection<PayrollSettlement>? PayrollSettlements { get; set; }
 }

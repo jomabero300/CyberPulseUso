@@ -1,10 +1,12 @@
 using CyberPulseUso.Backend.Controllers.Gene;
 using CyberPulseUso.Backend.Helpers;
+using CyberPulseUso.Backend.Helpers.Reports.Lnpa;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Lnpa;
 using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.EntitiesDTO;
 using CyberPulseUso.Shared.EntitiesDTO.Lnpa;
+using DocumentFormat.OpenXml.Office2016.Presentation.Command;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -73,4 +75,44 @@ public class ConventionValuesController : GenericController<ConventionValue>
 
     [HttpGet("Combo")]
     public async Task<IActionResult> GetComboAsync() => Ok(await _modelUnitOfWork.GetComboAsync());
+
+    [HttpGet("Report/{type}")]
+    public async Task<IActionResult> GetAsync(string type)
+    {
+        var response = await _modelUnitOfWork.GetAsync();
+
+        if (!response.WasSuccess)
+        {
+            return BadRequest(response.Message);
+        }
+        if (response.Result == null || !response.Result.Any())
+        {
+            return BadRequest("No hay datos para generar el reporte.");
+        }
+        if (type.ToLower() == "pdf")
+        {
+            string rutaPath = _env.WebRootPath;
+
+            var pdf = ConventionValueReport.ConventionValuePdf([.. response.Result], rutaPath);
+
+            return File(pdf, "application/pdf", "ConvencionesValorPdf.pdf");
+        }
+        else
+        {
+            var excelData = response.Result.Select(x => new ConventionValueExcelDTO
+            {
+                Codigo = x.Id,
+                Convención=x.Convention!.Name,
+                Fecha=x.Date.ToString("dd/MainMasterMonikerList/yyyy"),
+                Valor=x.Prince,
+                Estado = x.Statu?.Name
+            }).ToList();
+
+            byte[] fileBytes = GeneExcel.GenerarReporte(excelData, "ConvencionesValor");
+            string nombreArchivo = $"ConvencionesValor_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+            string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+            return File(fileBytes, contentType, nombreArchivo);
+        }
+    }
 }

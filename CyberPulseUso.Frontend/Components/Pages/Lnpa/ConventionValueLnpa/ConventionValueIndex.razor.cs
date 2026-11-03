@@ -4,6 +4,7 @@ using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.Resources;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
+using Microsoft.JSInterop;
 using MudBlazor;
 using System.Net;
 
@@ -16,6 +17,9 @@ public partial class ConventionValueIndex
     private readonly int[] pageSizeOptions = { 10, 25, 50, int.MaxValue };
     private int totalRecords = 0;
     private bool loading;
+    private bool _isProcessing=false;
+    private bool _isProcessing2=false;
+
     private const string baseUrl = "api/conventionvalues";
     private string infoFormat = "{first_item}-{last_item} => {all_items}";
 
@@ -24,7 +28,7 @@ public partial class ConventionValueIndex
     [Inject] private IDialogService DialogService { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
-
+    [Inject] IJSRuntime JS { get; set; } = null!;
     [Parameter, SupplyParameterFromForm] public string Filter { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
@@ -170,5 +174,40 @@ public partial class ConventionValueIndex
         await table.ReloadServerData();
 
         Snackbar.Add(Localizer["RecordDeletedOk"], Severity.Success);
+    }
+    private async Task ExportAsync(string type)
+    {
+        if (type == "pdf")
+        {
+            _isProcessing = true;
+        }
+        else
+        {
+            _isProcessing2 = true;
+        }
+        var response = await repository.GetBytesAsync($"api/ConventionValues/report/{type}");
+
+        if (response.Error || response.Response == null)
+        {
+            return;
+        }
+
+        if (type == "pdf")
+        {
+            await JS.InvokeVoidAsync("displayPdf", response.Response);
+        }
+        else
+        {
+            string nombreArchivo = $"Categorias_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+            await JS.InvokeVoidAsync("downloadFileFromBytes", response.Response, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", nombreArchivo);
+        }
+        if (type == "pdf")
+        {
+            _isProcessing = false;
+        }
+        else
+        {
+            _isProcessing2 = false;
+        }
     }
 }
