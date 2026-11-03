@@ -22,13 +22,13 @@ public static class LiquidacionDocument
         {
             container.Page(page =>
             {
-                page.Size(PageSizes.A4.Landscape()); // Formato horizontal original
-                page.Margin(30);
+                page.Size(PageSizes.A4); // Formato horizontal original .Landscape()
+                page.Margin(20);
                 page.PageColor(Colors.White);
 
                 // Aplicación de la API moderna sin métodos obsoletos
-                page.DefaultTextStyle(x => x.FontFamily("Lato").FontSize(9).FontColor(Colors.Grey.Darken3));
-
+                page.DefaultTextStyle(x => x.FontFamily("Lato").FontSize(8.5f).FontColor(Colors.Grey.Darken3));
+                
                 page.Header().Element(headerContainer => ComposeHeader(headerContainer, model));
                 page.Content().Element(contentContainer => ComposeContent(contentContainer, model));
                 page.Footer().Element(footerContainer => ComposeFooter(footerContainer, model));
@@ -44,11 +44,11 @@ public static class LiquidacionDocument
         {
             row.RelativeItem(2).Column(col =>
             {
-                col.Item().Text("SUBDIRECTIVA ARAUCA").FontSize(18).Bold().FontColor(PrimaryColor);
-                col.Item().Text("LIQUIDACIÓN PARCIAL TRABAJADORES CONTRATISTAS").FontSize(10).Medium().FontColor(Colors.Grey.Darken1);
+                col.Item().Text("SUBDIRECTIVA ARAUCA").FontSize(16).Bold().FontColor(PrimaryColor);
+                col.Item().Text("LIQUIDACIÓN PARCIAL TRABAJADORES CONTRATISTAS").FontSize(9).Medium().FontColor(Colors.Grey.Darken1);
             });
 
-            row.RelativeItem(3).Background(BgColor).Border(1).BorderColor(BorderColor).Padding(8).Row(headerRow =>
+            row.RelativeItem(3).Background(BgColor).Border(1).BorderColor(BorderColor).Padding(6).Row(headerRow =>
             {
                 headerRow.RelativeItem().Column(c =>
                 {
@@ -102,22 +102,22 @@ public static class LiquidacionDocument
                     table.Cell().Element(StyleCell).AlignRight().Text(item.DevengadoTotal > 0 ? item.DevengadoTotal.ToString("C0") : "-");
                     table.Cell().Element(StyleCell).AlignRight().Text(item.Deducido > 0 ? item.Deducido.ToString("C0") : "-");
 
-                    IContainer StyleCell(IContainer c) => c.BorderBottom(1).BorderColor(BorderColor).Padding(5);
+                    IContainer StyleCell(IContainer c) => c.BorderBottom(1).BorderColor(BorderColor).Padding(3.5f);
                 }
             });
 
             // Resumen de Totales y Barra de Progresos Visuales
-            column.Item().PaddingTop(15).Row(row =>
+            column.Item().PaddingTop(10).Row(row =>
             {
                 row.RelativeItem(2).Column(c =>
                 {
-                    c.Item().Text("RESUMEN DE TOTALES").FontSize(11).Bold().FontColor(PrimaryColor);
+                    c.Item().Text("RESUMEN DE TOTALES").FontSize(10).Bold().FontColor(PrimaryColor);
 
                     // Barra de progreso proporcional automatizada (Ingresos vs Deducciones)
                     double totalComposicion = model.TotalIngresos + model.TotalDeducciones;
                     float porcentajeIngresos = totalComposicion > 0 ? (float)(model.TotalIngresos / totalComposicion) : 1f;
 
-                    c.Item().PaddingTop(5).Height(12).Background(BorderColor).Row(bar =>
+                    c.Item().PaddingTop(4).Height(10).Background(BorderColor).Row(bar =>
                     {
                         bar.RelativeItem(porcentajeIngresos * 100).Background(AccentColor);
                         bar.RelativeItem((1 - porcentajeIngresos) * 100).Background(Colors.Red.Lighten2);
@@ -131,14 +131,14 @@ public static class LiquidacionDocument
                 {
                     t.ColumnsDefinition(cd => { cd.RelativeColumn(); cd.RelativeColumn(); });
 
-                    t.Cell().Padding(4).Text("TOTAL INGRESOS:").Bold();
-                    t.Cell().Padding(4).AlignRight().Text(model.TotalIngresos.ToString("C0")).FontColor(AccentColor).Bold();
+                    t.Cell().Padding(3).Text("TOTAL INGRESOS:").Bold();
+                    t.Cell().Padding(3).AlignRight().Text(model.TotalIngresos.ToString("C0")).FontColor(AccentColor).Bold();
 
-                    t.Cell().Padding(4).Text("TOTAL DEDUCCIONES:").Bold();
-                    t.Cell().Padding(4).AlignRight().Text(model.TotalDeducciones.ToString("C0")).FontColor(Colors.Red.Medium).Bold();
+                    t.Cell().Padding(3).Text("TOTAL DEDUCCIONES:").Bold();
+                    t.Cell().Padding(3).AlignRight().Text(model.TotalDeducciones.ToString("C0")).FontColor(Colors.Red.Medium).Bold();
 
-                    t.Cell().Background(PrimaryColor).Padding(6).Text("TOTAL A PAGAR:").Bold().FontColor(Colors.White);
-                    t.Cell().Background(PrimaryColor).Padding(6).AlignRight().Text(model.TotalAPagar.ToString("C0")).Bold().FontColor(Colors.White).FontSize(10);
+                    t.Cell().Background(PrimaryColor).Padding(5).Text("TOTAL A PAGAR:").Bold().FontColor(Colors.White);
+                    t.Cell().Background(PrimaryColor).Padding(5).AlignRight().Text(model.TotalAPagar.ToString("C0")).Bold().FontColor(Colors.White).FontSize(9.5f);
                 });
             });
         });
@@ -146,10 +146,10 @@ public static class LiquidacionDocument
 
     private static void ComposeFooter(IContainer container, LiquidacionReportModel model)
     {
-        container.BorderTop(1).BorderColor(BorderColor).PaddingTop(5).Row(row =>
+        container.BorderTop(1).BorderColor(BorderColor).PaddingTop(4).Row(row =>
         {
-            row.RelativeItem().Text($"Realizado por: {model.RealizadoPor}").FontSize(8).Italic();
-            row.RelativeItem().AlignRight().Text($"Fecha de Emisión: {model.Fecha:dd 'de' MMMM 'de' yyyy}").FontSize(8);
+            row.RelativeItem().Text($"Realizado por: {model.RealizadoPor}").FontSize(7.5f).Italic();
+            row.RelativeItem().AlignRight().Text($"Fecha de Emisión: {model.Fecha:dd 'de' MMMM 'de' yyyy}").FontSize(7.5f);
         });
     }
 }

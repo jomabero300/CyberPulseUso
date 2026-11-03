@@ -50,8 +50,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 
-builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7093") });
-//builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("http://cyberpulseusoapi.runasp.net") });
+//builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7093") });
+builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("http://cyberpulseusoapi.runasp.net"), Timeout = TimeSpan.FromSeconds(5) });
 
 
 builder.Services.AddScoped<IRepository, Repository>();

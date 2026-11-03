@@ -13,7 +13,7 @@ public partial class Login
 {
     private LoginDTO loginDTO = new();
     private bool wasClore;
-
+    string errorInternoHosting = "";
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private IDialogService DialogService { get; set; } = null!;
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
@@ -70,21 +70,29 @@ public partial class Login
             Snackbar.Add(Localizer["ERR010"], Severity.Error);
             return;
         }
-
-        var responseHttp = await repository.PostAsync<LoginDTO, TokenDTO>("/api/accounts/Login", loginDTO);
-
-        if (responseHttp.Error)
+        try
         {
-            var message = await responseHttp.GetErrorMessageAsync();
-            Snackbar.Add(Localizer[message!], Severity.Error);
-            return;
+            errorInternoHosting = "";
+            var responseHttp = await repository.PostAsync<LoginDTO, TokenDTO>("/api/accounts/Login", loginDTO);
+
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                Snackbar.Add(Localizer[message!], Severity.Error);
+                return;
+            }
+
+            await LoginService.LoginAsync(responseHttp.Response!.Token);
+
+            //NavigationManager.NavigateTo("/");
+
+            MudDialog.Close(DialogResult.Ok(true));
         }
-
-        await LoginService.LoginAsync(responseHttp.Response!.Token);
-
-        //NavigationManager.NavigateTo("/");
-
-        MudDialog.Close(DialogResult.Ok(true));
+        catch (Exception ex)
+        {
+            // Esto evitará que Blazor Server se caiga y pintará el error real en tu pantalla o Snackbar
+            errorInternoHosting = $"[EXCEPCIÓN DE SERVIDOR]: {ex.Message} -> {ex.InnerException?.Message}";
+            Snackbar.Add("Error de conexión interno del servidor", Severity.Warning);
+        }
     }
-
 }
