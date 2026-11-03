@@ -3,12 +3,6 @@
 
         <EditForm Model="loginDTO" OnValidSubmit="LoginAsync">
             <DataAnnotationsValidator />
-            @if (!string.IsNullOrEmpty(errorInternoHosting))
-            {
-                <MudText Color="Color.Error" Typo="Typo.body2" Class="my-2">
-                    @errorInternoHosting
-                </MudText>
-            }
             <MudGrid Class="mb-4">
                 <MudItem xs="12" sm="12">
                     <MudTextField @ref="myTextField" Label="@Localizer["Email"]" @bind-Value="@loginDTO.Email" InputType="InputType.Email" />

@@ -274,7 +274,7 @@ public class AccountsController : ControllerBase
             new("CountryId", user.Country.Id.ToString())
         };
 
-        var secret = _configuration["jwMBELtKey:Secret"];
+        var secret = _configuration["jwMBELtKey"];
         if (string.IsNullOrWhiteSpace(secret)) throw new InvalidOperationException("Falta configurar jwMBELtKey.");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

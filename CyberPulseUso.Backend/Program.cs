@@ -135,7 +135,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     ValidateLifetime = true,
     ValidateIssuerSigningKey = true,
     IssuerSigningKey = new SymmetricSecurityKey(
-        Encoding.UTF8.GetBytes(builder.Configuration["jwMBELtKey:Secret"]!)),
+        Encoding.UTF8.GetBytes(builder.Configuration["jwMBELtKey"]!)),
     ClockSkew = TimeSpan.Zero
 });
 
