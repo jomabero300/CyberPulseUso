@@ -125,7 +125,7 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
         return BadRequest();
     }
 
-    [HttpPost("generarpdf/{fecha}/{id}/{userid}")]
+    [HttpGet("generarpdf/{fecha:datetime}/{id}/{userid}")]
     public async Task<IActionResult> GenerarPdf(DateTime fecha, int id, string userid)
     {
         var response = await _modelUnitOfWork.GetAsync(fecha, id, userid, true);

@@ -563,7 +563,7 @@ public class PayrollSettlementRepository : GenericRepository<PayrollSettlement>,
             Cargo=_result.First().Charge!.Name!,
             Fecha=_result.First().Date,
             Grupo=_result.First().Charge!.Group!.Name!,
-            RealizadoPor= _result.First().User!.FullName,
+            RealizadoPor= $"{_result.First().User!.FirstName} {_result.First().User!.LastName}",
             RetencionFuente=2,
             RetencionSaludPension=1,
             Items= _result.Select(x => new ItemLiquidacion {

@@ -76,6 +76,7 @@ public class CategoriesController : GenericController<Category>
 
     [HttpGet("Combo")]
     public async Task<IActionResult> GetComboAsync() => Ok(await _modelUnitOfWork.GetComboAsync());
+
     [HttpGet("Report/{type}")]
     public async Task<IActionResult> GetAsync(string type)
     {

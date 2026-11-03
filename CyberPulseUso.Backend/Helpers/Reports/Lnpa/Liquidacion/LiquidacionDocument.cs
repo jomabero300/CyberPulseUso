@@ -27,7 +27,7 @@ public static class LiquidacionDocument
                 page.PageColor(Colors.White);
 
                 // Aplicación de la API moderna sin métodos obsoletos
-                page.DefaultTextStyle(x => x.FontFamily("Arial").FontSize(9).FontColor(Colors.Grey.Darken3));
+                page.DefaultTextStyle(x => x.FontFamily("Lato").FontSize(9).FontColor(Colors.Grey.Darken3));
 
                 page.Header().Element(headerContainer => ComposeHeader(headerContainer, model));
                 page.Content().Element(contentContainer => ComposeContent(contentContainer, model));
@@ -148,7 +148,7 @@ public static class LiquidacionDocument
     {
         container.BorderTop(1).BorderColor(BorderColor).PaddingTop(5).Row(row =>
         {
-            row.RelativeItem().Text($"Realizado por: model.RealizadoPor").FontSize(8).Italic();
+            row.RelativeItem().Text($"Realizado por: {model.RealizadoPor}").FontSize(8).Italic();
             row.RelativeItem().AlignRight().Text($"Fecha de Emisión: {model.Fecha:dd 'de' MMMM 'de' yyyy}").FontSize(8);
         });
     }

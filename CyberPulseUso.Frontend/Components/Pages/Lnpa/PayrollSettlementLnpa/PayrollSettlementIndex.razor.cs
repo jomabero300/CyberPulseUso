@@ -198,8 +198,10 @@ public partial class PayrollSettlementIndex
 
     private async Task GeneReportAsync(PayrollSettlement entity)
     {
-
-        var response = await repository.GetBytesAsync($"/api/payrollsettlements/generarpdf/{entity.Date}/{entity.ChargeId}/{entity.UserId}");
+        int id = entity.ChargeId;
+        string userid = entity.UserId!;
+        string fecha = entity.Date.ToString("yyyy-MM-ddTHH:mm:ss");
+        var response = await repository.GetBytesAsync($"api/payrollSettlements/generarpdf/{fecha}/{id}/{userid}");
 
         if (response.Error || response.Response == null)
         {
