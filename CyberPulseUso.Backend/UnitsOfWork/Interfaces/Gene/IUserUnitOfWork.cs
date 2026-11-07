@@ -32,4 +32,13 @@ public interface IUserUnitOfWork
     Task CheckRoleAsync(string roleName);
     Task AddUserToRoleAsync(User user, string roleName);
     Task<bool> IsUserInRoleAsync(User user, string roleName);
+
+    Task<RefreshToken?> GetRefreshTokenByHashAsync(string tokenHash);
+    Task CreateRefreshTokenAsync(RefreshToken entity);
+    Task<bool> RotateRefreshTokenAsync(string currentTokenHash,RefreshToken replacement,DateTime now);
+    Task RevokeAllRefreshTokensAsync(string userId);
+    Task RevokeRefreshTokenFamilyAsync(Guid familyId, DateTime now);
+
+    Task<IdentityResult> ResetPasswordAsNoTrackingAsync(string userId, string token, string newPassword);
+
 }

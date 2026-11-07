@@ -162,7 +162,10 @@ public partial class EditUser
             return;
         }
 
-        var responseHttp = await repository.PutAsync<User, TokenDTO>("/api/accounts", user!);
+        //var responseHttp = await repository.PutAsync<User, TokenDTO>("/api/accounts", user!);
+
+        var responseHttp = await repository.PutAsync<User, TokenDTO>($"/api/accounts?rememberMe={LoginService.RememberMe.ToString().ToLowerInvariant()}",user!);
+
 
         if (responseHttp.Error)
         {

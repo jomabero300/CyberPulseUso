@@ -12,10 +12,11 @@ namespace CyberPulseUso.Backend.UnitsOfWork.Implementations.Gene;
 public class UserUnitOfWork : IUserUnitOfWork
 {
     private readonly IUserRepository _userRepository;
-
-    public UserUnitOfWork(IUserRepository userRepository)
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
+    public UserUnitOfWork(IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository)
     {
         _userRepository = userRepository;
+        _refreshTokenRepository = refreshTokenRepository;
     }
 
     public async Task<IdentityResult> AddUserASync(User user, string password) => await _userRepository.AddUserAsync(user, password);
@@ -23,13 +24,17 @@ public class UserUnitOfWork : IUserUnitOfWork
     public async Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPassword) => await _userRepository.ChangePasswordAsync(user, currentPassword, newPassword);
     public async Task CheckRoleAsync(string roleName) => await _userRepository.CheckRoleAsync(roleName);
     public async Task<IdentityResult> ConfirmEmailAsync(User user, string token) => await _userRepository.ConfirmEmailAsync(user, token);
+
+    public async Task CreateRefreshTokenAsync(RefreshToken entity) => await _refreshTokenRepository.AddAsync(entity);
+
     public async Task<string> GenerateEmailConfirmationTokenAsync(User user) => await _userRepository.GenerateEmailConfirmationTokenAsync(user);
     public async Task<string> GeneratePasswordResetTokenAsync(User user) => await _userRepository.GeneratePasswordResetTokenAsync(user);
     public async Task<IEnumerable<User>> GetAsync(UserType userType) => await _userRepository.GetAsync(userType);
     public async Task<IEnumerable<User>> GetAsync(string id) => await _userRepository.GetAsync(id);
     public async Task<ActionResponse<IEnumerable<User>>> GetAsync(PaginationDTO pagination) => await _userRepository.GetAsync(pagination);
 
-  
+    public async Task<RefreshToken?> GetRefreshTokenByHashAsync(string tokenHash) => await _refreshTokenRepository.GetByHashAsync(tokenHash);
+
     public async Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination) => await _userRepository.GetTotalRecordsAsync(pagination);
     public async Task<User> GetUserAsync(Guid userId) => await _userRepository.GetUserAsync(userId);
     public async Task<User> GetUserAsync(string email) => await _userRepository.GetUserAsync(email);
@@ -38,7 +43,18 @@ public class UserUnitOfWork : IUserUnitOfWork
     public async Task<SignInResult> LoginAsync(LoginDTO model) => await _userRepository.LoginAsync(model);
     public async Task LogoutAsync() => await _userRepository.LogoutAsync();
     public async Task ResetAccessFailedCountAsync(User user) => await _userRepository.ResetAccessFailedCountAsync(user);
+
+    public async Task<IdentityResult> ResetPasswordAsNoTrackingAsync(string userId, string token, string newPassword)=>await _userRepository.ResetPasswordAsNoTrackingAsync(userId, token, newPassword);
+
     public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string password) => await _userRepository.ResetPasswordAsync(user, token, password);
+
+
+    public async Task RevokeAllRefreshTokensAsync(string userId) => await _refreshTokenRepository.RevokeAllAsync(userId);
+
+    public async Task RevokeRefreshTokenFamilyAsync(Guid familyId, DateTime now) => await _refreshTokenRepository.RevokeFamilyAsync(familyId, now);
+
+    public async Task<bool> RotateRefreshTokenAsync(string currentTokenHash, RefreshToken replacement, DateTime now) => await _refreshTokenRepository.RotateAsync(currentTokenHash, replacement, now);
+
     public async Task<IdentityResult> UpdateUserAsync(User user) => await _userRepository.UpdateUserAsync(user);
     public async Task UpdateUserAsync(string userId, UserType userType) => await _userRepository.UpdateUserAsync(userId, userType);
 }

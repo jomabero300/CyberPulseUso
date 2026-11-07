@@ -32,10 +32,12 @@ else
                                       @bind-Value="userDTO.Email"
                                       For="@(() => userDTO.Email)"
                                       InputType="InputType.Email" />
+
                         <MudTextField Label="@Localizer["Password"]"
                                       InputType="InputType.Password"
                                       @bind-Value="userDTO.Password"
                                       For="@(() => userDTO.Password)" />
+
                         <MudTextField Label="@Localizer["PasswordConfirm"]"
                                       InputType="InputType.Password"
                                       @bind-Value="userDTO.PasswordConfirm"

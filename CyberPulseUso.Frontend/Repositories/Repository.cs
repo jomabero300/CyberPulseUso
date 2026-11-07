@@ -1,3 +1,6 @@
+using CyberPulseUso.Frontend.AuthenticationProviders;
+using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
@@ -6,106 +9,215 @@ namespace CyberPulseUso.Frontend.Repositories;
 public class Repository : IRepository
 {
     private readonly HttpClient _httpClient;
+    private readonly AuthenticationProviderJWT _authenticationProvider;
 
     private JsonSerializerOptions _jsonDefaultOptions => new JsonSerializerOptions
     {
         PropertyNameCaseInsensitive = true,
     };
 
-    public Repository(HttpClient httpClient)
+    public Repository(HttpClient httpClient, AuthenticationProviderJWT authenticationProvider)
     {
         _httpClient = httpClient;
+        _authenticationProvider = authenticationProvider;
     }
 
+
+    // GET con respuesta tipada
     public async Task<HttpResponseWrapper<T>> GetAsync<T>(string url)
     {
-        var responseHttp = await _httpClient.GetAsync(url);
+        var responseHttp = await SendWithRefreshAsync(
+            () => new HttpRequestMessage(HttpMethod.Get, url));
 
         if (responseHttp.IsSuccessStatusCode)
         {
             var response = await UnserializeAnswer<T>(responseHttp);
-            return new HttpResponseWrapper<T>(response, false, responseHttp);
+
+            return new HttpResponseWrapper<T>(
+                response, false, responseHttp);
         }
 
-        return new HttpResponseWrapper<T>(default, true, responseHttp);
+        return new HttpResponseWrapper<T>(
+            default, true, responseHttp);
     }
 
-    public async Task<HttpResponseWrapper<object>> PostAsync<T>(string url, T model)
+    // POST sin respuesta tipada
+    public async Task<HttpResponseWrapper<object>> PostAsync<T>(
+        string url, T model)
     {
-        var messageJSON = JsonSerializer.Serialize(model);
-        var messageContet = new StringContent(messageJSON, Encoding.UTF8, "application/json");
-        var responseHttp = await _httpClient.PostAsync(url, messageContet);
-        return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
+        var responseHttp = await SendWithRefreshAsync(
+            () => CreateRequest(HttpMethod.Post, url, model));
+
+        return new HttpResponseWrapper<object>(
+            null, !responseHttp.IsSuccessStatusCode, responseHttp);
     }
 
-    public async Task<HttpResponseWrapper<TActionResponse>> PostAsync<T, TActionResponse>(string url, T model)
+    // POST con respuesta tipada
+    public async Task<HttpResponseWrapper<TActionResponse>>PostAsync<T, TActionResponse>(string url, T model)
     {
-        var messageJSON = JsonSerializer.Serialize(model);
-        var messageContet = new StringContent(messageJSON, Encoding.UTF8, "application/json");
+        var responseHttp = await SendWithRefreshAsync(
+            () => CreateRequest(HttpMethod.Post, url, model));
 
-        var request = new HttpRequestMessage(HttpMethod.Post, url);
-        request.Content = messageContet;
-
-        var responseHttp = await _httpClient.PostAsync(url, messageContet);
         if (responseHttp.IsSuccessStatusCode)
         {
-            var response = await UnserializeAnswer<TActionResponse>(responseHttp);
-            return new HttpResponseWrapper<TActionResponse>(response, false, responseHttp);
+            var response =
+                await UnserializeAnswer<TActionResponse>(responseHttp);
+
+            return new HttpResponseWrapper<TActionResponse>(
+                response, false, responseHttp);
         }
 
-        return new HttpResponseWrapper<TActionResponse>(default, !responseHttp.IsSuccessStatusCode, responseHttp);
+        return new HttpResponseWrapper<TActionResponse>(
+            default, true, responseHttp);
     }
 
+    // DELETE
     public async Task<HttpResponseWrapper<object>> DeleteAsync(string url)
     {
-        var responseHttp = await _httpClient.DeleteAsync(url);
-        return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
+        var responseHttp = await SendWithRefreshAsync(
+            () => new HttpRequestMessage(HttpMethod.Delete, url));
+
+        return new HttpResponseWrapper<object>(
+            null, !responseHttp.IsSuccessStatusCode, responseHttp);
     }
 
+    // PUT sin respuesta tipada
     public async Task<HttpResponseWrapper<object>> PutAsync<T>(string url, T model)
     {
-        var messageJson = JsonSerializer.Serialize(model);
-        var messageContent = new StringContent(messageJson, Encoding.UTF8, "application/json");
-        var responseHttp = await _httpClient.PutAsync(url, messageContent);
-        return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
+        var responseHttp = await SendWithRefreshAsync(
+            () => CreateRequest(HttpMethod.Put, url, model));
+
+        return new HttpResponseWrapper<object>(
+            null, !responseHttp.IsSuccessStatusCode, responseHttp);
     }
 
-    public async Task<HttpResponseWrapper<TActionResponse>> PutAsync<T, TActionResponse>(string url, T model)
+    // PUT con respuesta tipada
+    public async Task<HttpResponseWrapper<TActionResponse>>PutAsync<T, TActionResponse>(string url, T model)
     {
-        var messageJson = JsonSerializer.Serialize(model);
-        var messageContent = new StringContent(messageJson, Encoding.UTF8, "application/json");
-        var responseHttp = await _httpClient.PutAsync(url, messageContent);
+        var responseHttp = await SendWithRefreshAsync(
+            () => CreateRequest(HttpMethod.Put, url, model));
+
         if (responseHttp.IsSuccessStatusCode)
         {
-            var response = await UnserializeAnswer<TActionResponse>(responseHttp);
-            return new HttpResponseWrapper<TActionResponse>(response, false, responseHttp);
+            var response =
+                await UnserializeAnswer<TActionResponse>(responseHttp);
+
+            return new HttpResponseWrapper<TActionResponse>(
+                response, false, responseHttp);
         }
 
-        return new HttpResponseWrapper<TActionResponse>(default, true, responseHttp);
+        return new HttpResponseWrapper<TActionResponse>(
+            default, true, responseHttp);
     }
 
+    // GET sin respuesta tipada
     public async Task<HttpResponseWrapper<object>> GetAsync(string url)
     {
-        var responseHTTP = await _httpClient.GetAsync(url);
-        return new HttpResponseWrapper<object>(null, !responseHTTP.IsSuccessStatusCode, responseHTTP);
+        var responseHttp = await SendWithRefreshAsync(
+            () => new HttpRequestMessage(HttpMethod.Get, url));
+
+        return new HttpResponseWrapper<object>(
+            null, !responseHttp.IsSuccessStatusCode, responseHttp);
     }
 
-    private async Task<T> UnserializeAnswer<T>(HttpResponseMessage responseHttp)
-    {
-        var response = await responseHttp.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<T>(response, _jsonDefaultOptions)!;
-    }
-
+    // GET de archivos
     public async Task<HttpResponseWrapper<byte[]>> GetBytesAsync(string url)
     {
-        var responseHTTP = await _httpClient.GetAsync(url);
+        var responseHttp = await SendWithRefreshAsync(
+            () => new HttpRequestMessage(HttpMethod.Get, url));
 
-        if (responseHTTP.IsSuccessStatusCode)
+        if (responseHttp.IsSuccessStatusCode)
         {
-            var bytes = await responseHTTP.Content.ReadAsByteArrayAsync();
-            return new HttpResponseWrapper<byte[]>(bytes, false, responseHTTP);
+            var bytes = await responseHttp.Content.ReadAsByteArrayAsync();
+
+            return new HttpResponseWrapper<byte[]>(
+                bytes, false, responseHttp);
         }
 
-        return new HttpResponseWrapper<byte[]>(null, true, responseHTTP);
+        return new HttpResponseWrapper<byte[]>(
+            null, true, responseHttp);
+    }
+
+    // -------------------------------------------------------
+    // MÉTODOS PRIVADOS
+    // -------------------------------------------------------
+
+    private HttpRequestMessage CreateRequest<T>(
+        HttpMethod method, string url, T model)
+    {
+        var json = JsonSerializer.Serialize(model);
+
+        var content = new StringContent(
+            json, Encoding.UTF8, "application/json");
+
+        return new HttpRequestMessage(method, url)
+        {
+            Content = content
+        };
+    }
+
+    private async Task<HttpResponseMessage> SendWithRefreshAsync(Func<HttpRequestMessage> requestFactory)
+    {
+        // Capturar el Access Token que utilizará la primera solicitud.
+        var accessTokenUsed = _authenticationProvider.AccessToken;
+
+        var response = await SendOnceAsync(
+            requestFactory,
+            accessTokenUsed);
+
+        if (response.StatusCode != HttpStatusCode.Unauthorized)
+            return response;
+
+        // Intentar renovar utilizando el token que recibió el 401.
+        var refreshed = await _authenticationProvider.RefreshAsync(
+            accessTokenUsed);
+
+        if (!refreshed)
+            return response;
+
+        response.Dispose();
+
+        // Reintentar con el nuevo Access Token.
+        var retryResponse = await SendOnceAsync(
+            requestFactory,
+            _authenticationProvider.AccessToken);
+
+        if (retryResponse.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            _authenticationProvider.ClearSession();
+        }
+
+        return retryResponse;
+    }
+
+    private async Task<HttpResponseMessage> SendOnceAsync(Func<HttpRequestMessage> requestFactory,string? accessToken)
+    {
+        using var request = requestFactory();
+
+        if (!string.IsNullOrWhiteSpace(accessToken))
+        {
+            request.Headers.Authorization =
+                new AuthenticationHeaderValue("Bearer", accessToken);
+        }
+
+        var response = await _httpClient.SendAsync(request);
+
+        var requestPath = request.RequestUri is { IsAbsoluteUri: true } uri
+            ? uri.AbsolutePath
+            : request.RequestUri?.OriginalString;
+
+        Console.WriteLine(
+            $"[API] {request.Method} {requestPath} => " +
+            $"{(int)response.StatusCode} {response.StatusCode}");
+
+        return response;
+    }
+    private async Task<T> UnserializeAnswer<T>(
+        HttpResponseMessage responseHttp)
+    {
+        var response = await responseHttp.Content.ReadAsStringAsync();
+
+        return JsonSerializer.Deserialize<T>(
+            response, _jsonDefaultOptions)!;
     }
 }

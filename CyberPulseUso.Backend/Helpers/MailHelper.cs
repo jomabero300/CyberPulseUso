@@ -32,7 +32,7 @@ public class MailHelper : IMailHelper
                 return new ActionResponse<string>
                 {
                     WasSuccess = false,
-                    Message = "La configuraciÃ³n SMTP estÃ¡ incompleta o no es vÃ¡lida."
+                    Message = "La configuraciòn SMTP está¡ incompleta o no es vólida."
                 };
             }
 

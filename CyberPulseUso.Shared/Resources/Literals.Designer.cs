@@ -1906,6 +1906,15 @@ namespace CyberPulseUso.Shared.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Remember Me.
+        /// </summary>
+        public static string RememberMe {
+            get {
+                return ResourceManager.GetString("RememberMe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Report.
         /// </summary>
         public static string Report {

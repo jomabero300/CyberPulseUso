@@ -50,11 +50,13 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 
-//builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7093") });
-builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("http://cyberpulseusoapi.runasp.net")});
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7093") });
+//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://cyberpulseusoapi.runasp.net")});
 
 
 builder.Services.AddScoped<IRepository, Repository>();
+
+builder.Services.AddAuthorizationCore();
 
 builder.Services.AddSweetAlert2();
 
@@ -62,7 +64,7 @@ builder.Services.AddAuthentication("CustomJwtScheme").AddCookie("CustomJwtScheme
 
 
 //builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationProviderTest>();
-builder.Services.AddAuthorizationCore();
+
 builder.Services.AddScoped<AuthenticationProviderJWT>();
 builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationProviderJWT>(x => x.GetRequiredService<AuthenticationProviderJWT>());
 builder.Services.AddScoped<ILoginService, AuthenticationProviderJWT>(x => x.GetRequiredService<AuthenticationProviderJWT>());

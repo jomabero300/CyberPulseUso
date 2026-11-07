@@ -1,7 +1,8 @@
 using CyberPulseUso.Shared.Entities.Gene;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-
+
+
 using CyberPulseUso.Shared.Entities.Lnpa;
 namespace CyberPulseUso.Backend.Data;
 
@@ -16,6 +17,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<Country> Countries { get; set; }
     public DbSet<Iva> Ivas { get; set; }
     public DbSet<Neighborhood> Neighborhoods { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<State> States { get; set; }
     public DbSet<Statu> Status { get; set; }
     public DbSet<LogAuditoria> LogAuditorias { get; set; }
@@ -46,6 +48,50 @@ public class ApplicationDbContext : IdentityDbContext<User>
         builder.Entity<Neighborhood>()
             .HasIndex(x => new { x.CityId, x.Name })
             .IsUnique();
+
+
+
+
+        builder.Entity<RefreshToken>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+
+            entity.Property(x => x.UserId)
+                .IsRequired()
+                .HasMaxLength(450);
+
+            entity.Property(x => x.TokenHash)
+                .IsRequired()
+                .HasMaxLength(64)
+                .IsUnicode(false);
+
+            entity.Property(x => x.ReplacedByTokenHash)
+                .HasMaxLength(64)
+                .IsUnicode(false);
+
+            entity.HasIndex(x => x.TokenHash)
+                .IsUnique();
+
+            entity.HasIndex(x => new { x.UserId, x.ExpiresAt });
+
+            entity.HasIndex(x => x.FamilyId);
+
+            entity.HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+        });
+
+
+
+
+
+
+
+
+
+
 
         builder.Entity<State>()
             .HasIndex(x => new { x.CountryId, x.Name })

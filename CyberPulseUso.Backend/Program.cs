@@ -1,3 +1,4 @@
+using CyberPulseUso.Backend.Configuration;
 using CyberPulseUso.Backend.Data;
 using CyberPulseUso.Backend.Helpers;
 using CyberPulseUso.Backend.Repositories.Implementations;
@@ -35,8 +36,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(CorsPolicy, policy =>
     {
-        //policy.WithOrigins("https://localhost:7296")
-        policy.WithOrigins("http://cyberpulseuso.runasp.net")
+        //policy.WithOrigins("http://cyberpulseuso.runasp.net")
+        policy.WithOrigins("https://localhost:7172")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -71,7 +72,9 @@ builder.Services.AddScoped<IStatuRepository, StatuRepository>();
 builder.Services.AddScoped<IStatuUnitOfWork, StatuUnitOfWork>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IUserUnitOfWork, UserUnitOfWork>();
+
 
 builder.Services.AddScoped<IIvaRepository, IvaRepository>();
 builder.Services.AddScoped<IIvaUnitOfWork, IvaUnitOfWork>();
@@ -138,6 +141,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         Encoding.UTF8.GetBytes(builder.Configuration["jwMBELtKey"]!)),
     ClockSkew = TimeSpan.Zero
 });
+
+builder.Services.Configure<JwtSettings>(
+    builder.Configuration.GetSection("JwtSettings"));
 
 builder.Services.AddLocalization(option => option.ResourcesPath = "Resources");
 var app = builder.Build();

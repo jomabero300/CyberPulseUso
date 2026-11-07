@@ -174,6 +174,52 @@ namespace CyberPulseUso.Backend.Data.Migrations
                     b.ToTable("Neighborhoods", "Gene");
                 });
 
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Gene.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ReplacedByTokenHash")
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("SessionExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FamilyId");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.HasIndex("UserId", "ExpiresAt");
+
+                    b.ToTable("RefreshTokens", "Gene");
+                });
+
             modelBuilder.Entity("CyberPulseUso.Shared.Entities.Gene.State", b =>
                 {
                     b.Property<int>("Id")
@@ -767,6 +813,17 @@ namespace CyberPulseUso.Backend.Data.Migrations
                     b.Navigation("City");
                 });
 
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Gene.RefreshToken", b =>
+                {
+                    b.HasOne("CyberPulseUso.Shared.Entities.Gene.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CyberPulseUso.Shared.Entities.Gene.State", b =>
                 {
                     b.HasOne("CyberPulseUso.Shared.Entities.Gene.Country", "Country")
@@ -934,7 +991,7 @@ namespace CyberPulseUso.Backend.Data.Migrations
             modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.PayrollSettlement", b =>
                 {
                     b.HasOne("CyberPulseUso.Shared.Entities.Lnpa.Charge", "Charge")
-                        .WithMany()
+                        .WithMany("PayrollSettlements")
                         .HasForeignKey("ChargeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1036,6 +1093,8 @@ namespace CyberPulseUso.Backend.Data.Migrations
 
             modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.Charge", b =>
                 {
+                    b.Navigation("PayrollSettlements");
+
                     b.Navigation("Users");
                 });
 

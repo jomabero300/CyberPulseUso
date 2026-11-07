@@ -14,4 +14,7 @@ public class LoginDTO
     [Required(ErrorMessageResourceName = "RequiredField", ErrorMessageResourceType = typeof(Literals))]
     [MinLength(8, ErrorMessageResourceName = "MinLength", ErrorMessageResourceType = typeof(Literals))]
     public string Password { get; set; } = null!;
+
+    [Display(Name = "RememberMe", ResourceType = typeof(Literals))]
+    public bool RememberMe { get; set; }
 }

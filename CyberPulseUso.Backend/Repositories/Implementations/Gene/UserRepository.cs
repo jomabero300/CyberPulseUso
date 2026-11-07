@@ -6,6 +6,7 @@ using CyberPulseUso.Shared.EntitiesDTO;
 using CyberPulseUso.Shared.EntitiesDTO.Gene;
 using CyberPulseUso.Shared.Enums;
 using CyberPulseUso.Shared.Responses;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 namespace CyberPulseUso.Backend.Repositories.Implementations.Gene;
@@ -44,11 +45,26 @@ public class UserRepository : IUserRepository
     public async Task<IEnumerable<User>> GetAsync() => await _context.Users.AsNoTracking().OrderBy(x => x.FirstName).ToListAsync();
     public async Task<IEnumerable<User>> GetAsync(UserType userType) => await _context.Users.AsNoTracking().Where(x => x.UserType == userType).OrderBy(x => x.FirstName).ToListAsync();
     public async Task<User> GetUserAsync(Guid userId) { var user = await _context.Users.Include(x => x.Country).Include(x => x.Charge).FirstOrDefaultAsync(x => x.Id == userId.ToString()); if (user != null && !string.IsNullOrWhiteSpace(user.Photo)) user.Photo = $"{_configuration["UrlBackend"]}{_configuration["FolderUsers"]}{user.Photo}"; return user!; }
-    public async Task<User> GetUserAsync(string email) { var user = await _context.Users.AsNoTracking().Include(x => x.Country).Include(x => x.Charge).FirstOrDefaultAsync(x => x.Email == email); if (user != null && !string.IsNullOrWhiteSpace(user.Photo)) user.Photo = $"{_configuration["UrlBackend"]}{_configuration["FolderUsers"]}{user.Photo}"; return user!; }
+    public async Task<User> GetUserAsync(string email) 
+    {
+        //var user = await _context.Users.AsNoTracking().Include(x => x.Country).Include(x => x.Charge).FirstOrDefaultAsync(x => x.Email == email); 
+
+
+        //var query = await _context.Set<Category>().Include(x => x.Statu).AsNoTracking().OrderBy(x => x.Name).ToListAsync();
+        var user = await _context.Set<User>().Include(x => x.Country).Include(x => x.Charge).AsNoTracking().FirstOrDefaultAsync(x => x.Email == email);
+
+
+        if (user != null && !string.IsNullOrWhiteSpace(user.Photo)) 
+            user.Photo = $"{_configuration["UrlBackend"]}{_configuration["FolderUsers"]}{user.Photo}"; 
+        return user!; 
+    }
     public async Task<bool> IsUserInRoleAsync(User user, string roleName) => await _userManager.IsInRoleAsync(user, roleName);
     public async Task<SignInResult> LoginAsync(LoginDTO model) => await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
     public async Task LogoutAsync() => await _signInManager.SignOutAsync();
-    public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string password) => await _userManager.ResetPasswordAsync(user, token, password);
+    public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string password)
+    {
+        return await _userManager.ResetPasswordAsync(user, token, password); 
+    }
     public async Task<IdentityResult> UpdateUserAsync(User user)
     {
         var oldUser = await _context.Users.FirstOrDefaultAsync(x => x.Email == user.Email);
@@ -127,4 +143,15 @@ public class UserRepository : IUserRepository
     }
     public async Task UpdateUserAsync(string userId, UserType userType) { var entity = await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == userId); if (entity != null) await _context.Database.ExecuteSqlInterpolatedAsync($"UPDATE Admi.AspNetUsers SET UserType={(int)userType} WHERE Id={userId}"); }
     public async Task ResetAccessFailedCountAsync(User user) => await _userManager.ResetAccessFailedCountAsync(user);
+
+    public async Task<IdentityResult> ResetPasswordAsNoTrackingAsync(string userId, string token, string newPassword)
+    {
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null)
+            return IdentityResult.Failed(new IdentityError { Description = "Usuario no encontrado" });
+
+        // Realizar directamente el restablecimiento sobre la instancia rastreada
+        return await _userManager.ResetPasswordAsync(user, token, newPassword);
+
+    }
 }

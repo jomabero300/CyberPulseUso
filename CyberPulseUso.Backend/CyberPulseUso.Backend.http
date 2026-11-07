@@ -17,11 +17,29 @@ Content-Type: application/json
 
 {
   "email":"jbellor@sena.edu.co",
-  "password":"Mbel123*"
+  "password":"Mbel123*",
+  "RememberMe":true
 }
 
 ###
 
 GET {{CyberPulseUso.Backend_HostAddress}}/api/countries/Combo
+
+###
+
+POST {{CyberPulseUso.Backend_HostAddress}}/api/accounts/Logout
+
+###
+
+POST {{CyberPulseUso.Backend_HostAddress}}/api/accounts/Refresh
+Content-Type: application/json
+
+{
+  
+}
+
+###
+
+POST {{CyberPulseUso.Backend_HostAddress}}/api/accounts/Logout
 
 ###

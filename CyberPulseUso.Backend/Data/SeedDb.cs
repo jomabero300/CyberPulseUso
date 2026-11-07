@@ -34,7 +34,7 @@ public class SeedDb
             "Bello",
             "jbellor@sena.edu.co",
             "3133670740",
-            UserType.Admi,
+            UserType.SAdm,
             "17588236");
     }
 

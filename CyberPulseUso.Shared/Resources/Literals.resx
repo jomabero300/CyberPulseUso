@@ -988,4 +988,7 @@
   <data name="Processes" xml:space="preserve">
     <value>Processes</value>
   </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>Remember Me</value>
+  </data>
 </root>

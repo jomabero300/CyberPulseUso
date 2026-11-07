@@ -4,6 +4,7 @@ using CyberPulseUso.Shared.EntitiesDTO.Gene;
 using CyberPulseUso.Shared.EntitiesDTO.Lnpa;
 using CyberPulseUso.Shared.Resources;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.Extensions.Localization;
@@ -36,7 +37,6 @@ public partial class PayrollSettlementForm
     public bool FormPostedSuccessfully { get; set; } = false;
     [Parameter] public double WithholdingPercentage { get; set; } 
     [Parameter] public double HealthAndPensionDeductions { get; set; }
-
 
     protected override void OnInitialized()
     {

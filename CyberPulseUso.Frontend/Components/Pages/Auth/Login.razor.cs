@@ -69,33 +69,17 @@ public partial class Login
             Snackbar.Add(Localizer["ERR010"], Severity.Error);
             return;
         }
-        //var responseHttp = await repository.PostAsync<LoginDTO, TokenDTO>("/api/accounts/Login", loginDTO);
-
-        //if (responseHttp.Error)
-        //{
-        //    var message = await responseHttp.GetErrorMessageAsync();
-        //    Snackbar.Add(Localizer[message!], Severity.Error);
-        //    return;
-        //}
-
-        //await LoginService.LoginAsync(responseHttp.Response!.Token);
-
-        //MudDialog.Close(DialogResult.Ok(true));
-
 
 
         try
         {
-            var responseHttp = await repository.PostAsync<LoginDTO, TokenDTO>("/api/accounts/Login", loginDTO);
+            var response = await LoginService.LoginWithCredentialsAsync("/api/accounts/Login", loginDTO);
 
-            if (responseHttp.Error)
+            if (!response.Ok)
             {
-                var message = await responseHttp.GetErrorMessageAsync();
-                Snackbar.Add(Localizer[message!], Severity.Error);
+                Snackbar.Add(response.Body?? "No fue posible iniciar sesión.", Severity.Error);
                 return;
             }
-
-            await LoginService.LoginAsync(responseHttp.Response!.Token);
 
             MudDialog.Close(DialogResult.Ok(true));
         }
@@ -105,7 +89,5 @@ public partial class Login
             Snackbar.Add($"Error crítico: {ex.Message}", Severity.Error);
             Console.WriteLine(ex.ToString()); // Volcará la traza completa en la consola del navegador (F12)
         }
-
-
     }
 }

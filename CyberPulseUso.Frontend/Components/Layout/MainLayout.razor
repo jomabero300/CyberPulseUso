@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using CyberPulseUso.Frontend.Services
+@inherits LayoutComponentBase
+@inject ILoginService LoginService
 
 <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode" />
 <MudPopoverProvider />
@@ -12,7 +14,16 @@
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle" />
         @* <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" /> *@
 
+        @* ActivationEvent="@MouseEvent.MouseOver" *@
+
         <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" ActivationEvent="@MouseEvent.MouseOver" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+       @*      <MudMenuItem>
+                PRUEBA DEL MENU
+            </MudMenuItem>
+
+            <MudMenuItem>
+                SEGUNDA OPCION
+            </MudMenuItem> *@
             <AuthLinks />
         </MudMenu>
 

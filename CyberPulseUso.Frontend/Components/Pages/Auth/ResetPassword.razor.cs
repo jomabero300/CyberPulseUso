@@ -23,6 +23,14 @@ public partial class ResetPassword
 
     private async Task ChangePasswordAsync()
     {
+
+        if (string.IsNullOrWhiteSpace(Token) || string.IsNullOrWhiteSpace(resetPasswordDTO.Email))
+        {
+            Snackbar.Add("El enlace de recuperación no es válido o está incompleto.",Severity.Error);
+            return;
+        }
+
+
         if (!ValidateForm())
         {
             return;

@@ -9,10 +9,17 @@
                     <ValidationMessage For="@(() => loginDTO.Email)" />
                 </MudItem>
                 <MudItem xs="12" sm="12">
-                    <MudTextField Label="@Localizer["Password"]" @bind-Value="@loginDTO.Password" InputType="InputType.Password" />
+                    <MudTextField Label="@Localizer["Password"]" 
+                                        @bind-Value="@loginDTO.Password" 
+                                        InputType="InputType.Password" />
+
                     <ValidationMessage For="@(() => loginDTO.Password)" />
                 </MudItem>
             </MudGrid>
+
+            <MudCheckBox T="bool"
+             @bind-Value="loginDTO.RememberMe"
+                         Label=@Localizer["RememberMe"] />
 
             <MudGrid Class="mb-4">
                 <MudItem xs="12" sm="6" Class="d-flex justify-content-center">

@@ -1,10 +1,9 @@
-﻿using CyberPulseUso.Frontend.Helpers;
-using CyberPulseUso.Frontend.Services;
+﻿using CyberPulseUso.Frontend.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace CyberPulseUso.Frontend.AuthenticationProviders;
 
@@ -13,72 +12,220 @@ public class AuthenticationProviderJWT : AuthenticationStateProvider, ILoginServ
     private readonly IJSRuntime _jSRuntime;
     private readonly HttpClient _httpClient;
     private readonly string _tokenKey;
-    private readonly AuthenticationState _anonimous;
+    private readonly AuthenticationState _anonymous;
+    private string? _accessToken;
+    private bool _rememberMe;
+    private readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web);
+    public string? AccessToken => _accessToken;
+    public bool RememberMe => _rememberMe;
+    private readonly SemaphoreSlim _refreshSemaphore = new(1, 1);
+   
 
     public AuthenticationProviderJWT(IJSRuntime jSRuntime, HttpClient httpClient)
     {
         _jSRuntime = jSRuntime;
         _httpClient = httpClient;
         _tokenKey = "TOKEN_KEY";
-        _anonimous = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+        _anonymous = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
     }
 
-    public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+    public override Task<AuthenticationState>
+        GetAuthenticationStateAsync()
     {
-        //var token = await _jSRuntime.GetLocalStorage(_tokenKey);
+        if (string.IsNullOrWhiteSpace(_accessToken))
+            return Task.FromResult(_anonymous);
 
-        //if (token is null)
-        //{
-        //    return _anonimous;
-        //}
+        return Task.FromResult(
+            BuildAuthenticationState(_accessToken));
+    }
 
-        //return BuildAuthenticationState(token.ToString()!);
+    // LOGIN: se ejecuta desde el navegador para recibir la cookie.
+    public async Task<BrowserHttpResponse> LoginWithCredentialsAsync<T>(string url, T model)
+    {
+        var result = await BrowserRequestAsync(url, "POST", model);
+
+        if (!result.Ok)
+            return result;
+
         try
         {
-            // Intenta leer el token del LocalStorage normalmente
-            var token = await _jSRuntime.GetLocalStorage(_tokenKey);
+            using var document = JsonDocument.Parse(result.Body!);
 
-            if (token is null)
+            var root = document.RootElement;
+
+            var token = root.GetProperty("token").GetString();
+
+            var rememberMe = root.TryGetProperty(
+                "rememberMe", out var rememberElement)
+                && rememberElement.GetBoolean();
+
+            if (string.IsNullOrWhiteSpace(token))
+                throw new InvalidOperationException(
+                    "El Backend no devolvió un Access Token.");
+
+            SetAccessToken(token, rememberMe);
+        }
+        catch (Exception ex)
+        {
+            result.Ok = false;
+            result.Body = $"No fue posible procesar el token: {ex.Message}";
+        }
+
+        return result;
+    }
+
+
+
+    // REFRESH: el navegador envía automáticamente la cookie.
+    public async Task<bool> RefreshAsync(string? accessTokenUsed = null)
+    {
+        // Capturar el token antes de esperar el semáforo.
+        var tokenBeforeWait = accessTokenUsed ?? _accessToken;
+
+        await _refreshSemaphore.WaitAsync();
+
+        try
+        {
+            // Si otra solicitud renovó el token mientras esperábamos,
+            // no es necesario volver a consultar al Backend.
+            if (!string.Equals(
+                    _accessToken,
+                    tokenBeforeWait,
+                    StringComparison.Ordinal))
             {
-                return _anonimous;
+                return !string.IsNullOrWhiteSpace(_accessToken);
             }
 
-            return BuildAuthenticationState(token.ToString()!);
+            var result = await BrowserRequestAsync(
+                "/api/accounts/Refresh",
+                "POST",
+                null);
+
+            // Si otra solicitud procesó primero el Refresh Token,
+            // intentar nuevamente con la cookie que quedó actualizada.
+            if (!result.Ok && result.Status == 409)
+            {
+                result = await BrowserRequestAsync(
+                    "/api/accounts/Refresh",
+                    "POST",
+                    null);
+            }
+
+            if (!result.Ok)
+            {
+                ClearSession();
+                return false;
+            }
+            using var document = JsonDocument.Parse(result.Body!);
+
+            var root = document.RootElement;
+
+            var token = root.GetProperty("token").GetString();
+
+            var rememberMe =
+                root.TryGetProperty("rememberMe", out var rememberElement)
+                && rememberElement.GetBoolean();
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                throw new InvalidOperationException(
+                    "El Backend no devolvió un Access Token.");
+            }
+
+            SetAccessToken(token, rememberMe);
+
+            return true;
         }
-        catch (Exception ex) when (ex is JSDisconnectedException || ex is InvalidOperationException)
+        catch (Exception ex)
         {
-            // Si entra aquí, significa que Blazor está pre-renderizando en el servidor.
-            // Retornamos el usuario anónimo temporalmente.
-            // En cuanto la página cargue en el navegador, Blazor volverá a llamar 
-            // a este método automáticamente y leerá el token real.
-            return _anonimous;
+            Console.WriteLine($"Error renovando sesión: {ex}");
+
+            ClearSession();
+
+            return false;
+        }
+        finally
+        {
+            _refreshSemaphore.Release();
         }
     }
-
-    public async Task LoginAsync(string token)
+    // Inicialización después de que Blazor esté interactivo.
+    public async Task InitializeAsync()
     {
-        await _jSRuntime.SetLocalStorage(_tokenKey, token);
-        var authState = BuildAuthenticationState(token);
-        NotifyAuthenticationStateChanged(Task.FromResult(authState));
+        if (string.IsNullOrWhiteSpace(_accessToken))
+            await RefreshAsync();
     }
 
+    // LOGOUT: revoca la familia en el Backend y limpia la sesión local.
     public async Task LogoutAsync()
     {
-        await _jSRuntime.RemoveLocalStorage(_tokenKey);
-        _httpClient.DefaultRequestHeaders.Authorization = null;
-        NotifyAuthenticationStateChanged(Task.FromResult(_anonimous));
+        try
+        {
+            await BrowserRequestAsync("/api/accounts/Logout", "POST", null);
+        }
+        finally
+        {
+            ClearSession();
+        }
     }
+
+    // Compatibilidad con llamadas anteriores.
+    public Task LoginAsync(string token)
+    {
+        SetAccessToken(token, _rememberMe);
+        return Task.CompletedTask;
+    }
+
+    public void ClearSession()
+    {
+        _accessToken = null;
+        _rememberMe = false;
+
+        NotifyAuthenticationStateChanged(Task.FromResult(_anonymous));
+    }
+
+    private void SetAccessToken(string token, bool rememberMe)
+    {
+        _accessToken = token;
+        _rememberMe = rememberMe;
+
+        var authState = BuildAuthenticationState(token);
+
+        NotifyAuthenticationStateChanged(
+            Task.FromResult(authState));
+
+        Console.WriteLine($"[Auth] Access Token actualizado: {DateTime.Now:HH:mm:ss}");
+    }
+
     private AuthenticationState BuildAuthenticationState(string token)
     {
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
         var claims = ParseClaimsFromJWT(token);
-        return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(claims, "jwt")));
-    }
-    private IEnumerable<Claim>? ParseClaimsFromJWT(string token)
-    {
-        var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
-        var unserializedToken = jwtSecurityTokenHandler.ReadJwtToken(token);
-        return unserializedToken.Claims;
 
+        return new AuthenticationState(
+            new ClaimsPrincipal(
+                new ClaimsIdentity(claims, "jwt")));
     }
+
+    private IEnumerable<Claim> ParseClaimsFromJWT(string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
+
+        var jwt = handler.ReadJwtToken(token);
+
+        return jwt.Claims;
+    }
+
+    private async Task<BrowserHttpResponse> BrowserRequestAsync(string url, string method, object? model)
+    {
+        var absoluteUrl = Uri.TryCreate(url, UriKind.Absolute, out var uri)
+                ? uri.ToString()
+                : new Uri(_httpClient.BaseAddress!, url).ToString();
+
+        return await _jSRuntime.InvokeAsync<BrowserHttpResponse>(
+            "cyberPulseAuth.request",
+            absoluteUrl,
+            method,
+            model);
+    }
+
 }

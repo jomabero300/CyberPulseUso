@@ -3,6 +3,7 @@ using CyberPulseUso.Frontend.Repositories;
 using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.Resources;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using MudBlazor;
@@ -27,11 +28,28 @@ public partial class PayrollSettlementIndex
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
     [Inject] IJSRuntime JS { get; set; } = null!;
 
+
+    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
+    private string LoggedUserName { get; set; } = string.Empty;
+    private string LoggedUserCharge { get; set; } = string.Empty;
+
+
     [Parameter, SupplyParameterFromForm] public string Filter { get; set; } = string.Empty;
     protected override async Task OnInitializedAsync()
     {
         await LoadTotalRecordsAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        var user = authState.User;
+
+        var firstName = user.FindFirst("FirstName")?.Value ?? string.Empty;
+        var lastName = user.FindFirst("LastName")?.Value ?? string.Empty;
+
+        LoggedUserName = $"{firstName} {lastName}".Trim();
+        LoggedUserCharge= user.FindFirst("ChargeName")?.Value ?? string.Empty;
     }
+
+
     private async Task LoadTotalRecordsAsync()
     {
         loading = true;
@@ -123,8 +141,8 @@ public partial class PayrollSettlementIndex
                     { "Date", DateTime.Parse(_date) },
                     { "ChargeId", id},
                     { "DialogTitle", title },
-                    { "ChargeName", "Operador Tòcnico"  },
-                    { "OperatorName", "JOSE MANUEL BELLO ROMERO " },
+                    { "ChargeName", LoggedUserCharge  },
+                    { "OperatorName", LoggedUserName },
                     { "WithholdingPercentage",5d},
                     { "HealthAndPensionDeductions",3d}
                 };
@@ -137,8 +155,8 @@ public partial class PayrollSettlementIndex
             var parameters = new DialogParameters
                 {
                     { "DialogTitle", title },
-                    { "ChargeName", "Operador Tòcnico" },
-                    { "OperatorName", "JOSE MANUEL BELLO ROMERO"},
+                    { "ChargeName", LoggedUserCharge },
+                    { "OperatorName", LoggedUserName},
                     { "WithholdingPercentage",5d},
                     { "HealthAndPensionDeductions",3d}
                 };

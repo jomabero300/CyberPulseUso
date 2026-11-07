@@ -24,6 +24,25 @@ namespace CyberPulseUso.Frontend.Components.Layout
             };
         }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            //if (firstRender)
+            //{
+            //    await LoginService.InitializeAsync();
+            //}
+
+            if (firstRender)
+            {
+                try
+                {
+                    await LoginService.InitializeAsync();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error inicializando autenticación: {ex}");
+                }
+            }
+        }
         private void DrawerToggle()
         {
             _drawerOpen = !_drawerOpen;

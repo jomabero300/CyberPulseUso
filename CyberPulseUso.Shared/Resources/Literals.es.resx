@@ -1008,4 +1008,7 @@
   <data name="Processes" xml:space="preserve">
     <value>Procesos</value>
   </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>Permanecer conectado</value>
+  </data>
 </root>
