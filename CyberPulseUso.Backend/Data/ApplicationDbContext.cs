@@ -30,6 +30,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<LaborRemunerationParametersValue> LaborRemunerationParametersValues { get; set; }
     public DbSet<PayrollConcept> PayrollConcepts { get; set; }
     public DbSet<PayrollSettlement> PayrollSettlements { get; set; }
+    public DbSet<LaborRemunerationParametersOtherValue> LaborRemunerationParametersOtherValues { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -48,7 +49,6 @@ public class ApplicationDbContext : IdentityDbContext<User>
         builder.Entity<Neighborhood>()
             .HasIndex(x => new { x.CityId, x.Name })
             .IsUnique();
-
 
 
 
@@ -82,16 +82,6 @@ public class ApplicationDbContext : IdentityDbContext<User>
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
         });
-
-
-
-
-
-
-
-
-
-
 
         builder.Entity<State>()
             .HasIndex(x => new { x.CountryId, x.Name })

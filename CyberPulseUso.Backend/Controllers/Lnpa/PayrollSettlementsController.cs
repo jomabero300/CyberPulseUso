@@ -105,25 +105,87 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
     [HttpGet("Combo")]
     public async Task<IActionResult> GetComboAsync() => Ok(await _modelUnitOfWork.GetComboAsync());
 
+    //[HttpGet("Sett")]
+    //public async Task<IActionResult> GetLiqAsync()
+    //{
+    //    try
+    //    {
+    //        var email = User.Identity?.Name;
+    //        if (string.IsNullOrWhiteSpace(email)) return Unauthorized();
+
+    //        var result = await _userUnitOfWork.GetUserAsync(email);
+    //        if (result.ChargeId == null) return BadRequest("El usuario no tiene un cargo asignado.");
+
+    //        int respuesta= result.ChargeId ?? 0 ;
+
+    //        string id= result.Id;
+
+    //        var response = await _modelUnitOfWork.GetLiqAsync(respuesta, id);
+
+    //        if (response.WasSuccess)
+    //        {
+
+    //            return Ok(response.Result);
+    //        }
+
+    //        return BadRequest();
+    //    }catch (Exception ex)
+    //    {
+    //        return BadRequest(ex.Message);
+    //    }
+    //}
+
+
     [HttpGet("Sett")]
     public async Task<IActionResult> GetLiqAsync()
     {
-        var email = User.Identity?.Name;
-        if (string.IsNullOrWhiteSpace(email)) return Unauthorized();
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
-        var result = await _userUnitOfWork.GetUserAsync(email);
-        if (result.ChargeId == null) return BadRequest("El usuario no tiene un cargo asignado.");
-
-        var response = await _modelUnitOfWork.GetLiqAsync(result.ChargeId ?? 0, result.Id);
-
-        if (response.WasSuccess)
+        try
         {
+            var email = User.Identity?.Name;
 
-            return Ok(response.Result);
+            if (string.IsNullOrWhiteSpace(email))
+                return Unauthorized();
+
+            var result = await _userUnitOfWork.GetUserAsync(email);
+
+            Console.WriteLine(
+                $"[LIQ] Consulta usuario: {stopwatch.ElapsedMilliseconds} ms");
+
+            if (result == null)
+                return Unauthorized();
+
+            if (result.ChargeId == null)
+                return BadRequest("El usuario no tiene un cargo asignado.");
+
+            int chargeId = result.ChargeId.Value;
+            string userId = result.Id;
+
+            stopwatch.Restart();
+
+            var response = await _modelUnitOfWork.GetLiqAsync(
+                chargeId,
+                userId);
+
+            Console.WriteLine(
+                $"[LIQ] Consulta liquidación: {stopwatch.ElapsedMilliseconds} ms");
+
+            if (response.WasSuccess)
+                return Ok(response.Result);
+
+            return BadRequest();
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[LIQ] ERROR: {ex}");
 
-        return BadRequest();
+            return BadRequest(ex.Message);
+        }
     }
+
+
+
 
     [HttpGet("generarpdf/{fecha:datetime}/{id}/{userid}")]
     public async Task<IActionResult> GenerarPdf(DateTime fecha, int id, string userid)

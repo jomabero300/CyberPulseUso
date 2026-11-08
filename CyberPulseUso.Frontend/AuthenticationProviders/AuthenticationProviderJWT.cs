@@ -113,9 +113,13 @@ public class AuthenticationProviderJWT : AuthenticationStateProvider, ILoginServ
 
             if (!result.Ok)
             {
+                Console.WriteLine(
+                    $"[AUTH REFRESH ERROR] Status: {result.Status} | Body: {result.Body}");
+
                 ClearSession();
                 return false;
             }
+
             using var document = JsonDocument.Parse(result.Body!);
 
             var root = document.RootElement;
@@ -150,11 +154,32 @@ public class AuthenticationProviderJWT : AuthenticationStateProvider, ILoginServ
         }
     }
     // Inicialización después de que Blazor esté interactivo.
+    //public async Task InitializeAsync()
+    //{
+    //    if (string.IsNullOrWhiteSpace(_accessToken))
+    //        await RefreshAsync();
+    //}
+
+
     public async Task InitializeAsync()
     {
+        Console.WriteLine("[AUTH] InitializeAsync INICIADO");
+
         if (string.IsNullOrWhiteSpace(_accessToken))
-            await RefreshAsync();
+        {
+            Console.WriteLine("[AUTH] No hay Access Token. Iniciando RefreshAsync.");
+
+            var result = await RefreshAsync();
+
+            Console.WriteLine($"[AUTH] Resultado de RefreshAsync: {result}");
+        }
+        else
+        {
+            Console.WriteLine("[AUTH] Ya existe un Access Token.");
+        }
     }
+
+
 
     // LOGOUT: revoca la familia en el Backend y limpia la sesión local.
     public async Task LogoutAsync()

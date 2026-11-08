@@ -46,7 +46,7 @@ public partial class PayrollSettlementIndex
         var lastName = user.FindFirst("LastName")?.Value ?? string.Empty;
 
         LoggedUserName = $"{firstName} {lastName}".Trim();
-        LoggedUserCharge= user.FindFirst("ChargeName")?.Value ?? string.Empty;
+        LoggedUserCharge = user.FindFirst("ChargeName")?.Value ?? string.Empty;
     }
 
 

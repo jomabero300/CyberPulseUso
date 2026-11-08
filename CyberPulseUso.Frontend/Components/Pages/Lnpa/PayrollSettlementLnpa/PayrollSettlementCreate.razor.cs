@@ -37,7 +37,8 @@ public partial class PayrollSettlementCreate
 
     private async Task LoadPayrollSettlementsAsync()
     {
-        var responseHttp = await Repository.GetAsync<List<PayrollSettlementDTO>>("/api/PayrollSettlements/Sett");
+        var responseHttp = await Repository.GetAsync<List<PayrollSettlementDTO>>("/api/payrollsettlements/sett");
+
 
         if (responseHttp.Error)
         {
@@ -50,13 +51,8 @@ public partial class PayrollSettlementCreate
 
     }
 
-
-
-
-
     private async Task CreateAsync()
     {
-        Console.WriteLine($"Registros recibidos: {payrollSettlementDTO.Count}");
         //if (_sqlValidator.HasSqlInjection(payrollSettlementDTO!.Amount.ToString()))
         //{
         //    Snackbar.Add(Localizer["ERR010"], Severity.Error);

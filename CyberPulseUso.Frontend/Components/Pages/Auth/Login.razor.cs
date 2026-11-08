@@ -1,6 +1,5 @@
 using CyberPulseUso.Frontend.Repositories;
 using CyberPulseUso.Frontend.Services;
-using CyberPulseUso.Shared.Entities.Gene;
 using CyberPulseUso.Shared.EntitiesDTO.Gene;
 using CyberPulseUso.Shared.Resources;
 using Microsoft.AspNetCore.Components;
@@ -13,6 +12,7 @@ public partial class Login
 {
     private LoginDTO loginDTO = new();
     private bool wasClore;
+
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private IDialogService DialogService { get; set; } = null!;
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
@@ -52,7 +52,6 @@ public partial class Login
         wasClore = true;
         MudDialog.Cancel();
     }
-
     private async Task LoginAsync()
     {
         if (wasClore)
@@ -77,7 +76,8 @@ public partial class Login
 
             if (!response.Ok)
             {
-                Snackbar.Add(response.Body?? "No fue posible iniciar sesión.", Severity.Error);
+                Snackbar.Add(Localizer[response.Body!], Severity.Error);
+
                 return;
             }
 

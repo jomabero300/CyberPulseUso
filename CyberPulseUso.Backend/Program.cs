@@ -36,8 +36,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(CorsPolicy, policy =>
     {
-        //policy.WithOrigins("http://cyberpulseuso.runasp.net")
-        policy.WithOrigins("https://localhost:7172")
+        //policy.WithOrigins("https://localhost:7172")
+        policy.WithOrigins("http://cyberpulseuso.runasp.net")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -108,6 +108,8 @@ builder.Services.AddScoped<IPayrollConceptUnitOfWork, PayrollConceptUnitOfWork>(
 builder.Services.AddScoped<IPayrollSettlementRepository, PayrollSettlementRepository>();
 builder.Services.AddScoped<IPayrollSettlementUnitOfWork, PayrollSettlementUnitOfWork>();
 
+builder.Services.AddScoped<ILaborRemunerationParametersOtherValueRepository, LaborRemunerationParametersOtherValueRepository>();
+builder.Services.AddScoped<ILaborRemunerationParametersOtherValueUnitOfWork, LaborRemunerationParametersOtherValueUnitOfWork>(); 
 
 builder.Services.AddScoped<IMailHelper, MailHelper>();
 

@@ -4,7 +4,6 @@ using CyberPulseUso.Shared.EntitiesDTO.Gene;
 using CyberPulseUso.Shared.EntitiesDTO.Lnpa;
 using CyberPulseUso.Shared.Resources;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.Extensions.Localization;
@@ -35,8 +34,8 @@ public partial class PayrollSettlementForm
     [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
     [Inject] private IStringLocalizer<Literals> Localizer { get; set; } = null!;
     public bool FormPostedSuccessfully { get; set; } = false;
-    [Parameter] public double WithholdingPercentage { get; set; } 
-    [Parameter] public double HealthAndPensionDeductions { get; set; }
+    //[Parameter] public double WithholdingPercentage { get; set; } 
+    //[Parameter] public double HealthAndPensionDeductions { get; set; }
 
     protected override void OnInitialized()
     {
@@ -113,8 +112,7 @@ public partial class PayrollSettlementForm
         if (withholdingConcept is not null)
         {
             // Calcular retención en la fuente
-            withholdingConcept.DeductedValue =
-                (totalAccruedValue * WithholdingPercentage) / 100;
+            withholdingConcept.DeductedValue = (totalAccruedValue * withholdingConcept.Amount) / 100;
         }
 
         //aportes a dalud y pension
@@ -123,11 +121,9 @@ public partial class PayrollSettlementForm
 
         if (HealthConcept is not null)
         {
-            // Calcular retención en la fuente
-            HealthConcept!.DeductedValue =
-                totalAccruedValue * HealthAndPensionDeductions / 100d;
-            PensionConcept!.DeductedValue =
-                totalAccruedValue * HealthAndPensionDeductions / 100d;
+            //Salu y pension
+            HealthConcept!.DeductedValue = totalAccruedValue * HealthConcept.Amount / 100d;
+            PensionConcept!.DeductedValue = totalAccruedValue * PensionConcept.Amount / 100d;
         }
 
         //DESCUENTO CUOTA SINDICAL 2%
@@ -135,11 +131,11 @@ public partial class PayrollSettlementForm
         //SALARIO BÁSICO DIARIO ACTUAL (Dia)
         var CurrentDayliBbaseSalary = PayrollSettlementDTO!.FirstOrDefault(x => x.PayrollConceptId == 1);
 
-        UnionDuesDeduction!.DeductedValue = ((CurrentDayliBbaseSalary!.Amount * CurrentDayliBbaseSalary.UnitValue) * 1) / 100;
+        UnionDuesDeduction!.DeductedValue = ((CurrentDayliBbaseSalary!.Amount * CurrentDayliBbaseSalary.UnitValue) * UnionDuesDeduction.Amount) / 100;
 
         //DESCUENTO SOLIDARIDAD 2%
         var SolidarityDiscount = PayrollSettlementDTO!.FirstOrDefault(x => x.PayrollConceptId == 20);
-        SolidarityDiscount!.DeductedValue = ((CurrentDayliBbaseSalary!.Amount * CurrentDayliBbaseSalary.UnitValue) * 1) / 100;
+        SolidarityDiscount!.DeductedValue = ((CurrentDayliBbaseSalary!.Amount * CurrentDayliBbaseSalary.UnitValue) * SolidarityDiscount.Amount) / 100;
         // Total deducido
         totalDeductedValue = PayrollSettlementDTO?.Sum(x => x.DeductedValue) ?? 0d;
     }

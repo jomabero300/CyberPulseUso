@@ -200,17 +200,50 @@ public class Repository : IRepository
                 new AuthenticationHeaderValue("Bearer", accessToken);
         }
 
-        var response = await _httpClient.SendAsync(request);
-
         var requestPath = request.RequestUri is { IsAbsoluteUri: true } uri
             ? uri.AbsolutePath
             : request.RequestUri?.OriginalString;
 
-        Console.WriteLine(
-            $"[API] {request.Method} {requestPath} => " +
-            $"{(int)response.StatusCode} {response.StatusCode}");
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
-        return response;
+        try
+        {
+            // Esperar inicialmente solo los encabezados de respuesta.
+            var response = await _httpClient.SendAsync(
+                request,
+                HttpCompletionOption.ResponseHeadersRead);
+
+            stopwatch.Stop();
+
+            Console.WriteLine(
+                $"[API] {request.Method} {requestPath} => " +
+                $"{(int)response.StatusCode} {response.StatusCode} " +
+                $"| Tiempo: {stopwatch.ElapsedMilliseconds} ms");
+
+            return response;
+        }
+        catch (TaskCanceledException ex)
+        {
+            stopwatch.Stop();
+
+            Console.WriteLine(
+                $"[API TIMEOUT/CANCELACIÓN] {request.Method} {requestPath} " +
+                $"| Tiempo: {stopwatch.ElapsedMilliseconds} ms " +
+                $"| Mensaje: {ex.Message}");
+
+            throw;
+        }
+        catch (HttpRequestException ex)
+        {
+            stopwatch.Stop();
+
+            Console.WriteLine(
+                $"[API ERROR] {request.Method} {requestPath} " +
+                $"| Tiempo: {stopwatch.ElapsedMilliseconds} ms " +
+                $"| Error: {ex.Message}");
+
+            throw;
+        }
     }
     private async Task<T> UnserializeAnswer<T>(
         HttpResponseMessage responseHttp)

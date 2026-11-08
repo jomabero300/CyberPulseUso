@@ -1011,4 +1011,7 @@
   <data name="RememberMe" xml:space="preserve">
     <value>Permanecer conectado</value>
   </data>
+  <data name="laborremunerationparametersothervalues" xml:space="preserve">
+    <value>Parametros</value>
+  </data>
 </root>

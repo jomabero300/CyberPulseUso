@@ -1,0 +1,108 @@
+﻿@page "/laborremunerationparametersothervalues"
+
+@if (loading)
+{
+    <Loading />
+}
+else
+{
+    <MudCard Class="p-4">
+
+        <MudItem>
+            <MudText Typo="Typo.h5">
+                Configuración de valores
+            </MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                Modifique los valores que considere necesarios.
+            </MudText>
+        </MudItem>
+
+        <div class="payroll-form-container">
+            <div class="payroll-table-container">
+
+                <MudTable Items="@laborRemunerationParametersOtherValueDTO"
+                          Dense="true"
+                          Hover="true"
+                          Striped="true"
+                          Bordered="false"
+                          Elevation="0"
+                          FixedHeader="true"
+                          Height="100%"
+                          Class="payroll-table"
+                          Context="model">
+
+                    <ColGroup>
+                        <col style="width: 65%;" />
+                        <col style="width: 140px;" />
+                    </ColGroup>
+
+                    <HeaderContent>
+                        <MudTh Class="col-name">
+                            Concepto
+                        </MudTh>
+
+                        <MudTh Class="col-amount"
+                               Style="text-align:center;">
+                            Valor
+                        </MudTh>
+                    </HeaderContent>
+
+                    <RowTemplate>
+
+                        <MudTd DataLabel="Concepto">
+                            <MudText Typo="Typo.body2">
+                                @model.LRP!.Name
+                            </MudText>
+                        </MudTd>
+
+                        <MudTd DataLabel="Valor"
+                               Style="text-align:center;">
+
+                            <MudNumericField T="double"
+                                             @bind-Value="model.Value"
+                                             Min="0"
+                                             Variant="Variant.Outlined"
+                                             Margin="Margin.Dense"
+                                             HideSpinButtons="true"
+                                             Class="excel-input"
+                                             Immediate="true"
+                                             Style="width:125px;" />
+
+                        </MudTd>
+
+                    </RowTemplate>
+
+                </MudTable>
+
+            </div>
+        </div>
+
+        <MudGrid Justify="Justify.Center" Class="mt-4">
+
+            <MudItem>
+                <MudButton Variant="Variant.Outlined"
+                           StartIcon="@Icons.Material.Filled.Save"
+                           Color="Color.Primary"
+                           Disabled="@(!laborRemunerationParametersOtherValueDTO.Any())"
+                           OnClick="SaveUserAsync">
+
+                    @Localizer["SaveChanges"]
+
+                </MudButton>
+            </MudItem>
+
+            <MudItem>
+                <MudButton Variant="Variant.Outlined"
+                           StartIcon="@Icons.Material.Filled.ArrowBack"
+                           Color="Color.Info"
+                           OnClick="ReturnAction">
+
+                    @Localizer["Return"]
+
+                </MudButton>
+            </MudItem>
+
+        </MudGrid>
+
+    </MudCard>
+}

@@ -1213,6 +1213,15 @@ namespace CyberPulseUso.Shared.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Parameters.
+        /// </summary>
+        public static string laborremunerationparametersothervalues {
+            get {
+                return ResourceManager.GetString("laborremunerationparametersothervalues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Remunarations.
         /// </summary>
         public static string LaborRemunerationParameterss {

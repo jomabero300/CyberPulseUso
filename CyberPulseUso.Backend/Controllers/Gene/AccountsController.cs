@@ -27,17 +27,20 @@ public class AccountsController : ControllerBase
     private readonly IConfiguration _configuration;
     private readonly IMailHelper _mailHelper;
     private readonly ICountryUnitOfWork _countryUnitOfWork;
+    private readonly IWebHostEnvironment _env;
 
     public AccountsController(
         ICountryUnitOfWork countryUnitOfWork,
         IMailHelper mailHelper,
         IConfiguration configuration,
-        IUserUnitOfWork userUnitOfWork)
+        IUserUnitOfWork userUnitOfWork,
+        IWebHostEnvironment env)
     {
         _countryUnitOfWork = countryUnitOfWork;
         _mailHelper = mailHelper;
         _configuration = configuration;
         _userUnitOfWork = userUnitOfWork;
+        _env = env;
     }
 
 
@@ -193,9 +196,10 @@ public class AccountsController : ControllerBase
 
         if (user == null) return NotFound();
         if (user.EmailConfirmed) return BadRequest("ERR009");
-
-        user.Photo = await photoLastIndexOf(user.Photo);
-
+        if (!string.IsNullOrWhiteSpace(user.Photo))
+        {
+            user.Photo = await photoLastIndexOf(user.Photo);
+        }
         var result = await _userUnitOfWork.ConfirmEmailAsync(user, token);
 
         return result.Succeeded ? NoContent() : BadRequest(result.Errors.FirstOrDefault()?.Description);
@@ -431,9 +435,10 @@ public class AccountsController : ControllerBase
     }
 
 
-
     private async Task<ActionResponse<string>> SendConfirmationEmailAsync(User user, string language)
     {
+        
+        // Generar el token y el enlace de confirmación
         var myToken = await _userUnitOfWork.GenerateEmailConfirmationTokenAsync(user);
         var tokenLink = Url.Action("ConfirmEmail", "accounts", new
         {
@@ -441,10 +446,39 @@ public class AccountsController : ControllerBase
             token = HttpUtility.UrlEncode(myToken)
         }, HttpContext.Request.Scheme, _configuration["Url Frontend"]);
 
-        var subjectKey = language == "es" ? "Mail:SubjectConfirmationEs" : "Mail:SubjectConfirmationEn";
-        var bodyKey = language == "es" ? "Mail:BodyConfirmationEs" : "Mail:BodyConfirmationEn";
-        return await _mailHelper.SendMail(user.FullName, user.Email!, _configuration[subjectKey]!, string.Format(_configuration[bodyKey]!, tokenLink), language);
+        // 1. Determinar el nombre del archivo HTML según el idioma
+        bool esEspanol = language.Equals("es", StringComparison.OrdinalIgnoreCase);
+        string nombreArchivoHtml = esEspanol ? "ConfirmationEmailEs.html" : "ConfirmationEmailEn.html";
+
+        // 2. Construir las rutas físicas absolutas en el servidor
+        string rutaPlantillaHtml = Path.Combine(_env.WebRootPath, "Pages", nombreArchivoHtml);
+        string rutaLogoLocal = Path.Combine(_env.WebRootPath, "Images","Reports", "Logo.jpg");
+
+        // 3. Enviar los datos al Helper (dejamos el subject vacío para que lo extraiga del HTML)
+        return await _mailHelper.SendMail(user.FullName,user.Email!,subject: string.Empty,rutaPlantillaHtml,language,tokenLink!,rutaLogoLocal);
     }
+
+
+
+
+
+
+
+
+    //private async Task<ActionResponse<string>> SendConfirmationEmailAsync(User user, string language)
+    //{
+    //    var myToken = await _userUnitOfWork.GenerateEmailConfirmationTokenAsync(user);
+    //    var tokenLink = Url.Action("ConfirmEmail", "accounts", new
+    //    {
+    //        userid = user.Id,
+    //        token = HttpUtility.UrlEncode(myToken)
+    //    }, HttpContext.Request.Scheme, _configuration["Url Frontend"]);
+
+    //    var subjectKey = language == "es" ? "Mail:SubjectConfirmationEs" : "Mail:SubjectConfirmationEn";
+    //    var bodyKey = language == "es" ? "Mail:BodyConfirmationEs" : "Mail:BodyConfirmationEn";
+
+    //    return await _mailHelper.SendMail(user.FullName, user.Email!, _configuration[subjectKey]!, string.Format(_configuration[bodyKey]!, tokenLink), language);
+    //}
     private async Task<ActionResponse<string>> SendRecoverEmailAsync(User user, string language)
     {
         var myToken = await _userUnitOfWork.GeneratePasswordResetTokenAsync(user);

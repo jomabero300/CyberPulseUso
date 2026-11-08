@@ -392,37 +392,37 @@ public class PayrollSettlementRepository : GenericRepository<PayrollSettlement>,
         .ToList();
 
 
-        var unitValue = combinedResult.Where(x => x.PayrollConceptId == 1 || x.PayrollConceptId == 2).Sum(x => x.UnitValue);
+        //var unitValue = combinedResult.Where(x => x.PayrollConceptId == 1 || x.PayrollConceptId == 2).Sum(x => x.UnitValue);
 
-        var result = combinedResult.Select(x =>
-        {
-            if (x.PayrollConceptId == 5)
-            {
-                x.UnitValue = unitValue / 7 * 0.75;
-            }
+        //var result = combinedResult.Select(x =>
+        //{
+        //    if (x.PayrollConceptId == 5)
+        //    {
+        //        x.UnitValue = unitValue / 7 * 0.75;
+        //    }
 
-            if (x.PayrollConceptId == 6)
-            {
-                x.UnitValue = unitValue / 7 * 2.1;
-            }
+        //    if (x.PayrollConceptId == 6)
+        //    {
+        //        x.UnitValue = unitValue / 7 * 2.1;
+        //    }
 
-            if (x.PayrollConceptId == 11)
-            {
-                x.UnitValue = unitValue * 0.9;
-            }
+        //    if (x.PayrollConceptId == 11)
+        //    {
+        //        x.UnitValue = unitValue * 0.9;
+        //    }
 
-            if (x.PayrollConceptId == 12)
-            {
-                x.UnitValue = unitValue;
-            }
-            if (x.PayrollConceptId == 13)
-            {
-                x.UnitValue = unitValue * 2;
-            }
+        //    if (x.PayrollConceptId == 12)
+        //    {
+        //        x.UnitValue = unitValue;
+        //    }
+        //    if (x.PayrollConceptId == 13)
+        //    {
+        //        x.UnitValue = unitValue * 2;
+        //    }
 
-            return x;
-        }).OrderBy(x => x.PayrollConceptId)
-        .ToList();
+        //    return x;
+        //}).OrderBy(x => x.PayrollConceptId)
+        //.ToList();
 
         return new ActionResponse<IEnumerable<PayrollSettlementDTO>>
         {

@@ -62,16 +62,16 @@
 .payroll-table ::deep .excel-input,
 .payroll-table ::deep .excel-input .mud-input-control,
 .payroll-table ::deep .excel-input .mud-input-control-input-container {
-    width: 45px !important;
-    min-width: 45px !important;
-    max-width: 45px !important;
+    width: 95px !important;
+    min-width: 95px !important;
+    max-width: 95px !important;
     margin: 0 !important;
     box-sizing: border-box;
 }
 
     .payroll-table ::deep .excel-input .mud-input {
-        width: 45px !important;
-        min-width: 45px !important;
+        width: 75px !important;
+        min-width: 75px !important;
         min-height: 23px !important;
         height: 23px !important;
     }
@@ -81,7 +81,7 @@
         min-width: 0 !important;
         height: 23px !important;
         padding: 1px 3px !important;
-        text-align: right;
+        text-align: center !important;
         font-size: 11px !important;
         box-sizing: border-box;
     }

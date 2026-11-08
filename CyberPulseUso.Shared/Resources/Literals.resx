@@ -991,4 +991,7 @@
   <data name="RememberMe" xml:space="preserve">
     <value>Remember Me</value>
   </data>
+  <data name="laborremunerationparametersothervalues" xml:space="preserve">
+    <value>Parameters</value>
+  </data>
 </root>

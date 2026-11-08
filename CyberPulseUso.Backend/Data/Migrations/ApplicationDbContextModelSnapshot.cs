@@ -192,6 +192,8 @@ namespace CyberPulseUso.Backend.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ReplacedByTokenHash")
+                        .HasMaxLength(64)
+                        .IsUnicode(false)
                         .HasColumnType("varchar(64)");
 
                     b.Property<DateTime?>("RevokedAt")
@@ -202,10 +204,13 @@ namespace CyberPulseUso.Backend.Data.Migrations
 
                     b.Property<string>("TokenHash")
                         .IsRequired()
+                        .HasMaxLength(64)
+                        .IsUnicode(false)
                         .HasColumnType("varchar(64)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
+                        .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -527,6 +532,32 @@ namespace CyberPulseUso.Backend.Data.Migrations
                     b.HasIndex("StatuId");
 
                     b.ToTable("LaborRemunerationParameters", "Lnpa");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.LaborRemunerationParametersOtherValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("LRPId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatuId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Value")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LRPId");
+
+                    b.HasIndex("StatuId");
+
+                    b.ToTable("LaborRemunerationParametersOtherValues", "Lnpa");
                 });
 
             modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.LaborRemunerationParametersValue", b =>
@@ -939,6 +970,25 @@ namespace CyberPulseUso.Backend.Data.Migrations
                         .HasForeignKey("StatuId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Statu");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.LaborRemunerationParametersOtherValue", b =>
+                {
+                    b.HasOne("CyberPulseUso.Shared.Entities.Lnpa.LaborRemunerationParameters", "LRP")
+                        .WithMany()
+                        .HasForeignKey("LRPId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CyberPulseUso.Shared.Entities.Gene.Statu", "Statu")
+                        .WithMany()
+                        .HasForeignKey("StatuId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("LRP");
 
                     b.Navigation("Statu");
                 });

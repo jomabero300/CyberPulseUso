@@ -15,36 +15,15 @@
                 @OperatorName
             </MudText>
 
-            <div class="payroll-retentions">
-                <div class="retention-item">
-                    <MudText Typo="Typo.caption">
-                        Retención en la fuente
-                    </MudText>
-                    <MudText Typo="Typo.body2" Class="font-weight-bold">
-                        @WithholdingPercentage %
-                    </MudText>
-                </div>
-
-                <div class="retention-item">
-                    <MudText Typo="Typo.caption">
-                        Retención legal salud y pensión
-                    </MudText>
-                    <MudText Typo="Typo.body2" Class="font-weight-bold">
-                        @HealthAndPensionDeductions %
-                    </MudText>
-                </div>
-            </div>
-
         </div>
     </TitleContent>
     <DialogContent>
         <PayrollSettlementForm 
             @ref="PayrollSettlementForm" 
             PayrollSettlementDTO="@payrollSettlementDTO"                       
-            WithholdingPercentage=@WithholdingPercentage
-            HealthAndPensionDeductions=@HealthAndPensionDeductions
             OnValidSubmit="CreateAsync" 
             ReturnAction="Return" />
+
     </DialogContent>
 
 </MudDialog>
