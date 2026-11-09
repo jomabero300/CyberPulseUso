@@ -20,4 +20,8 @@ public interface IPayrollSettlementRepository
     Task<ActionResponse<IEnumerable<PayrollSettlementListDTO>>> GetAsync(string Id);
     Task<ActionResponse<IEnumerable<PayrollSettlementDTO>>> GetAsync(DateTime fecha, int Id,string id);
     Task<ActionResponse<LiquidacionReportModel>> GetAsync(DateTime fecha, int Id, string id, bool esta);
+
+    //dasboard
+    Task<ActionResponse<PayrollDashboardDTO>> GetWorkerDashboardAsync(string userId);
+    Task<ActionResponse<PayrollDashboardDTO>> GetAdminDashboardAsync();
 }

@@ -105,37 +105,6 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
     [HttpGet("Combo")]
     public async Task<IActionResult> GetComboAsync() => Ok(await _modelUnitOfWork.GetComboAsync());
 
-    //[HttpGet("Sett")]
-    //public async Task<IActionResult> GetLiqAsync()
-    //{
-    //    try
-    //    {
-    //        var email = User.Identity?.Name;
-    //        if (string.IsNullOrWhiteSpace(email)) return Unauthorized();
-
-    //        var result = await _userUnitOfWork.GetUserAsync(email);
-    //        if (result.ChargeId == null) return BadRequest("El usuario no tiene un cargo asignado.");
-
-    //        int respuesta= result.ChargeId ?? 0 ;
-
-    //        string id= result.Id;
-
-    //        var response = await _modelUnitOfWork.GetLiqAsync(respuesta, id);
-
-    //        if (response.WasSuccess)
-    //        {
-
-    //            return Ok(response.Result);
-    //        }
-
-    //        return BadRequest();
-    //    }catch (Exception ex)
-    //    {
-    //        return BadRequest(ex.Message);
-    //    }
-    //}
-
-
     [HttpGet("Sett")]
     public async Task<IActionResult> GetLiqAsync()
     {
@@ -183,9 +152,6 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
             return BadRequest(ex.Message);
         }
     }
-
-
-
 
     [HttpGet("generarpdf/{fecha:datetime}/{id}/{userid}")]
     public async Task<IActionResult> GenerarPdf(DateTime fecha, int id, string userid)

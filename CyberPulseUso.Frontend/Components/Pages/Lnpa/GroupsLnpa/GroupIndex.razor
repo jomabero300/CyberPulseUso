@@ -65,13 +65,13 @@
                     <FilterComponent ApplyFilter="SetFilterValue" />
                 </ToolBarContent>
                 <HeaderContent>
-                    <MudTh>@Localizer["Category"]</MudTh>
                     <MudTh>@Localizer["Name"]</MudTh>
+                    <MudTh>@Localizer["Category"]</MudTh>
                     <MudTh Class="text-center">@Localizer["Actions"]</MudTh>
                 </HeaderContent>
                 <RowTemplate>
-                            <MudTd>@group.Category?.Name</MudTd>
                             <MudTd>@group.Name</MudTd>
+                            <MudTd>@group.Category?.Name</MudTd>
                     <MudTd Class="text-center">
                         <MudTooltip Text="@Localizer["Edit"]">
                             <MudButton Variant="Variant.Filled"

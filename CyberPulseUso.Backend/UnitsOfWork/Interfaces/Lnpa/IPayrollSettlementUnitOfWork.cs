@@ -19,6 +19,9 @@ public interface IPayrollSettlementUnitOfWork
     Task<ActionResponse<List<PayrollSettlement>>> UpdateAsync(List<PayrollSettlementDTO> entity);
     Task<ActionResponse<IEnumerable<PayrollSettlementDTO>>> GetLiqAsync(int id,string Id);
     Task<ActionResponse<IEnumerable<PayrollSettlementDTO>>> GetAsync(DateTime fecha, int Id, string id);
-
     Task<ActionResponse<LiquidacionReportModel>> GetAsync(DateTime fecha, int Id, string id, bool esta);
+
+    //dasboard
+    Task<ActionResponse<PayrollDashboardDTO>> GetWorkerDashboardAsync(string userId);
+    Task<ActionResponse<PayrollDashboardDTO>> GetAdminDashboardAsync();
 }

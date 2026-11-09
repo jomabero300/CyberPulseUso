@@ -1,9 +1,40 @@
 ﻿@page "/"
+@using CyberPulseUso.Frontend.Components.Pages.Lnpa.Dashboard
+<PageTitle>Inicio</PageTitle>
 
-<PageTitle>@Localizer["Home"]</PageTitle>
+<AuthorizeView>
+    <Authorized>
+        <Dashboard />
+    </Authorized>
 
-<MudText Typo="Typo.h3" GutterBottom="true">@Localizer["Home"]</MudText>
+    <NotAuthorized>
+        <div class="home-welcome-container">
+            <div class="home-welcome-content">
 
-<h1>@Localizer["Title"]</h1>
+                <MudText Typo="Typo.h4" Align="Align.Center">
+                    USO – Regional Arauca
+                </MudText>
 
-<h2>@Localizer["Subtitle"]</h2>
+                <MudText Typo="Typo.h5" Align="Align.Center">
+                    Sistema de Liquidación de Nómina Parcial
+                </MudText>
+
+                <MudText Typo="Typo.body2" Color="Color.Secondary">
+                    Gestión y consulta de liquidaciones laborales
+                </MudText>
+
+                <img src="Images/images.jpg"
+                     alt="Logo USO"
+                     class="home-welcome-logo" />
+
+            </div>
+        </div>
+    </NotAuthorized>
+
+    <Authorizing>
+        <div class="home-welcome-container">
+            <MudProgressCircular Indeterminate="true"
+                                 Color="Color.Primary" />
+        </div>
+    </Authorizing>
+</AuthorizeView>

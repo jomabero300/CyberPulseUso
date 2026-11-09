@@ -33,4 +33,8 @@ public class PayrollSettlementUnitOfWork : GenericUnitOfWork<PayrollSettlement>,
     public async Task<ActionResponse<List<PayrollSettlement>>> UpdateAsync(List<PayrollSettlementDTO> entity) => await _repository.UpdateAsync(entity);
 
     public async Task<ActionResponse<LiquidacionReportModel>> GetAsync(DateTime fecha, int Id, string id, bool esta) => await _repository.GetAsync(fecha, Id, id, esta);
+
+    //Dasboard
+    public async Task<ActionResponse<PayrollDashboardDTO>> GetWorkerDashboardAsync(string userId)=>await _repository.GetWorkerDashboardAsync(userId);
+    public async Task<ActionResponse<PayrollDashboardDTO>> GetAdminDashboardAsync()=>await _repository.GetAdminDashboardAsync();
 }

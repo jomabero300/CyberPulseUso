@@ -582,4 +582,136 @@ public class PayrollSettlementRepository : GenericRepository<PayrollSettlement>,
             Result = result
         };
     }
+
+    //dashboard
+    public Task<ActionResponse<PayrollDashboardDTO>> GetWorkerDashboardAsync(string userId)
+    {
+        var query = _context.PayrollSettlements
+            .AsNoTracking()
+            .Where(x => x.UserId == userId);
+
+        return BuildDashboardAsync(query);
+    }
+
+    public Task<ActionResponse<PayrollDashboardDTO>> GetAdminDashboardAsync()
+    {
+        var query = _context.PayrollSettlements
+            .AsNoTracking()
+            .AsQueryable();
+
+        return BuildDashboardAsync(query);
+    }
+    private async Task<ActionResponse<PayrollDashboardDTO>> BuildDashboardAsync(IQueryable<PayrollSettlement> query)
+    {
+        try
+        {
+            var today = DateTime.Today;
+            var startDate = new DateTime(today.Year, 1, 1);
+            var endDate = today.AddDays(1);
+
+            query = query.Where(x =>
+                x.Date >= startDate &&
+                x.Date < endDate &&
+                x.Statu != null &&
+                x.Statu.Name == "Activo");
+
+            var totalAccrued = await query
+                .SumAsync(x => (double?)x.AccruedValue) ?? 0;
+
+            var totalDeducted = await query
+                .SumAsync(x => (double?)x.DeductedValue) ?? 0;
+
+            var settlementCount = await query.CountAsync();
+
+            var workerCount = await query
+                .Where(x => x.UserId != null)
+                .Select(x => x.UserId)
+                .Distinct()
+                .CountAsync();
+
+            var monthlyResults = await query
+                .GroupBy(x => new
+                {
+                    x.Date.Year,
+                    x.Date.Month
+                })
+                .Select(g => new PayrollDashboardMonthlyDTO
+                {
+                    Year = g.Key.Year,
+                    Month = g.Key.Month,
+                    AccruedValue = g.Sum(x => x.AccruedValue),
+                    DeductedValue = g.Sum(x => x.DeductedValue),
+                    NetValue = g.Sum(x => x.AccruedValue - x.DeductedValue)
+                })
+                .ToListAsync();
+
+            // Incluye también los meses sin liquidaciones.
+            var monthlyData = Enumerable.Range(1, today.Month)
+                .Select(month =>
+                {
+                    var data = monthlyResults.FirstOrDefault(x =>
+                        x.Year == today.Year && x.Month == month);
+
+                    return data ?? new PayrollDashboardMonthlyDTO
+                    {
+                        Year = today.Year,
+                        Month = month,
+                        AccruedValue = 0,
+                        DeductedValue = 0,
+                        NetValue = 0
+                    };
+                })
+                .ToList();
+
+            var recentSettlements = await query
+                .GroupBy(x => new
+                {
+                    x.ChargeId,
+                    Date = x.Date.Date,
+                    ChargeName = x.Charge != null
+                        ? x.Charge.Name
+                        : string.Empty
+                })
+                .Select(g => new PayrollDashboardRecentDTO
+                {
+                    Id = g.Min(x => x.Id),
+                    Date = g.Key.Date,
+                    UserName = string.Empty,
+                    ChargeName = g.Key.ChargeName,
+                    AccruedValue = g.Sum(x => x.AccruedValue),
+                    DeductedValue = g.Sum(x => x.DeductedValue),
+                    NetValue = g.Sum(x => x.AccruedValue)
+                              - g.Sum(x => x.DeductedValue)
+                })
+                .OrderByDescending(x => x.Date)
+                .ThenByDescending(x => x.Id)
+                .Take(10)
+                .ToListAsync();
+
+            var dashboard = new PayrollDashboardDTO
+            {
+                TotalAccrued = totalAccrued,
+                TotalDeducted = totalDeducted,
+                TotalNet = totalAccrued - totalDeducted,
+                SettlementCount = settlementCount,
+                WorkerCount = workerCount,
+                MonthlyData = monthlyData,
+                RecentSettlements = recentSettlements
+            };
+
+            return new ActionResponse<PayrollDashboardDTO>
+            {
+                WasSuccess = true,
+                Result = dashboard
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ActionResponse<PayrollDashboardDTO>
+            {
+                WasSuccess = false,
+                Message = ex.Message
+            };
+        }
+    }
 }

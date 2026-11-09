@@ -1,0 +1,26 @@
+/* CSS for Home component */
+/* CSS for Dashboard component */
+
+.home-welcome-container {
+    min-height: calc(100vh - 64px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.home-welcome-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 12px;
+}
+
+.home-welcome-logo {
+    width: min(300px, 70vw);
+    height: auto;
+    object-fit: contain;
+    margin-top: 15px;
+}

@@ -1,0 +1,152 @@
+﻿@using System.Globalization
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+
+    <div class="d-flex justify-space-between align-center mb-4">
+
+        <div>
+            <MudText Typo="Typo.h4" GutterBottom="true">
+                @(isAdmin ? "Dashboard administrativo" : "Mi dashboard")
+            </MudText>
+
+            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                Resumen de liquidaciones del año @DateTime.Today.Year
+            </MudText>
+        </div>
+
+        <img src="Images/images.jpg"
+             alt="Logo USO"
+             style="width: 100px; height: auto; object-fit: contain;" />
+
+    </div>
+
+    @if (loading)
+    {
+        <MudProgressLinear Indeterminate="true" Color="Color.Primary" />
+    }
+    else
+    {
+        <MudGrid Spacing="3">
+
+            @* Total devengado *@
+            <MudItem xs="12" sm="6" md="3">
+                <MudCard Elevation="2" Class="pa-3">
+                    <MudText Typo="Typo.subtitle2" Color="Color.Secondary">
+                        Total devengado
+                    </MudText>
+                    <MudText Typo="Typo.h5" Color="Color.Primary" Class="mt-2">
+                        @dashboard.TotalAccrued.ToString("C0", CultureInfo.GetCultureInfo("es-CO"))
+                    </MudText>
+                </MudCard>
+            </MudItem>
+
+            @* Total deducido *@
+            <MudItem xs="12" sm="6" md="3">
+                <MudCard Elevation="2" Class="pa-3">
+                    <MudText Typo="Typo.subtitle2" Color="Color.Secondary">
+                        Total deducido
+                    </MudText>
+                    <MudText Typo="Typo.h5" Color="Color.Error" Class="mt-2">
+                        @dashboard.TotalDeducted.ToString("C0", CultureInfo.GetCultureInfo("es-CO"))
+                    </MudText>
+                </MudCard>
+            </MudItem>
+
+            @* Total neto *@
+            <MudItem xs="12" sm="6" md="3">
+                <MudCard Elevation="2" Class="pa-3">
+                    <MudText Typo="Typo.subtitle2" Color="Color.Secondary">
+                        Total neto liquidado
+                    </MudText>
+                    <MudText Typo="Typo.h5" Color="Color.Success" Class="mt-2">
+                        @dashboard.TotalNet.ToString("C0", CultureInfo.GetCultureInfo("es-CO"))
+                    </MudText>
+                </MudCard>
+            </MudItem>
+
+            @* Cuarto indicador según el rol *@
+            <MudItem xs="12" sm="6" md="3">
+                <MudCard Elevation="2" Class="pa-3">
+                    <MudText Typo="Typo.subtitle2" Color="Color.Secondary">
+                        @(isAdmin ? "Trabajadores con liquidaciones" : "Liquidaciones registradas")
+                    </MudText>
+                    <MudText Typo="Typo.h5" Color="Color.Info" Class="mt-2">
+                        @(isAdmin ? dashboard.WorkerCount : dashboard.SettlementCount)
+                    </MudText>
+                    @if (isAdmin)
+                    {
+                        <MudText Typo="Typo.caption" Color="Color.Secondary">
+                            @dashboard.SettlementCount liquidaciones registradas
+                        </MudText>
+                    }
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+
+            @* grafica *@
+
+        <MudChart T="double"
+                  ChartType="ChartType.Line"
+                  ChartSeries="@monthlySeries"
+                  ChartLabels="@monthlyLabels"
+                  ChartOptions="@monthlyChartOptions"
+                  Width="100%"
+                  Height="350px" />
+
+
+        @* HIstorial de liquidaciones  *@
+        <MudCard Elevation="2" Class="pa-4 mt-4">
+            <MudText Typo="Typo.h6" GutterBottom="true">
+                @(isAdmin ? "Últimas 10 liquidaciones consolidadas" : "Mis últimas 10 liquidaciones")
+            </MudText>
+            <MudTable Items="@dashboard.RecentSettlements"
+                      Hover="true"
+                      Striped="true"
+                      Dense="true"
+                      Breakpoint="Breakpoint.Sm">
+
+                <HeaderContent>
+                    <MudTh>Cargo</MudTh>
+                    <MudTh>Fecha</MudTh>
+                    <MudTh Align="Align.Right">Total devengado</MudTh>
+                    <MudTh Align="Align.Right">Total deducciones</MudTh>
+                    <MudTh Align="Align.Right">Neto a pagar</MudTh>
+                </HeaderContent>
+
+                <NoRecordsContent>
+                    <MudText Typo="Typo.body2"
+                             Color="Color.Secondary"
+                             Class="pa-4">
+                        No hay liquidaciones registradas este año.
+                    </MudText>
+                </NoRecordsContent>
+
+                <RowTemplate>
+                    <MudTd DataLabel="Cargo">
+                        @context.ChargeName
+                    </MudTd>
+
+                    <MudTd DataLabel="Fecha">
+                        @context.Date.ToString("dd/MM/yyyy")
+                    </MudTd>
+
+                    <MudTd DataLabel="Total devengado" Align="Align.Right">
+                        @context.AccruedValue.ToString("C0", CultureInfo.GetCultureInfo("es-CO"))
+                    </MudTd>
+
+                    <MudTd DataLabel="Total deducciones" Align="Align.Right">
+                        @context.DeductedValue.ToString("C0", CultureInfo.GetCultureInfo("es-CO"))
+                    </MudTd>
+
+                    <MudTd DataLabel="Neto a pagar" Align="Align.Right">
+                        <MudText Color="Color.Success" Typo="Typo.body2">
+                            @context.NetValue.ToString("C0", CultureInfo.GetCultureInfo("es-CO"))
+                        </MudText>
+                    </MudTd>
+                </RowTemplate>
+
+            </MudTable>
+
+        </MudCard>
+    }
+</MudContainer>

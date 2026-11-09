@@ -2,6 +2,7 @@
 using CyberPulseUso.Frontend.Repositories;
 using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.Resources;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
@@ -10,8 +11,8 @@ using System.Net;
 
 namespace CyberPulseUso.Frontend.Components.Pages.Lnpa.GroupsLnpa;
 
-//[Authorize(Roles="Admi")]
-//[Authorize]
+[Authorize(Roles = "SAdm,Admi")]
+[Authorize]
 public partial class GroupIndex
 {
     private List<Group>? groups { get; set; }
