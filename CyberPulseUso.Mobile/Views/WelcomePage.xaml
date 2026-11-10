@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CyberPulseUso.Mobile.Views.WelcomePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#FFFFFF"
+    Shell.NavBarIsVisible="False">
+
+    <Grid BackgroundColor="White">
+        <Grid  Padding="28" RowDefinitions="*,Auto">
+
+            <VerticalStackLayout
+                Grid.Row="0"
+                Spacing="24"
+                VerticalOptions="Center"
+                HorizontalOptions="Center">
+
+                <Border
+             WidthRequest="180"
+    HeightRequest="180"
+    BackgroundColor="White"
+    Stroke="#F3A43F"
+    StrokeThickness="2"
+    HorizontalOptions="Center">
+
+                    <Border.StrokeShape>
+                        <Ellipse/>
+                    </Border.StrokeShape>
+
+                    <Image
+                        Source="uso.jpg"
+                        Aspect="AspectFit"
+                        Margin="5"/>
+                </Border>
+                <VerticalStackLayout Spacing="10">
+
+                    <Label
+                        Text="USO - ARAUCA"
+                        FontSize="29"
+                        FontAttributes="Bold"
+                        TextColor="#171717"
+                        HorizontalTextAlignment="Center"/>
+
+                    <BoxView
+                        HeightRequest="4"
+                        WidthRequest="75"
+                        Color="#C9152B"
+                        HorizontalOptions="Center"/>
+
+                    <Label
+                        Text="Bienvenido"
+                        FontSize="23"
+                        FontAttributes="Bold"
+                        TextColor="#C9152B"
+                        HorizontalTextAlignment="Center"/>
+
+                    <Label
+                        Text="Gestiona tu información de manera sencilla, segura y desde cualquier lugar."
+                        FontSize="15"
+                        TextColor="#555555"
+                        HorizontalTextAlignment="Center"
+                        HorizontalOptions="Center"
+                        MaximumWidthRequest="320"/>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+
+            <VerticalStackLayout
+                Grid.Row="1"
+                Spacing="15">
+
+                <Button
+                    Text="Siguiente"
+                    Clicked="OnNextClicked"
+                    BackgroundColor="#C9152B"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    HeightRequest="54"
+                    CornerRadius="12"/>
+
+                <Label
+                    Text="USO - Arauca © 2026"
+                    FontSize="11"
+                    TextColor="#777777"
+                    HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CyberPulseUso.Mobile.Views.HomePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Inicio"
+    BackgroundColor="#F5F7FB">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Encabezado -->
+        <Grid
+            Grid.Row="0"
+            Padding="20,18"
+            BackgroundColor="#172554"
+            ColumnDefinitions="*,Auto">
+
+            <VerticalStackLayout Spacing="3">
+                <Label
+                    Text="CyberPulse Uso"
+                    FontSize="21"
+                    FontAttributes="Bold"
+                    TextColor="White"/>
+
+                <Label
+                    Text="Panel principal"
+                    FontSize="12"
+                    TextColor="#BFDBFE"/>
+            </VerticalStackLayout>
+
+            <Button
+                Grid.Column="1"
+                Text="Salir"
+                Clicked="OnLogoutClicked"
+                BackgroundColor="#C9152B"
+                TextColor="White"
+                FontSize="13"
+                FontAttributes="Bold"
+                CornerRadius="10"
+                Padding="14,8"
+                VerticalOptions="Center"/>
+        </Grid>
+
+        <!-- Contenido -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="22" Spacing="20">
+
+                <VerticalStackLayout Spacing="5">
+                    <Label
+                        Text="¡Bienvenido!"
+                        FontSize="26"
+                        FontAttributes="Bold"
+                        TextColor="#172554"/>
+
+                    <Label
+                        Text="Desde aquí podrás acceder a las funcionalidades de la aplicación."
+                        FontSize="14"
+                        TextColor="#64748B"/>
+                </VerticalStackLayout>
+
+                <Border
+                    BackgroundColor="White"
+                    Stroke="#E2E8F0"
+                    StrokeThickness="1"
+                    Padding="20">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="18"/>
+                    </Border.StrokeShape>
+
+                    <VerticalStackLayout Spacing="10">
+                        <Label
+                            Text="Panel de control"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            TextColor="#1E293B"/>
+
+                        <Label
+                            Text="Tus módulos y opciones estarán disponibles aquí."
+                            FontSize="14"
+                            TextColor="#64748B"/>
+                    </VerticalStackLayout>
+                </Border>
+                <Button
+                    Text="Copiar registros de diagnóstico"
+                    Clicked="OnCopyLogsClicked"
+                    BackgroundColor="#555555"
+                    TextColor="White"
+                    Margin="10" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

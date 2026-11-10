@@ -32,17 +32,34 @@ builder.Services.AddControllers()
     .AddViewLocalization();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
+var allowedOrigins = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .Get<string[]>() ?? [];
+
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(CorsPolicy, policy =>
     {
-        //policy.WithOrigins("https://localhost:7172")
-        policy.WithOrigins("http://cyberpulseuso.runasp.net")
+        policy.WithOrigins(allowedOrigins)
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
     });
 });
+
+
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy(CorsPolicy, policy =>
+//    {
+//        //policy.WithOrigins("https://localhost:7172")
+//        policy.WithOrigins("https://cyberpulseuso.runasp.net")
+//            .AllowAnyHeader()
+//            .AllowAnyMethod()
+//            .AllowCredentials();
+//    });
+//});
 
 
 builder.Services.AddOpenApi();
@@ -177,13 +194,12 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors(CorsPolicy);
-app.UseHttpsRedirection();
 app.UseAuthentication();
-app.UseFileServer();
-
 app.UseAuthorization();
+app.UseFileServer();
 
 app.MapControllers();
 

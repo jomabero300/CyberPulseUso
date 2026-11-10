@@ -237,14 +237,11 @@ public class AccountsController : ControllerBase
             {
                 var currentTokenHash = HashRefreshToken(currentRefreshToken);
 
-                var storedRefreshToken =
-                    await _userUnitOfWork.GetRefreshTokenByHashAsync(currentTokenHash);
+                var storedRefreshToken = await _userUnitOfWork.GetRefreshTokenByHashAsync(currentTokenHash);
 
                 if (storedRefreshToken != null && storedRefreshToken.RevokedAt == null)
                 {
-                    await _userUnitOfWork.RevokeRefreshTokenFamilyAsync(
-                        storedRefreshToken.FamilyId,
-                        DateTime.UtcNow);
+                    await _userUnitOfWork.RevokeRefreshTokenFamilyAsync(storedRefreshToken.FamilyId,DateTime.UtcNow);
                 }
             }
 

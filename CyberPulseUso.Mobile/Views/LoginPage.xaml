@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CyberPulseUso.Mobile.Views.LoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Iniciar sesión"
+    BackgroundColor="#F5F7FB"
+    Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <Grid Padding="28,40"
+              RowDefinitions="*,Auto,*"
+              VerticalOptions="Fill">
+
+            <VerticalStackLayout
+                Grid.Row="1"
+                Spacing="22"
+                VerticalOptions="Center">
+
+                <!-- Encabezado -->
+                <VerticalStackLayout Spacing="8"
+                                     HorizontalOptions="Center">
+
+                    <Label
+                        Text="UNIÓN SINDICAL OBRERA"
+                        FontSize="20"
+                        FontAttributes="Bold"
+                        HorizontalOptions="Center"
+                        HorizontalTextAlignment="Center"
+                        TextColor="{AppThemeBinding Light=#171717, Dark=White}" />
+
+                    <Label Text="USO - ARAUCA"
+                           FontSize="18"
+                           TextColor="#2563EB"
+                           HorizontalTextAlignment="Center"/>
+
+                    <Label Text="Bienvenido de nuevo"
+                           FontSize="23"
+                           FontAttributes="Bold"
+                           TextColor="#1E293B"
+                           Margin="0,18,0,0"
+                           HorizontalTextAlignment="Center"/>
+
+                    <Label Text="Ingresa tus credenciales para continuar"
+                           FontSize="13"
+                           TextColor="#64748B"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+
+                <!-- Formulario -->
+                <Border BackgroundColor="White"
+                        Stroke="#E2E8F0"
+                        StrokeThickness="1"
+                        Padding="22">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+
+                    <VerticalStackLayout Spacing="17">
+
+                        <VerticalStackLayout Spacing="7">
+                            <Label Text="Correo electrónico"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="#334155"/>
+
+                            <Entry
+                                Placeholder="correo@ejemplo.com"
+                                Keyboard="Email"
+                                Text="{Binding Email}"
+                                TextColor="#1E293B"
+                                PlaceholderColor="#94A3B8"
+                                FontSize="14"
+                                ClearButtonVisibility="WhileEditing"/>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="7">
+                            <Label Text="Contraseña"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="#334155"/>
+
+                            <Entry
+                                Placeholder="Ingresa tu contraseña"
+                                IsPassword="True"
+                                Text="{Binding Password}"
+                                TextColor="#1E293B"
+                                PlaceholderColor="#94A3B8"
+                                FontSize="14"/>
+                        </VerticalStackLayout>
+
+                        <!-- Mantener sesión -->
+                        <HorizontalStackLayout Spacing="8"
+                                               VerticalOptions="Center">
+
+                            <CheckBox
+                                IsChecked="{Binding RememberMe}"
+                                Color="#2563EB"
+                                VerticalOptions="Center"/>
+
+                            <Label Text="Mantener la sesión abierta"
+                                   FontSize="13"
+                                   TextColor="#475569"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+
+                        <!-- Mensaje de error -->
+                        <Label Text="{Binding ErrorMessage}"
+                               TextColor="#DC2626"
+                               FontSize="12"
+                               HorizontalTextAlignment="Center"/>
+
+                        <!-- Botón de ingreso -->
+                        <Button
+                            Text="Iniciar sesión"
+                            Command="{Binding LoginCommand}"
+                            BackgroundColor="#2563EB"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            FontSize="15"
+                            HeightRequest="52"
+                            CornerRadius="12"/>
+
+                        <ActivityIndicator
+                            IsRunning="{Binding IsBusy}"
+                            IsVisible="{Binding IsBusy}"
+                            Color="#2563EB"
+                            HorizontalOptions="Center"/>
+
+
+                        <!-- Opciones de autenticación -->
+                        <VerticalStackLayout Spacing="14"
+                                     HorizontalOptions="Center"
+                                     Margin="0,5,0,0">
+
+
+                            <Button Text="Registrarme"
+                                    Clicked="OnRegisterTapped"
+                                    BackgroundColor="Transparent"
+                                    TextColor="#2563EB"
+                                    FontAttributes="Bold"
+                                    Padding="5">
+
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup>
+                                        <VisualState Name="Normal">
+                                            <VisualState.Setters>
+                                                <Setter Property="Opacity" Value="1"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+
+                                        <VisualState Name="Pressed">
+                                            <VisualState.Setters>
+                                                <Setter Property="Opacity" Value="0.5"/>
+                                                <Setter Property="Scale" Value="0.96"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </Button>
+
+
+                            <Button Text="¿Olvidaste tu contraseña?"
+                                Clicked="OnRecoverPasswordTapped"
+                                BackgroundColor="Transparent"
+                                TextColor="#2563EB"
+                                FontSize="13"
+                                Padding="5"/>
+
+
+
+                            <Button Text="Reenviar correo de activación"
+                                Clicked="OnResendTokenTapped"
+                                BackgroundColor="Transparent"
+                                TextColor="#2563EB"
+                                FontSize="13"
+                                Padding="5"/>
+
+                            <!--<Label Text="Reenviar correo de activación"
+                                           TextColor="#F3A43F"
+                                           FontSize="13"
+                                           HorizontalTextAlignment="Center">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnResendConfirmationTapped"/>
+                                </Label.GestureRecognizers>
+                            </Label>-->
+
+                        </VerticalStackLayout>
+
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Pie -->
+                <Label Text="CyberPulse Uso © 2026"
+                       FontSize="11"
+                       TextColor="#94A3B8"
+                       HorizontalTextAlignment="Center"/>
+
+            </VerticalStackLayout>
+        </Grid>
+    </ScrollView>
+</ContentPage>

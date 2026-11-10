@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CyberPulseUso.Mobile.Views.RegisterPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Registro"
+    BackgroundColor="#F5F7FB"
+    Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,30" Spacing="18">
+
+            <Label Text="UNIÓN SINDICAL OBRERA"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center"
+                   TextColor="#171717"/>
+
+            <Label Text="USO - ARAUCA"
+                   FontSize="18"
+                   HorizontalTextAlignment="Center"
+                   TextColor="#2563EB"/>
+
+            <Label Text="Crear una cuenta"
+                   FontSize="23"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center"
+                   TextColor="#1E293B"
+                   Margin="0,10,0,0"/>
+
+            <Label Text="Completa tus datos para registrarte"
+                   FontSize="13"
+                   HorizontalTextAlignment="Center"
+                   TextColor="#64748B"/>
+
+            <Border BackgroundColor="White"
+                    Stroke="#E2E8F0"
+                    StrokeThickness="1"
+                    Padding="20">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="18"/>
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="14">
+
+                    <Entry Placeholder="Documento de identidad"
+                           Text="{Binding User.DocumentId}"
+                           Keyboard="Numeric"/>
+
+                    <Entry Placeholder="Nombres"
+                           Text="{Binding User.FirstName}"/>
+
+                    <Entry Placeholder="Apellidos"
+                           Text="{Binding User.LastName}"/>
+
+                    <Entry Placeholder="Teléfono"
+                           Text="{Binding User.PhoneNumber}"
+                           Keyboard="Telephone"/>
+
+                    <Entry Placeholder="Correo electrónico"
+                           Text="{Binding User.Email}"
+                           Keyboard="Email"/>
+
+                    <Entry Placeholder="Contraseña"
+                           Text="{Binding User.Password}"
+                           IsPassword="True"/>
+
+                    <Entry Placeholder="Confirmar contraseña"
+                               Text="{Binding User.PasswordConfirm}"
+                               IsPassword="True"/>
+
+                    <Label Text="{Binding ErrorMessage}"
+                           TextColor="#DC2626"
+                           FontSize="13"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"/>
+
+                    <Label Text="País"
+                           FontAttributes="Bold"
+                           TextColor="#334155"/>
+
+                    <SearchBar Placeholder="Buscar país..."
+                           Text="{Binding SearchText}"
+                           BackgroundColor="#F5F7FB"
+                           TextColor="#1E293B"
+                           PlaceholderColor="#94A3B8"/>
+
+                    <Border Stroke="#E2E8F0"
+                        StrokeThickness="1"
+                        BackgroundColor="White"
+                        Padding="5">
+
+                        <CollectionView
+                            ItemsSource="{Binding FilteredCountries}"
+                            SelectedItem="{Binding SelectedCountry, Mode=TwoWay}"
+                            SelectionMode="Single"
+                            HeightRequest="160">
+
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Padding="12"
+                      ColumnDefinitions="*">
+
+                                        <Label Text="{Binding Name}"
+                                           FontSize="14"
+                                           TextColor="#334155"
+                                           VerticalOptions="Center"/>
+
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+
+                            <CollectionView.EmptyView>
+                                <Label Text="No se encontraron países."
+                                       TextColor="#64748B"
+                                       HorizontalTextAlignment="Center"
+                                       VerticalOptions="Center"/>
+                            </CollectionView.EmptyView>
+
+                        </CollectionView>
+                    </Border>
+
+                    <Label Text="{Binding SelectedCountry.Name,
+                               StringFormat='País seleccionado: {0}'}"
+                               TextColor="#2563EB"
+                               FontSize="12"/>
+
+                    <Label Text="Fotografía"
+                           FontAttributes="Bold"
+                           TextColor="#334155"/>
+
+
+                    <Label Text="Fotografía"
+                           FontAttributes="Bold"
+                           TextColor="#334155"/>
+
+                    <VerticalStackLayout Spacing="10">
+
+                        <Button Text="Seleccionar de la galería"
+                            Command="{Binding SelectImageCommand}"
+                            BackgroundColor="#E2E8F0"
+                            TextColor="#334155"/>
+
+
+
+                        <Button Text="Tomar fotografía"
+                            Command="{Binding TakePhotoCommand}"
+                            BackgroundColor="#2563EB"
+                            TextColor="White"/>
+
+                        <Image Source="{Binding ImageUrl}"
+                               HeightRequest="150"
+                               WidthRequest="150"
+                               Aspect="AspectFill"
+                               HorizontalOptions="Center"/>
+
+                    </VerticalStackLayout>
+
+
+
+
+
+
+                    <Border BackgroundColor="#2563EB"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="5">
+
+                        <Grid ColumnDefinitions="Auto,*"
+                              HeightRequest="50">
+
+                            <ActivityIndicator
+                                Grid.Column="0"
+                                IsRunning="{Binding IsBusy}"
+                                IsVisible="{Binding IsBusy}"
+                                Color="White"
+                                VerticalOptions="Center"
+                                Margin="10,0"/>
+
+                            <Button Grid.Column="1"
+                                Text="Registrarme"
+                                Command="{Binding RegisterCommand}"
+                                BackgroundColor="Transparent"
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                HeightRequest="50"
+                                CornerRadius="12"/>
+                        </Grid>
+                    </Border>
+
+                    <Button Text="Regresar"
+                            BackgroundColor="Transparent"
+                            TextColor="#2563EB"/>
+
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="CyberPulse Uso © 2026"
+                   FontSize="11"
+                   TextColor="#94A3B8"
+                   HorizontalTextAlignment="Center"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

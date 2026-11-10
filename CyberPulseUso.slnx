@@ -1,5 +1,8 @@
 <Solution>
   <Project Path="CyberPulseUso.Backend/CyberPulseUso.Backend.csproj" />
   <Project Path="CyberPulseUso.Frontend/CyberPulseUso.Frontend.csproj" />
+  <Project Path="CyberPulseUso.Mobile/CyberPulseUso.Mobile.csproj" Id="8ceafca9-a470-4e88-9da2-40cc1d756380">
+    <Deploy Solution="Debug|*" />
+  </Project>
   <Project Path="CyberPulseUso.Shared/CyberPulseUso.Shared.csproj" />
 </Solution>
