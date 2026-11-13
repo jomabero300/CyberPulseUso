@@ -23,6 +23,4 @@ public class GroupDTO
     public StatuDTO? Statu { get; set; }
     [Required(ErrorMessageResourceName = "RequiredField", ErrorMessageResourceType = typeof(Literals))]
     public CategoryDTO? Category { get; set; }
-    
 }
-

@@ -49,19 +49,6 @@ builder.Services.AddCors(options =>
 });
 
 
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy(CorsPolicy, policy =>
-//    {
-//        //policy.WithOrigins("https://localhost:7172")
-//        policy.WithOrigins("https://cyberpulseuso.runasp.net")
-//            .AllowAnyHeader()
-//            .AllowAnyMethod()
-//            .AllowCredentials();
-//    });
-//});
-
-
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<ApplicationDbContext>(x =>
     x.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -166,24 +153,6 @@ builder.Services.Configure<JwtSettings>(
 
 builder.Services.AddLocalization(option => option.ResourcesPath = "Resources");
 var app = builder.Build();
-
-//app.Use(async (context, next) =>
-//{
-//    try
-//    {
-//        await next();
-//    }
-//    catch (Exception ex)
-//    {
-//        // Si la API falla internamente, interceptamos el error y lo escupimos en texto plano
-//        context.Response.StatusCode = 500;
-//        context.Response.ContentType = "text/plain; charset=utf-8";
-//        await context.Response.WriteAsync($"[ERROR DETECTADO EN MONSTERASP.NET]\n\n" +
-//                                         $"Mensaje: {ex.Message}\n\n" +
-//                                         $"Detalle (Stack Trace):\n{ex.StackTrace}");
-//    }
-//});
-
 
 SeedDataAsync(app);
 

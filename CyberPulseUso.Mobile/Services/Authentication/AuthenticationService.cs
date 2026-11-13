@@ -1,4 +1,5 @@
 ﻿using CyberPulseUso.Mobile.Services.Interfaces;
+using CyberPulseUso.Shared.Entities.Gene;
 using CyberPulseUso.Shared.EntitiesDTO.Gene;
 
 namespace CyberPulseUso.Mobile.Services.Authentication;
@@ -7,7 +8,7 @@ public class AuthenticationService : IAuthenticationService
 {
     private const string LoginEndpoint = "api/Accounts/Login";
     private const string LogoutEndpoint = "api/Accounts/Logout";
-
+    private const string UpdateProfileEndpoint = "api/Accounts";
     private readonly IApiRepository _repository;
     private readonly ITokenService _tokenService;
     private readonly ITokenRefreshService _tokenRefreshService;
@@ -76,4 +77,31 @@ public class AuthenticationService : IAuthenticationService
 
         return await _tokenRefreshService.RefreshAsync();
     }
+
+    public async Task<TokenDTO?> UpdateProfileAsync(User user, bool rememberMe)
+    {
+        var response = await _repository.PutAsync<User, TokenDTO>(
+            $"{UpdateProfileEndpoint}?rememberMe={rememberMe.ToString().ToLowerInvariant()}",
+            user);
+
+        if (response is null || string.IsNullOrWhiteSpace(response.Token))
+            return null;
+
+        // Guardar el nuevo JWT.
+        await _tokenService.SaveAccessTokenAsync(
+            response.Token,
+            response.Expiration);
+
+        // Mantener la preferencia de sesión.
+        await _tokenService.SaveRememberMeAsync(rememberMe);
+
+        // Conservar la cookie renovada por el Backend.
+        if (rememberMe)
+        {
+            await _tokenService.PersistRefreshCookieAsync();
+        }
+
+        return response;
+    }
+
 }

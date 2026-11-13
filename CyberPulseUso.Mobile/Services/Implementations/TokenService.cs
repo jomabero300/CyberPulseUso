@@ -1,7 +1,10 @@
 ﻿using CyberPulseUso.Mobile.Configuration;
+using CyberPulseUso.Mobile.Models;
 using CyberPulseUso.Mobile.Services.Interfaces;
+using System.Diagnostics;
 using System.Globalization;
 using System.Net;
+using System.Text.Json;
 
 namespace CyberPulseUso.Mobile.Services.Implementations;
 
@@ -23,7 +26,7 @@ public class TokenService : ITokenService
         _apiUri = new Uri(ApiConfiguration.BaseUrl);
     }
 
-    public async Task SaveAccessTokenAsync( string token, DateTime expiration)
+    public async Task SaveAccessTokenAsync(string token, DateTime expiration)
     {
         await SecureStorage.Default.SetAsync(TokenKey, token);
 
@@ -83,7 +86,7 @@ public class TokenService : ITokenService
 
     public async Task SaveRememberMeAsync(bool rememberMe)
     {
-        await SecureStorage.Default.SetAsync(RememberMeKey,rememberMe.ToString());
+        await SecureStorage.Default.SetAsync(RememberMeKey, rememberMe.ToString());
 
         if (!rememberMe)
         {
@@ -106,7 +109,7 @@ public class TokenService : ITokenService
     {
         RemoveRefreshCookie();
 
-        var cookie = new Cookie(RefreshCookieName,cookieValue,"/api")
+        var cookie = new Cookie(RefreshCookieName, cookieValue, "/api")
         {
             Secure = true,
             HttpOnly = true
@@ -117,7 +120,7 @@ public class TokenService : ITokenService
 
     private void RemoveRefreshCookie()
     {
-        var expiredCookie = new Cookie(RefreshCookieName,string.Empty,"/")
+        var expiredCookie = new Cookie(RefreshCookieName, string.Empty, "/")
         {
             Secure = true,
             HttpOnly = true,
@@ -126,7 +129,6 @@ public class TokenService : ITokenService
 
         _cookieContainer.Add(_apiUri, expiredCookie);
     }
-
 
     public async Task PersistRefreshCookieAsync()
     {
@@ -140,5 +142,97 @@ public class TokenService : ITokenService
         }
 
         await SaveRefreshCookieAsync(cookie.Value);
+    }
+
+
+
+
+    public async Task<UserSession?> GetUserSessionAsync()
+    {
+        var token = await GetAccessTokenAsync();
+
+        if (string.IsNullOrWhiteSpace(token))
+            return null;
+
+        try
+        {
+            var parts = token.Split('.');
+
+            if (parts.Length != 3)
+                return null;
+
+            var payload = parts[1]
+                .Replace('-', '+')
+                .Replace('_', '/');
+
+            payload = payload.PadRight(
+                payload.Length + (4 - payload.Length % 4) % 4,
+                '=');
+
+            var jsonBytes = Convert.FromBase64String(payload);
+
+            using var document = JsonDocument.Parse(jsonBytes);
+
+            var root = document.RootElement;
+
+            string GetClaim(params string[] names)
+            {
+                foreach (var property in root.EnumerateObject())
+                {
+                    if (names.Any(name =>
+                        string.Equals(property.Name, name,
+                            StringComparison.OrdinalIgnoreCase)))
+                    {
+                        return property.Value.ToString();
+                    }
+                }
+
+                return string.Empty;
+            }
+
+            var session = new UserSession
+            {
+                Email = GetClaim(
+                   "unique_name",
+                   "name",
+                   "email",
+                   "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"),
+
+                FirstName = GetClaim("FirstName", "FrstName"),
+
+                LastName = GetClaim("LastName"),
+
+                Photo = GetClaim("Photo"),
+
+                UserType = GetClaim(
+                   "role",
+                   "Role",
+                   "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"),
+
+                ChargeName = GetClaim("ChargeName"),
+
+                CountryId = int.TryParse(GetClaim("CountryId"),out var countryId) ? countryId : 0
+            };
+
+            Debug.WriteLine("===== DATOS DE USER SESSION =====");
+            Debug.WriteLine($"Email: [{session.Email}]");
+            Debug.WriteLine($"UserType: [{session.UserType}]");
+            Debug.WriteLine($"ChargeName: [{session.ChargeName}]");
+            Debug.WriteLine($"FullName: [{session.FullName}]");
+            Debug.WriteLine("=================================");
+
+            Debug.WriteLine($"¿Tiene fotografía?: {!string.IsNullOrWhiteSpace(session.Photo)}");
+            Debug.WriteLine($"Longitud de fotografía: {session.Photo?.Length ?? 0}");
+
+            return session;
+        }
+        catch (Exception ex) when (
+            ex is FormatException ||
+            ex is JsonException ||
+            ex is ArgumentException)
+        {
+            Debug.WriteLine($"Error leyendo sesión: {ex}");
+            return null;
+        }
     }
 }

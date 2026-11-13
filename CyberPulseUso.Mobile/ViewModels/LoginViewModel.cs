@@ -118,7 +118,10 @@ public partial class LoginViewModel : ObservableObject
                 return;
             }
 
-            await Shell.Current.GoToAsync(nameof(HomePage));
+            if (Shell.Current is AppShell appShell)
+            {
+                await appShell.NavigateToHomeAsync();
+            }
         }
         catch (HttpRequestException ex)
         {

@@ -4,11 +4,94 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:CyberPulseUso.Mobile.Views"
-    FlyoutBehavior="Disabled"
+    FlyoutBehavior="Flyout"
+    FlyoutBackgroundColor="#F8FAFC"
+    FlyoutWidth="290"
     Title="CyberPulse Uso">
+
+    <Shell.FlyoutHeader>
+        <Grid
+            x:Name="FlyoutHeaderView"
+            Padding="20,25,20,22"
+            BackgroundColor="#F8FAFC"
+            RowDefinitions="Auto,Auto"
+            RowSpacing="18">
+
+            <!-- Identificación de la aplicación -->
+            <VerticalStackLayout Spacing="4">
+                <Label
+                    Text="USO ARAUCA"
+                    FontSize="23"
+                    FontAttributes="Bold"
+                    TextColor="#1E293B"/>
+
+                <Label
+                    Text="CYBERPULSE"
+                    FontSize="12"
+                    CharacterSpacing="3"
+                    TextColor="#64748B"/>
+            </VerticalStackLayout>
+
+            <!-- Información del usuario -->
+            <Grid
+                Grid.Row="1"
+                ColumnDefinitions="65,*"
+                ColumnSpacing="12">
+
+                <!-- Fotografía -->
+                <Border
+                    WidthRequest="60"
+                    HeightRequest="60"
+                    Stroke="#CBD5E1"
+                    StrokeThickness="1"
+                    BackgroundColor="#FFFFFF"
+                    StrokeShape="RoundRectangle 30"
+                    VerticalOptions="Start">
+
+                    <Image
+                        Source="{Binding PhotoImage}"
+                        Aspect="AspectFill"
+                        WidthRequest="60"
+                        HeightRequest="60"/>
+                </Border>
+
+                <!-- Datos -->
+                <VerticalStackLayout
+                    Grid.Column="1"
+                    VerticalOptions="Center"
+                    Spacing="5">
+
+                    <Label
+                        Text="{Binding FullName}"
+                        FontSize="16"
+                        FontAttributes="Bold"
+                        TextColor="#1E293B"
+                        LineBreakMode="TailTruncation"/>
+
+                    <Label
+                        Text="{Binding ChargeName}"
+                        FontSize="13"
+                        TextColor="#475569"
+                        LineBreakMode="TailTruncation"/>
+
+                    <Label
+                        Text="{Binding UserType}"
+                        FontSize="12"
+                        TextColor="#64748B"/>
+
+                    <Label
+                        Text="{Binding Email}"
+                        FontSize="11"
+                        TextColor="#64748B"
+                        LineBreakMode="TailTruncation"/>
+                </VerticalStackLayout>
+            </Grid>
+        </Grid>
+    </Shell.FlyoutHeader>
 
     <ShellContent
         Route="Welcome"
+        FlyoutItemIsVisible="False"
         ContentTemplate="{DataTemplate views:WelcomePage}" />
 
 </Shell>

@@ -111,4 +111,14 @@
         <Setter Property="RefreshColor" Value="{StaticResource Primary}"/>
     </Style>
 
+    <!-- Botones de iconos -->
+
+    <Style x:Key="IconButtonBase" TargetType="ImageButton">
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="WidthRequest" Value="40"/>
+        <Setter Property="HeightRequest" Value="40"/>
+        <Setter Property="Padding" Value="8"/>
+        <Setter Property="Aspect" Value="AspectFit"/>
+    </Style>
+
 </ResourceDictionary>

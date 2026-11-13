@@ -3,4 +3,5 @@
 public class PagedResult<T>
 {
     public IEnumerable<T> Items { get; init; } = [];
-    public int TotalRecords { get; init; }}
+    public int TotalRecords { get; init; }
+}

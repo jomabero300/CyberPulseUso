@@ -17,7 +17,7 @@ public class ChargeDTO
     public GroupDTO? Group { get; set; }
 
     [Display(Name = "Name", ResourceType = typeof(Literals))]
-    [MaxLength(100, ErrorMessageResourceName = "MaxLength", ErrorMessageResourceType = typeof(Literals))]
+    [MaxLength(80, ErrorMessageResourceName = "MaxLength", ErrorMessageResourceType = typeof(Literals))]
     [Required(ErrorMessageResourceName = "RequiredField", ErrorMessageResourceType = typeof(Literals))]
     public string? Name { get; set; }
     
@@ -25,6 +25,5 @@ public class ChargeDTO
     [Required(ErrorMessageResourceName = "RequiredField", ErrorMessageResourceType = typeof(Literals))]
     public int StatuId { get; set; }
     
-    public StatuDTO? Statu { get; set; }
-    
+    public StatuDTO? Statu { get; set; }    
 }

@@ -35,6 +35,8 @@ public class UserUnitOfWork : IUserUnitOfWork
 
     public async Task<RefreshToken?> GetRefreshTokenByHashAsync(string tokenHash) => await _refreshTokenRepository.GetByHashAsync(tokenHash);
 
+    public async Task<ActionResponse<IEnumerable<User>>> GetReportAsync(PaginationDTO pagination)=>await _userRepository.GetReportAsync(pagination);
+
     public async Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination) => await _userRepository.GetTotalRecordsAsync(pagination);
     public async Task<User> GetUserAsync(Guid userId) => await _userRepository.GetUserAsync(userId);
     public async Task<User> GetUserAsync(string email) => await _userRepository.GetUserAsync(email);

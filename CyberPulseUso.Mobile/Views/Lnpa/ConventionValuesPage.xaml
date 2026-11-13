@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CyberPulseUso.Mobile.Views.Lnpa.ConventionValuesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Valores de convenios">
+
+    <Grid Padding="15"
+          RowDefinitions="Auto,Auto,*,Auto"
+          RowSpacing="12">
+
+        <!-- Encabezado -->
+        <Grid Grid.Row="0"
+              ColumnDefinitions="*,Auto,Auto,Auto"
+              ColumnSpacing="8">
+
+            <Label Text="Beneficios"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center" />
+
+            <ImageButton Grid.Column="1"
+                         Source="icon_pdf.svg"
+                         Style="{StaticResource IconButtonBase}"
+                         Clicked="OnExportPdfClicked"
+                         ToolTipProperties.Text="Exportar PDF" />
+
+            <ImageButton Grid.Column="2"
+                         Source="icon_excel.svg"
+                         Style="{StaticResource IconButtonBase}"
+                         Clicked="OnExportExcelClicked"
+                         ToolTipProperties.Text="Exportar Excel" />
+
+            <ImageButton Grid.Column="3"
+                         Source="icon_add.svg"
+                         Style="{StaticResource IconButtonBase}"
+                         Clicked="OnCreateClicked"
+                         ToolTipProperties.Text="Nuevo valor" />
+        </Grid>
+
+        <!-- Búsqueda -->
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,Auto"
+              ColumnSpacing="8">
+
+            <Entry Text="{Binding Filter}"
+                   Placeholder="Buscar por fecha, convenio o precio..."
+                   ReturnType="Search"
+                   ReturnCommand="{Binding SearchCommand}" />
+
+            <ImageButton Grid.Column="1"
+                         Source="icon_search.svg"
+                         Style="{StaticResource IconButtonBase}"
+                         Clicked="OnSearchClicked" />
+        </Grid>
+
+        <!-- Listado -->
+        <CollectionView Grid.Row="2"
+                        ItemsSource="{Binding ConventionValues}"
+                        SelectionMode="None">
+
+            <CollectionView.EmptyView>
+                <Label Text="No hay beneficios para mostrar."
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       TextColor="Gray" />
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Padding="12"
+                            Margin="0,4"
+                            Stroke="#DDDDDD"
+                            StrokeThickness="1">
+
+                        <Grid ColumnDefinitions="*,Auto"
+                              RowDefinitions="Auto,Auto,Auto"
+                              ColumnSpacing="8"
+                              RowSpacing="5">
+
+                            <Label Grid.Row="0"
+                                   Text="{Binding Convention.Name}"
+                                   FontAttributes="Bold"
+                                   FontSize="16" />
+
+                            <Label Grid.Row="1"
+                                   Text="{Binding Date, StringFormat='Fecha: {0:dd/MM/yyyy}'}"
+                                   FontSize="13" />
+
+                            <Label Grid.Row="2"
+                                   Text="{Binding Prince, StringFormat='Precio: {0:N2}'}"
+                                   FontSize="13" />
+
+                            <VerticalStackLayout Grid.Column="1"
+                                                 Grid.RowSpan="3"
+                                                 Spacing="5"
+                                                 VerticalOptions="Center">
+
+                                <Label Text="{Binding Statu.Name, StringFormat='Estado: {0}'}"
+                                       FontSize="12"
+                                       HorizontalTextAlignment="End" />
+
+                                <HorizontalStackLayout Spacing="5"
+                                                       HorizontalOptions="End">
+
+                                    <ImageButton Source="icon_edit.svg"
+                                                 Style="{StaticResource IconButtonBase}"
+                                                 CommandParameter="{Binding .}"
+                                                 Clicked="OnEditClicked" />
+
+                                    <ImageButton Source="icon_delete.svg"
+                                                 Style="{StaticResource IconButtonBase}"
+                                                 CommandParameter="{Binding .}"
+                                                 Clicked="OnDeleteClicked" />
+
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Paginación -->
+        <Grid Grid.Row="3"
+              ColumnDefinitions="Auto,Auto,Auto,Auto,Auto"
+              ColumnSpacing="12"
+              HorizontalOptions="Center"
+              VerticalOptions="Center">
+
+            <ImageButton Grid.Column="0"
+                         Source="icon_previous.svg"
+                         Style="{StaticResource IconButtonBase}"
+                         IsEnabled="{Binding CanGoPrevious}"
+                         Clicked="OnPreviousPageClicked" />
+
+            <Label Grid.Column="1"
+                   Text="{Binding Page}"
+                   VerticalOptions="Center"
+                   HorizontalTextAlignment="Center" />
+
+            <Label Grid.Column="2"
+                   Text="de"
+                   VerticalOptions="Center" />
+
+            <Label Grid.Column="3"
+                   Text="{Binding TotalPages}"
+                   VerticalOptions="Center"
+                   HorizontalTextAlignment="Center" />
+
+            <ImageButton Grid.Column="4"
+                         Source="icon_next.svg"
+                         Style="{StaticResource IconButtonBase}"
+                         IsEnabled="{Binding CanGoNext}"
+                         Clicked="OnNextPageClicked" />
+        </Grid>
+
+        <!-- Cargando -->
+        <ActivityIndicator Grid.RowSpan="4"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           ZIndex="1" />
+
+    </Grid>
+</ContentPage>

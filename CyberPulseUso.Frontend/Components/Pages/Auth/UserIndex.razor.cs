@@ -1,7 +1,6 @@
 using CyberPulseUso.Frontend.Repositories;
 using CyberPulseUso.Shared.Entities.Gene;
 using CyberPulseUso.Shared.Resources;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using MudBlazor;

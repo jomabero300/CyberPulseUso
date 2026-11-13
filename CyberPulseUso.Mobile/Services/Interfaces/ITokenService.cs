@@ -1,8 +1,10 @@
-﻿namespace CyberPulseUso.Mobile.Services.Interfaces;
+﻿using CyberPulseUso.Mobile.Models;
+
+namespace CyberPulseUso.Mobile.Services.Interfaces;
 
 public interface ITokenService
 {
-    Task SaveAccessTokenAsync(string token,DateTime expiration);
+    Task SaveAccessTokenAsync(string token, DateTime expiration);
 
     Task<string?> GetAccessTokenAsync();
 
@@ -19,4 +21,6 @@ public interface ITokenService
     Task ClearAsync();
 
     Task PersistRefreshCookieAsync();
+
+    Task<UserSession?> GetUserSessionAsync();
 }

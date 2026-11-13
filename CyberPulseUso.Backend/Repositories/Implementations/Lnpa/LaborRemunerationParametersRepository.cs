@@ -118,7 +118,7 @@ public class LaborRemunerationParametersRepository : GenericRepository<LaborRemu
     {
         var model = await _context.Set<LaborRemunerationParameters>().FindAsync(entity.Id);
         if (model == null)
-            return new ActionResponse<LaborRemunerationParameters> { WasSuccess = false, Message = "ERR005" };
+            return new ActionResponse<LaborRemunerationParameters> { WasSuccess = false, Message = "ERR001" };
 
         CopyMatchingProperties(entity, model, isUpdate: true);
         try

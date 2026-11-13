@@ -103,7 +103,7 @@ public class ConventionValuesController : GenericController<ConventionValue>
             {
                 Codigo = x.Id,
                 Convención=x.Convention!.Name,
-                Fecha=x.Date.ToString("dd/MainMasterMonikerList/yyyy"),
+                Fecha=x.Date.ToString("dd/MM/yyyy"),
                 Valor=x.Prince,
                 Estado = x.Statu?.Name
             }).ToList();

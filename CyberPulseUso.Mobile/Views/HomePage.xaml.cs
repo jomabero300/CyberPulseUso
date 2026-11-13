@@ -44,24 +44,4 @@ public partial class HomePage : ContentPage
             _isLoggingOut = false;
         }
     }
-
-
-    private async void OnCopyLogsClicked(object? sender, EventArgs e)
-    {
-        try
-        {           
-
-            await DisplayAlertAsync(
-                "Diagnóstico",
-                "Los registros se copiaron. Ahora puedes pegarlos aquí.",
-                "Aceptar");
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlertAsync(
-                "Error",
-                ex.Message,
-                "Aceptar");
-        }
-    }
 }

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CyberPulseUso.Mobile.Views.ProfilePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Mi perfil">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <Label
+                Text="Mi perfil"
+                FontSize="26"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+            <Image
+                Source="{Binding ProfileImage}"
+                HeightRequest="120"
+                WidthRequest="120"
+                Aspect="AspectFill"
+                HorizontalOptions="Center" />
+
+            <HorizontalStackLayout
+                HorizontalOptions="Center"
+                Spacing="20">
+
+                    <Button
+                        Text="Galería"
+                        Command="{Binding SelectImageCommand}" />
+
+                    <Button
+                        Text="Cámara"
+                        Command="{Binding TakePhotoCommand}" />
+
+            </HorizontalStackLayout>
+
+            <Label Text="Nombres" />
+            <Entry
+                Text="{Binding User.FirstName}"
+                Placeholder="Ingrese sus nombres" />
+
+            <Label Text="Apellidos" />
+            <Entry
+                Text="{Binding User.LastName}"
+                Placeholder="Ingrese sus apellidos" />
+
+            <Label Text="Teléfono" />
+            <Entry
+                Text="{Binding User.PhoneNumber}"
+                Keyboard="Telephone"
+                Placeholder="Ingrese su teléfono" />
+
+            <Label Text="País" />
+
+            <VerticalStackLayout Spacing="3">
+                <Button
+                    Text="{Binding CountryDisplay}"
+                    Command="{Binding ToggleCountryListCommand}"
+                    BackgroundColor="#EEEEEE"
+                    TextColor="Black"
+                    HorizontalOptions="Fill" />
+
+                <Border
+                    IsVisible="{Binding IsCountryListVisible}"
+                    Stroke="#CCCCCC"
+                    Padding="5">
+
+                    <VerticalStackLayout>
+                        <SearchBar
+                        Placeholder="Buscar país..."
+                        Text="{Binding CountryFilter}" />
+
+                        <CollectionView
+                            ItemsSource="{Binding FilteredCountries}"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding SelectedCountry}"
+                            HeightRequest="150">
+
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Label
+                            Text="{Binding Name}"
+                            Padding="10" />
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+
+
+
+            <Label Text="Cargo" />
+
+            <VerticalStackLayout Spacing="3">
+                <Button
+                    Text="{Binding ChargeDisplay}"
+                    Command="{Binding ToggleChargeListCommand}"
+                    BackgroundColor="#EEEEEE"
+                    TextColor="Black"
+                    HorizontalOptions="Fill" />
+
+                <Border
+                    IsVisible="{Binding IsChargeListVisible}"
+                    Stroke="#CCCCCC"
+                    Padding="5">
+
+                    <VerticalStackLayout>
+                        <SearchBar
+                            Placeholder="Buscar cargo..."
+                            Text="{Binding ChargeFilter}" />
+
+                        <CollectionView
+                            ItemsSource="{Binding FilteredCharges}"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding SelectedCharge}"
+                            HeightRequest="150">
+
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Label
+                            Text="{Binding Name}"
+                            Padding="10" />
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+
+
+            <ActivityIndicator
+                IsRunning="{Binding IsBusy}"
+                IsVisible="{Binding IsBusy}" />
+
+            <Label
+                Text="{Binding ErrorMessage}"
+                TextColor="Red"
+                HorizontalOptions="Center" />
+
+            <Button
+                Text="Guardar cambios"
+                Command="{Binding SaveCommand}"
+                BackgroundColor="#163F73"
+                TextColor="White"
+                CornerRadius="10" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

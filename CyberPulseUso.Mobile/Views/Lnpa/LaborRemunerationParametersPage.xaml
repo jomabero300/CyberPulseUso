@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CyberPulseUso.Mobile.Views.Lnpa.LaborRemunerationParametersPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Remuneraciones">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto"
+          Padding="12"
+          RowSpacing="10">
+
+        <!-- Encabezado -->
+        <Grid Grid.Row="0"
+              ColumnDefinitions="*,Auto,Auto,Auto"
+              ColumnSpacing="8">
+
+            <Label Text="Remuneraciones"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center" />
+
+            <ImageButton Grid.Column="1"
+                         Source="icon_pdf.svg"
+                         Style="{StaticResource IconButtonBase}"
+                         Clicked="OnExportPdfClicked"
+                         ToolTipProperties.Text="Exportar PDF" />
+
+            <ImageButton Grid.Column="2"
+                         Source="icon_excel.svg"
+                         Style="{StaticResource IconButtonBase}"
+                         Clicked="OnExportExcelClicked"
+                         ToolTipProperties.Text="Exportar Excel" />
+
+            <ImageButton Grid.Column="3"
+                         Source="icon_add.svg"
+                         Style="{StaticResource IconButtonBase}"
+                         Clicked="OnAddClicked"
+                         ToolTipProperties.Text="Agregar remuneración" />
+        </Grid>
+
+        <!-- Búsqueda -->
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,Auto"
+              ColumnSpacing="8">
+
+            <Entry Text="{Binding Filter}"
+                   Placeholder="Buscar por descripción o estado..."
+                   ReturnType="Search" />
+
+            <ImageButton Grid.Column="1"
+                         Source="icon_search.svg"
+                         Style="{StaticResource IconButtonBase}"
+                         Clicked="OnSearchClicked"
+                         ToolTipProperties.Text="Buscar" />
+        </Grid>
+
+        <!-- Listado -->
+        <CollectionView Grid.Row="2"
+                        ItemsSource="{Binding LaborRemunerationParameters}"
+                        SelectionMode="None">
+
+            <CollectionView.EmptyView>
+                <Label Text="No hay remuneraciones para mostrar."
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       TextColor="Gray" />
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Padding="10"
+                            Margin="0,4"
+                            Stroke="#DDDDDD"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8">
+
+                        <Grid ColumnDefinitions="*,Auto,Auto"
+                              ColumnSpacing="8">
+
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="{Binding Name}"
+                                       FontAttributes="Bold"
+                                       FontSize="16" />
+
+                                <Label Text="{Binding Statu.Name,
+                                                      StringFormat='Estado: {0}'}"
+                                       FontSize="13"
+                                       TextColor="Gray" />
+                            </VerticalStackLayout>
+
+                            <ImageButton Grid.Column="1"
+                                         Source="icon_edit.svg"
+                                         Style="{StaticResource IconButtonBase}"
+                                         CommandParameter="{Binding .}"
+                                         Clicked="OnEditClicked"
+                                         ToolTipProperties.Text="Editar" />
+
+                            <ImageButton Grid.Column="2"
+                                         Source="icon_delete.svg"
+                                         Style="{StaticResource IconButtonBase}"
+                                         CommandParameter="{Binding .}"
+                                         Clicked="OnDeleteClicked"
+                                         ToolTipProperties.Text="Eliminar" />
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Paginación -->
+        <Grid Grid.Row="3"
+              ColumnDefinitions="Auto,*,Auto,Auto,Auto"
+              ColumnSpacing="8"
+              VerticalOptions="Center">
+
+            <ImageButton Source="icon_previous.svg"
+                         Style="{StaticResource IconButtonBase}"
+                         IsEnabled="{Binding CanGoPrevious}"
+                         Clicked="OnPreviousPageClicked" />
+
+            <Label Grid.Column="1"
+                   Text="{Binding Page, StringFormat='Página {0}'}"
+                   HorizontalOptions="End"
+                   VerticalOptions="Center" />
+
+            <Label Grid.Column="2"
+                   Text="de"
+                   VerticalOptions="Center" />
+
+            <Label Grid.Column="3"
+                   Text="{Binding TotalPages}"
+                   VerticalOptions="Center" />
+
+            <ImageButton Grid.Column="4"
+                         Source="icon_next.svg"
+                         Style="{StaticResource IconButtonBase}"
+                         IsEnabled="{Binding CanGoNext}"
+                         Clicked="OnNextPageClicked" />
+        </Grid>
+
+        <!-- Indicador de carga -->
+        <Grid Grid.RowSpan="4"
+              IsVisible="{Binding IsBusy}"
+              BackgroundColor="#80000000"
+              InputTransparent="False">
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                              Color="White"
+                              HorizontalOptions="Center"
+                              VerticalOptions="Center" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

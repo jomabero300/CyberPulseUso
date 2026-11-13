@@ -34,6 +34,17 @@
     <Color x:Key="Gray900">#292929</Color>
     <Color x:Key="Gray950">#171717</Color>
 
+
+
+    <!-- Colores de acciones -->
+
+    <Color x:Key="SaveColor">#2E7D32</Color>
+    <Color x:Key="EditColor">#1976D2</Color>
+    <Color x:Key="DeleteColor">#D32F2F</Color>
+    <Color x:Key="SearchColor">#686868</Color>
+    <Color x:Key="PdfColor">#C9152B</Color>
+    <Color x:Key="ExcelColor">#217346</Color>
+
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
     <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>

@@ -6,21 +6,21 @@ using CyberPulseUso.Shared.EntitiesDTO;
 using CyberPulseUso.Shared.EntitiesDTO.Gene;
 using CyberPulseUso.Shared.Enums;
 using CyberPulseUso.Shared.Responses;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 namespace CyberPulseUso.Backend.Repositories.Implementations.Gene;
+
 public class UserRepository : IUserRepository
 {
     private readonly ApplicationDbContext _context; private readonly UserManager<User> _userManager; private readonly RoleManager<IdentityRole> _roleManager; private readonly SignInManager<User> _signInManager; private readonly IConfiguration _configuration; private readonly IWebHostEnvironment _env;
     public UserRepository(ApplicationDbContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager, IWebHostEnvironment env, IConfiguration configuration) { _context = context; _userManager = userManager; _roleManager = roleManager; _signInManager = signInManager; _env = env; _configuration = configuration; }
 
 
-    public async Task<IdentityResult> AddUserAsync(User user, string password) 
-    { 
-        if (!string.IsNullOrWhiteSpace(user.Photo)) 
-            user.Photo = await HtmlUtilities.UploadImageAsync(user.Photo, $"{_env.WebRootPath}{_configuration["FolderUsers"]}"); 
-        return await _userManager.CreateAsync(user, password); 
+    public async Task<IdentityResult> AddUserAsync(User user, string password)
+    {
+        if (!string.IsNullOrWhiteSpace(user.Photo))
+            user.Photo = await HtmlUtilities.UploadImageAsync(user.Photo, $"{_env.WebRootPath}{_configuration["FolderUsers"]}");
+        return await _userManager.CreateAsync(user, password);
     }
     public async Task AddUserToRoleAsync(User user, string roleName) { await _userManager.AddToRoleAsync(user, roleName); }
     public async Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPassword)
@@ -28,7 +28,7 @@ public class UserRepository : IUserRepository
 
         var userOld = await _userManager.FindByEmailAsync(user.Email!);
 
-        var result= await _userManager.ChangePasswordAsync(userOld!, currentPassword, newPassword);
+        var result = await _userManager.ChangePasswordAsync(userOld!, currentPassword, newPassword);
 
         return result;
     }
@@ -45,7 +45,7 @@ public class UserRepository : IUserRepository
     public async Task<IEnumerable<User>> GetAsync() => await _context.Users.AsNoTracking().OrderBy(x => x.FirstName).ToListAsync();
     public async Task<IEnumerable<User>> GetAsync(UserType userType) => await _context.Users.AsNoTracking().Where(x => x.UserType == userType).OrderBy(x => x.FirstName).ToListAsync();
     public async Task<User> GetUserAsync(Guid userId) { var user = await _context.Users.Include(x => x.Country).Include(x => x.Charge).FirstOrDefaultAsync(x => x.Id == userId.ToString()); if (user != null && !string.IsNullOrWhiteSpace(user.Photo)) user.Photo = $"{_configuration["UrlBackend"]}{_configuration["FolderUsers"]}{user.Photo}"; return user!; }
-    public async Task<User> GetUserAsync(string email) 
+    public async Task<User> GetUserAsync(string email)
     {
         //var user = await _context.Users.AsNoTracking().Include(x => x.Country).Include(x => x.Charge).FirstOrDefaultAsync(x => x.Email == email); 
 
@@ -54,16 +54,16 @@ public class UserRepository : IUserRepository
         var user = await _context.Set<User>().Include(x => x.Country).Include(x => x.Charge).AsNoTracking().FirstOrDefaultAsync(x => x.Email == email);
 
 
-        if (user != null && !string.IsNullOrWhiteSpace(user.Photo)) 
-            user.Photo = $"{_configuration["UrlBackend"]}{_configuration["FolderUsers"]}{user.Photo}"; 
-        return user!; 
+        if (user != null && !string.IsNullOrWhiteSpace(user.Photo))
+            user.Photo = $"{_configuration["UrlBackend"]}{_configuration["FolderUsers"]}{user.Photo}";
+        return user!;
     }
     public async Task<bool> IsUserInRoleAsync(User user, string roleName) => await _userManager.IsInRoleAsync(user, roleName);
     public async Task<SignInResult> LoginAsync(LoginDTO model) => await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
     public async Task LogoutAsync() => await _signInManager.SignOutAsync();
     public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string password)
     {
-        return await _userManager.ResetPasswordAsync(user, token, password); 
+        return await _userManager.ResetPasswordAsync(user, token, password);
     }
     public async Task<IdentityResult> UpdateUserAsync(User user)
     {
@@ -83,9 +83,9 @@ public class UserRepository : IUserRepository
     {
         var query = _context.Users.AsNoTracking().Include(x => x.Country).AsQueryable();
 
-        if(string.IsNullOrWhiteSpace(pagination.otro))
+        if (string.IsNullOrWhiteSpace(pagination.otro))
         {
-            query = query.Where(x => x.Email != "jbellor@sena.edu.co" && x.Email != "jomabero300@gmal.com");
+            query = query.Where(x => x.UserType != UserType.SAdm);
         }
 
         //if (pagination.UserType != null) 
@@ -93,53 +93,55 @@ public class UserRepository : IUserRepository
         //    query = query.Where(x => x.UserType == pagination.UserType);
         //}
 
-        if (!string.IsNullOrWhiteSpace(pagination.Filter)) 
+        if (!string.IsNullOrWhiteSpace(pagination.Filter))
             query = query.Where(x => x.FirstName.ToLower().Contains(pagination.Filter.ToLower()) || x.LastName.ToLower().Contains(pagination.Filter.ToLower()));
         var list = await query.OrderBy(x => x.FirstName).ThenBy(x => x.LastName)
-                                .Select(x => new User { 
-                                    Id = x.Id, 
-                                    FirstName = x.FirstName, 
-                                    LastName = x.LastName, 
-                                    Photo = !string.IsNullOrWhiteSpace(x.Photo) ? $"{_configuration["UrlBackend"]}{_configuration["FolderUsers"]}{x.Photo}" : $"{_configuration["Url Frontend"]}/Images/NoImage.png", 
-                                    UserType = x.UserType, 
-                                    NormalizedUserName = x.NormalizedUserName, 
-                                    Email = x.Email, 
-                                    NormalizedEmail = x.NormalizedEmail, 
-                                    EmailConfirmed = x.EmailConfirmed, 
-                                    PasswordHash = x.PasswordHash, 
-                                    SecurityStamp = x.SecurityStamp, 
-                                    ConcurrencyStamp = x.ConcurrencyStamp, 
-                                    PhoneNumber = x.PhoneNumber, 
-                                    PhoneNumberConfirmed = x.PhoneNumberConfirmed, 
-                                    TwoFactorEnabled = x.TwoFactorEnabled, 
-                                    LockoutEnd = x.LockoutEnd, 
-                                    LockoutEnabled = x.LockoutEnabled, 
-                                    AccessFailedCount = x.AccessFailedCount, 
-                                    Country = x.Country, 
-                                    CountryId = x.CountryId, 
-                                    DocumentId = x.DocumentId }).Paginate(pagination).ToListAsync();
-        return new ActionResponse<IEnumerable<User>> 
-        { 
-            WasSuccess = true, 
-            Result = list 
+                                .Select(x => new User
+                                {
+                                    Id = x.Id,
+                                    FirstName = x.FirstName,
+                                    LastName = x.LastName,
+                                    Photo = !string.IsNullOrWhiteSpace(x.Photo) ? $"{_configuration["UrlBackend"]}{_configuration["FolderUsers"]}{x.Photo}" : $"{_configuration["Url Frontend"]}/Images/NoImage.png",
+                                    UserType = x.UserType,
+                                    NormalizedUserName = x.NormalizedUserName,
+                                    Email = x.Email,
+                                    NormalizedEmail = x.NormalizedEmail,
+                                    EmailConfirmed = x.EmailConfirmed,
+                                    PasswordHash = x.PasswordHash,
+                                    SecurityStamp = x.SecurityStamp,
+                                    ConcurrencyStamp = x.ConcurrencyStamp,
+                                    PhoneNumber = x.PhoneNumber,
+                                    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                                    TwoFactorEnabled = x.TwoFactorEnabled,
+                                    LockoutEnd = x.LockoutEnd,
+                                    LockoutEnabled = x.LockoutEnabled,
+                                    AccessFailedCount = x.AccessFailedCount,
+                                    Country = x.Country,
+                                    CountryId = x.CountryId,
+                                    DocumentId = x.DocumentId
+                                }).Paginate(pagination).ToListAsync();
+        return new ActionResponse<IEnumerable<User>>
+        {
+            WasSuccess = true,
+            Result = list
         };
     }
-    public async Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination) 
-    { 
+    public async Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination)
+    {
         var query = _context.Users.AsNoTracking().AsQueryable();
 
         if (string.IsNullOrWhiteSpace(pagination.otro))
         {
-            query = query.Where(x => x.Email != "jbellor@sena.edu.co" && x.Email != "jomabero300@gmal.com");
+            query = query.Where(x => x.UserType != UserType.SAdm);
         }
 
-        if (!string.IsNullOrWhiteSpace(pagination.Filter)) 
-            query = query.Where(x => x.FirstName.ToLower().Contains(pagination.Filter.ToLower()) || x.LastName.ToLower().Contains(pagination.Filter.ToLower())); 
-        return new ActionResponse<int> 
-        { 
-            WasSuccess = true, 
-            Result = await query.CountAsync() 
-        }; 
+        if (!string.IsNullOrWhiteSpace(pagination.Filter))
+            query = query.Where(x => x.FirstName.ToLower().Contains(pagination.Filter.ToLower()) || x.LastName.ToLower().Contains(pagination.Filter.ToLower()));
+        return new ActionResponse<int>
+        {
+            WasSuccess = true,
+            Result = await query.CountAsync()
+        };
     }
     public async Task UpdateUserAsync(string userId, UserType userType) { var entity = await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == userId); if (entity != null) await _context.Database.ExecuteSqlInterpolatedAsync($"UPDATE Admi.AspNetUsers SET UserType={(int)userType} WHERE Id={userId}"); }
     public async Task ResetAccessFailedCountAsync(User user) => await _userManager.ResetAccessFailedCountAsync(user);
@@ -153,5 +155,34 @@ public class UserRepository : IUserRepository
         // Realizar directamente el restablecimiento sobre la instancia rastreada
         return await _userManager.ResetPasswordAsync(user, token, newPassword);
 
+    }
+
+    public async Task<ActionResponse<IEnumerable<User>>> GetReportAsync(PaginationDTO pagination)
+    {
+        var query = _context.Users.AsNoTracking().Include(x => x.Country).AsQueryable();
+
+        // Si otro tiene algún valor, se excluyen los usuarios SAdm.
+        if (!string.IsNullOrWhiteSpace(pagination.otro))
+        {
+            query = query.Where(x => x.UserType != UserType.SAdm);
+        }
+
+        // Aplicar el filtro sobre los usuarios permitidos.
+        if (!string.IsNullOrWhiteSpace(pagination.Filter))
+        {
+            var filter = pagination.Filter.Trim().ToLower();
+
+            query = query.Where(x =>
+                x.FirstName.ToLower().Contains(filter) ||
+                x.LastName.ToLower().Contains(filter));
+        }
+
+        var users = await query.OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToListAsync();
+
+        return new ActionResponse<IEnumerable<User>>
+        {
+            WasSuccess = true,
+            Result = users
+        };
     }
 }

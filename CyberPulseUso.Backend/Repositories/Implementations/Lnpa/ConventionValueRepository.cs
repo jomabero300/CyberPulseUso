@@ -6,6 +6,7 @@ using CyberPulseUso.Shared.EntitiesDTO;
 using CyberPulseUso.Shared.EntitiesDTO.Lnpa;
 using CyberPulseUso.Shared.Responses;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using System.Reflection;
 
 namespace CyberPulseUso.Backend.Repositories.Implementations.Lnpa;
@@ -56,24 +57,21 @@ public class ConventionValueRepository : GenericRepository<ConventionValue>, ICo
 
     public override async Task<ActionResponse<IEnumerable<ConventionValue>>> GetAsync(PaginationDTO pagination)
     {
-        IQueryable<ConventionValue> query = _context.Set<ConventionValue>().AsNoTracking();
-        query = query.Include(x => x.Statu).Include(x => x.Convention);
+        IQueryable<ConventionValue> query = _context.Set<ConventionValue>()
+            .AsNoTracking()
+            .Include(x => x.Statu)
+            .Include(x => x.Convention);
 
-        if (!string.IsNullOrWhiteSpace(pagination.Filter))
-        {
-            query = query.Where(x =>
-                x.Prince.ToString().ToLower().Contains(pagination.Filter.ToLower()));
-
-        }
+        query = ApplyFilter(query, pagination.Filter);
 
         query = query.OrderBy(x => x.Id);
+
         return new ActionResponse<IEnumerable<ConventionValue>>
         {
             WasSuccess = true,
             Result = await query.Paginate(pagination).ToListAsync()
         };
     }
-
     public async Task<ActionResponse<ConventionValue>> AddAsync(ConventionValueDTO entity)
     {
         var model = new ConventionValue();
@@ -102,12 +100,19 @@ public class ConventionValueRepository : GenericRepository<ConventionValue>, ICo
 
     public async Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination)
     {
-        IQueryable<ConventionValue> query = _context.Set<ConventionValue>().AsNoTracking();
-        query = query.Include(x => x.Statu);
-                // El modelo no tiene una propiedad string 'Name'; se conserva el filtro recibido
-        // en PaginationDTO, pero no se aplica un filtro específico del modelo.
+        IQueryable<ConventionValue> query = _context.Set<ConventionValue>()
+            .AsNoTracking()
+            .Include(x => x.Convention);
+
+        query = ApplyFilter(query, pagination.Filter);
+
         var totalRecords = await query.CountAsync();
-        return new ActionResponse<int> { WasSuccess = true, Result = totalRecords };
+
+        return new ActionResponse<int>
+        {
+            WasSuccess = true,
+            Result = totalRecords
+        };
     }
 
     public async Task<ActionResponse<ConventionValue>> UpdateAsync(ConventionValueDTO entity)
@@ -155,5 +160,30 @@ public class ConventionValueRepository : GenericRepository<ConventionValue>, ICo
 
             targetProperty.SetValue(target, value);
         }
+    }
+
+
+    private static IQueryable<ConventionValue> ApplyFilter(IQueryable<ConventionValue> query,string? filter)
+    {
+        if (string.IsNullOrWhiteSpace(filter))
+            return query;
+
+        filter = filter.Trim();
+
+        if (DateTime.TryParse(
+            filter,
+            CultureInfo.GetCultureInfo("es-CO"),
+            DateTimeStyles.None,
+            out var date))
+        {
+            return query.Where(x => x.Date.Date == date.Date);
+        }
+
+        return query.Where(x =>
+            (x.Convention != null &&
+             x.Convention.Name != null &&
+             x.Convention.Name.Contains(filter))
+            ||
+            x.Prince.ToString().Contains(filter));
     }
 }

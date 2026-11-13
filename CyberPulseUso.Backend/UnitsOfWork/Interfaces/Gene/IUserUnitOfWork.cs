@@ -40,5 +40,6 @@ public interface IUserUnitOfWork
     Task RevokeRefreshTokenFamilyAsync(Guid familyId, DateTime now);
 
     Task<IdentityResult> ResetPasswordAsNoTrackingAsync(string userId, string token, string newPassword);
+    Task<ActionResponse<IEnumerable<User>>> GetReportAsync(PaginationDTO pagination);
 
 }

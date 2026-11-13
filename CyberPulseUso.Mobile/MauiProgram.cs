@@ -3,7 +3,11 @@ using CyberPulseUso.Mobile.Services.Authentication;
 using CyberPulseUso.Mobile.Services.Implementations;
 using CyberPulseUso.Mobile.Services.Interfaces;
 using CyberPulseUso.Mobile.ViewModels;
+using CyberPulseUso.Mobile.ViewModels.Gene;
+using CyberPulseUso.Mobile.ViewModels.Lnpa;
 using CyberPulseUso.Mobile.Views;
+using CyberPulseUso.Mobile.Views.Gene;
+using CyberPulseUso.Mobile.Views.Lnpa;
 using Microsoft.Extensions.Logging;
 using System.Net;
 
@@ -23,7 +27,7 @@ public static class MauiProgram
             });
 
         builder.Services.AddSingleton<CookieContainer>();
-        
+
         builder.Services.AddSingleton(sp =>
         {
             var cookieContainer =
@@ -51,13 +55,15 @@ public static class MauiProgram
                 Timeout = TimeSpan.FromSeconds(
                     ApiConfiguration.TimeoutSeconds)
             };
+
+
         });
-        builder.Services.AddTransient<IApiRepository,ApiRepository>();
-        builder.Services.AddSingleton<ITokenService,TokenService>();
+        builder.Services.AddTransient<IApiRepository, ApiRepository>();
+        builder.Services.AddSingleton<ITokenService, TokenService>();
 
         builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
 
-        builder.Services.AddSingleton<ITokenRefreshService,TokenRefreshService>();
+        builder.Services.AddSingleton<ITokenRefreshService, TokenRefreshService>();
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<LoginPage>();
         builder.Services.AddSingleton<AppShell>();
@@ -70,6 +76,34 @@ public static class MauiProgram
 
         builder.Services.AddTransient<ResendTokenViewModel>();
         builder.Services.AddTransient<ResendTokenPage>();
+
+
+        builder.Services.AddTransient<ProfileViewModel>();
+        builder.Services.AddTransient<ProfilePage>();
+
+        builder.Services.AddTransient<UsersViewModel>();
+        builder.Services.AddTransient<UsersPage>();
+
+        builder.Services.AddTransient<CategoriesViewModel>();
+        builder.Services.AddTransient<CategoriesPage>();
+
+        builder.Services.AddTransient<GroupsViewModel>();
+        builder.Services.AddTransient<GroupsPage>();
+
+        builder.Services.AddTransient<ChargesViewModel>();
+        builder.Services.AddTransient<ChargesPage>();
+
+        builder.Services.AddTransient<ConventionsViewModel>();
+        builder.Services.AddTransient<ConventionsPage>();
+
+        builder.Services.AddTransient<ConventionValuesViewModel>();
+        builder.Services.AddTransient<ConventionValuesPage>();
+
+        builder.Services.AddTransient<LaborRemunerationParametersViewModel>();
+        builder.Services.AddTransient<LaborRemunerationParametersPage>();
+
+        builder.Services.AddTransient<PayrollSettlementsPage>();
+        builder.Services.AddTransient<PayrollSettlementsViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();

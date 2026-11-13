@@ -9,7 +9,7 @@ public class LaborRemunerationParametersDTO
     public int Id { get; set; }
 
     [Display(Name = "Name", ResourceType = typeof(Literals))]
-    [MaxLength(100, ErrorMessageResourceName = "MaxLength", ErrorMessageResourceType = typeof(Literals))]
+    [MaxLength(170, ErrorMessageResourceName = "MaxLength", ErrorMessageResourceType = typeof(Literals))]
     [Required(ErrorMessageResourceName = "RequiredField", ErrorMessageResourceType = typeof(Literals))]
     public string? Name { get; set; }
     
@@ -17,7 +17,5 @@ public class LaborRemunerationParametersDTO
     [Required(ErrorMessageResourceName = "RequiredField", ErrorMessageResourceType = typeof(Literals))]
     public int StatuId { get; set; }
     
-    public StatuDTO? Statu { get; set; }
-    
+    public StatuDTO? Statu { get; set; }   
 }
-

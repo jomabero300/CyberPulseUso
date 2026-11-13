@@ -16,7 +16,5 @@ public class CategoryDTO
     [Required(ErrorMessageResourceName = "RequiredField", ErrorMessageResourceType = typeof(Literals))]
     public int StatuId { get; set; }
     
-    public StatuDTO? Statu { get; set; }
-    
+    public StatuDTO? Statu { get; set; }    
 }
-

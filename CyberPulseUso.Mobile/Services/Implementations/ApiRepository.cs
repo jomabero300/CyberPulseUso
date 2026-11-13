@@ -89,4 +89,27 @@ public class ApiRepository : IApiRepository
         }
     }
 
+    public async Task<byte[]> GetFileAsync(string url,CancellationToken cancellationToken = default)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Get, url);
+
+        using var response = await _httpClient.SendAsync(
+            request,
+            HttpCompletionOption.ResponseHeadersRead,
+            cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await response.Content.ReadAsStringAsync(
+                cancellationToken);
+
+            throw new HttpRequestException(
+                $"Error HTTP {(int)response.StatusCode}: {error}",
+                null,
+                response.StatusCode);
+        }
+
+        return await response.Content.ReadAsByteArrayAsync(
+            cancellationToken);
+    }
 }

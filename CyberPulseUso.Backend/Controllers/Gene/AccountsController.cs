@@ -1,4 +1,5 @@
 ﻿using CyberPulseUso.Backend.Helpers;
+using CyberPulseUso.Backend.Helpers.Reports.Gene;
 using CyberPulseUso.Backend.UnitsOfWork.Implementations.Gene;
 using CyberPulseUso.Backend.UnitsOfWork.Interfaces.Gene;
 using CyberPulseUso.Shared.Entities.Gene;
@@ -432,6 +433,61 @@ public class AccountsController : ControllerBase
     }
 
 
+
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpGet("Report")]
+    public async Task<IActionResult> GetReportAsync([FromQuery] PaginationDTO pagination)
+    {
+        // Conservar la regla de visibilidad según el rol.
+        if (User.IsInRole("SAdm"))
+            pagination.otro = string.Empty;
+        else
+            pagination.otro = "ExcludeSAdm";
+
+        var response = await _userUnitOfWork.GetReportAsync(pagination);
+
+        if (!response.WasSuccess)
+        {
+            return BadRequest(response.Message);
+        }
+
+        if (response.Result == null || !response.Result.Any())
+        {
+            return BadRequest("No hay usuarios para generar el reporte.");
+        }
+
+        if (pagination.FileType?.ToLower() == "pdf")
+        {
+            string rutaPath = _env.WebRootPath;
+
+            var pdf = UserReport.UserPdf([.. response.Result], rutaPath);
+
+            return File(pdf, "application/pdf", "UsuariosPdf.pdf");
+        }
+        else
+        {
+            var excelData = response.Result.Select(x => new UserExcelDTO
+            {
+                Usuario = x.FullName,
+                Contacto = x.PhoneNumber,
+                Email = x.Email,
+                Tipo = x.UserType.GetDisplayName()
+            }).ToList();
+
+            byte[] fileBytes = GeneExcel.GenerarReporte(excelData, "Usuarios");
+
+            string nombreArchivo = $"Usuarios_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+
+            string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+            return File(fileBytes, contentType, nombreArchivo);
+        }
+    }
+
+
+
+
     private async Task<ActionResponse<string>> SendConfirmationEmailAsync(User user, string language)
     {
         
@@ -454,10 +510,6 @@ public class AccountsController : ControllerBase
         // 3. Enviar los datos al Helper (dejamos el subject vacío para que lo extraiga del HTML)
         return await _mailHelper.SendMail(user.FullName,user.Email!,subject: string.Empty,rutaPlantillaHtml,language,tokenLink!,rutaLogoLocal);
     }
-
-
-
-
 
 
 
@@ -570,5 +622,66 @@ public class AccountsController : ControllerBase
                 SameSite = SameSiteMode.None,
                 Path = "/api"
             });
+    }
+
+    //Parte Mobile
+
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "SAdm,Admi")]
+    [HttpGet("mobile/paginated")]
+    public async Task<IActionResult> GetMobilePaginatedAsync([FromQuery] PaginationDTO pagination)
+    {
+        if (User.IsInRole("SAdm"))
+            pagination.otro = UserType.SAdm.ToString();
+
+        var response = await _userUnitOfWork.GetAsync(pagination);
+
+        if (!response.WasSuccess)
+            return BadRequest(response.Message);
+
+        var users = response.Result!.Select(x => new UserMobileDTO
+        {
+            Id = x.Id,
+            FirstName = x.FirstName,
+            LastName = x.LastName,
+            Email = x.Email ?? string.Empty,
+            Photo = x.Photo ?? string.Empty,
+            UserType = x.UserType
+        });
+
+        return Ok(users);
+    }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "SAdm,Admi")]
+    [HttpGet("mobile/totalrecords")]
+    public async Task<IActionResult> GetMobileTotalRecordsAsync([FromQuery] PaginationDTO pagination)
+    {
+        if (User.IsInRole("SAdm"))
+            pagination.otro = UserType.SAdm.ToString();
+
+        var response = await _userUnitOfWork.GetTotalRecordsAsync(pagination);
+
+        return response.WasSuccess
+            ? Ok(response.Result)
+            : BadRequest(response.Message);
+    }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,Roles = "SAdm,Admi")]
+    [HttpPut("mobile/usertype")]
+    public async Task<IActionResult> UpdateMobileUserTypeAsync([FromQuery] string id,[FromQuery] UserType userType)
+    {
+        if (string.IsNullOrWhiteSpace(id))
+            return BadRequest("Identificador de usuario inválido.");
+
+        if (!Enum.IsDefined(typeof(UserType), userType))
+            return BadRequest("Tipo de usuario inválido.");
+
+        // El administrador Admi solamente puede asignar work o User.
+        if (User.IsInRole("Admi") && userType != UserType.work && userType != UserType.User)
+            return Forbid();
+
+        await _userUnitOfWork.UpdateUserAsync(id, userType);
+
+        return NoContent();
     }
 }

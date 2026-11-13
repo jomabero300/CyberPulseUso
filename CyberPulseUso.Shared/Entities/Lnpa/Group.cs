@@ -24,6 +24,4 @@ public class Group
     public Category? Category { get; set; }
     public ICollection<LaborRemunerationParametersValue>? LaborRemunerationParametersValues { get; set; }
     public ICollection<Charge>? Charges { get; set; }
-
-
 }

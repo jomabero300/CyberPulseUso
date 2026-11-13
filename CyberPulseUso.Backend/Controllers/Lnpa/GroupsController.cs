@@ -25,7 +25,8 @@ public class GroupsController : GenericController<Group>
         _modelUnitOfWork = modelUnitOfWork;
         _env = env;
     }
-
+    
+    [HttpGet]
     public override async Task<IActionResult> GetAsync(int id)
     {
         var response = await _modelUnitOfWork.GetAsync(id);

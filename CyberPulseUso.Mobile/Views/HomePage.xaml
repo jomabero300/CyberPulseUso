@@ -81,12 +81,6 @@
                             TextColor="#64748B"/>
                     </VerticalStackLayout>
                 </Border>
-                <Button
-                    Text="Copiar registros de diagnóstico"
-                    Clicked="OnCopyLogsClicked"
-                    BackgroundColor="#555555"
-                    TextColor="White"
-                    Margin="10" />
 
             </VerticalStackLayout>
         </ScrollView>

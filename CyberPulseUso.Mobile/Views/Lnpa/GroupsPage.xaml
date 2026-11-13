@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CyberPulseUso.Mobile.Views.Lnpa.GroupsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Grupos">
+
+    <Grid Padding="15"
+          RowDefinitions="Auto,Auto,*,Auto"
+          RowSpacing="12">
+
+        <!-- Encabezado -->
+        <Grid Grid.Row="0"
+              ColumnDefinitions="*,Auto">
+
+            <Label Text="Gestión"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center" />
+
+            <HorizontalStackLayout
+                Spacing="10"
+                HorizontalOptions="End">
+
+                <ImageButton
+                    Source="icon_pdf.svg"
+                    Style="{StaticResource IconButtonBase}"
+                    Clicked="OnExportPdfClicked"
+                    ToolTipProperties.Text="Exportar PDF" />
+
+                <ImageButton
+                    Source="icon_excel.svg"
+                    Style="{StaticResource IconButtonBase}"
+                    Clicked="OnExportExcelClicked"
+                    ToolTipProperties.Text="Exportar Excel" />
+
+            </HorizontalStackLayout>
+
+            <ImageButton Grid.Column="1"
+                         Source="icon_add.svg"
+                         Style="{StaticResource IconButtonBase}"
+                         Clicked="OnCreateClicked"
+                         SemanticProperties.Description="Nuevo grupo" />
+        </Grid>
+
+        <!-- Búsqueda -->
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,Auto"
+              ColumnSpacing="8">
+
+            <Entry Placeholder="Buscar grupo..."
+                   Text="{Binding Filter}"
+                   ReturnType="Search"
+                   Completed="OnSearchClicked" />
+
+            <ImageButton Grid.Column="1"
+                         Source="icon_search.svg"
+                         Style="{StaticResource IconButtonBase}"
+                         Clicked="OnSearchClicked"
+                         SemanticProperties.Description="Buscar grupos" />
+        </Grid>
+
+        <!-- Listado -->
+        <Grid Grid.Row="2">
+
+            <CollectionView ItemsSource="{Binding Groups}"
+                            SelectionMode="None">
+
+                <CollectionView.EmptyView>
+                    <Label Text="No hay grupos para mostrar."
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           TextColor="Gray" />
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+
+                        <Border Stroke="#CCCCCC"
+                                StrokeThickness="1"
+                                Padding="10"
+                                Margin="0,4"
+                                StrokeShape="RoundRectangle 8">
+
+                            <Grid ColumnDefinitions="*,Auto"
+                                  ColumnSpacing="10">
+
+                                <VerticalStackLayout Grid.Column="0"
+                                                     Spacing="5"
+                                                     VerticalOptions="Center">
+
+                                    <Label Text="{Binding Name}"
+                                           FontAttributes="Bold"
+                                           FontSize="16" />
+
+                                    <HorizontalStackLayout Spacing="5">
+                                        <Label Text="Categoría:"
+                                               FontSize="13"
+                                               TextColor="Gray" />
+
+                                        <Label Text="{Binding Category.Name}"
+                                               FontSize="13" />
+                                    </HorizontalStackLayout>
+
+                                    <HorizontalStackLayout Spacing="5">
+                                        <Label Text="Estado:"
+                                               FontSize="13"
+                                               TextColor="Gray" />
+
+                                        <Label Text="{Binding Statu.Name}"
+                                               FontSize="13" />
+                                    </HorizontalStackLayout>
+
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Column="1"
+                                                     Spacing="5"
+                                                     VerticalOptions="Center">
+
+                                    <ImageButton Source="icon_edit.svg"
+                                                 Style="{StaticResource IconButtonBase}"
+                                                 Clicked="OnEditClicked"
+                                                 CommandParameter="{Binding .}"
+                                                 SemanticProperties.Description="Editar grupo" />
+
+                                    <ImageButton Source="icon_delete.svg"
+                                                 Style="{StaticResource IconButtonBase}"
+                                                 Clicked="OnDeleteClicked"
+                                                 CommandParameter="{Binding .}"
+                                                 SemanticProperties.Description="Eliminar grupo" />
+
+                                </VerticalStackLayout>
+
+                            </Grid>
+                        </Border>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+
+        </Grid>
+
+        <!-- Paginación -->
+        <VerticalStackLayout Grid.Row="3"
+                             Spacing="8">
+
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="Red"
+                   FontSize="13" />
+
+            <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto"
+                HorizontalOptions="Center">
+
+                <ImageButton
+                    Source="icon_previous.svg"
+                    Style="{StaticResource IconButtonBase}"
+                    Clicked="OnPreviousPageClicked"
+                    IsEnabled="{Binding CanGoPrevious}"
+                    SemanticProperties.Description="Página anterior" />
+
+                <Label Grid.Column="1"
+                   Text="{Binding Page}"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center" />
+
+                <Label Grid.Column="2"
+                   Text="de"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   Margin="5,0" />
+
+                <Label Grid.Column="3"
+                   Text="{Binding TotalPages}"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center" />
+
+                <ImageButton Grid.Column="4"
+                     Source="icon_next.svg"
+                     Style="{StaticResource IconButtonBase}"
+                     Clicked="OnNextPageClicked"
+                     IsEnabled="{Binding CanGoNext}"
+                     SemanticProperties.Description="Página siguiente" />
+
+            </Grid>
+            <Label Text="{Binding TotalRecords, StringFormat='Total de grupos: {0}'}"
+                   HorizontalOptions="Center"
+                   FontSize="13" />
+
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentPage>

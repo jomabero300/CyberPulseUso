@@ -9,4 +9,5 @@ public interface IApiRepository
     Task<TResponse?> PutAsync<TRequest, TResponse>(string url,TRequest data,CancellationToken cancellationToken = default);
 
     Task DeleteAsync(string url,CancellationToken cancellationToken = default);
+    Task<byte[]> GetFileAsync(string url,CancellationToken cancellationToken = default);
 }

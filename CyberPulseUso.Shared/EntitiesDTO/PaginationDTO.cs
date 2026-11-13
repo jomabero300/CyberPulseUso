@@ -17,4 +17,6 @@ public class PaginationDTO
     public string? otro { get; set; }
 
     public UserType? UserType { get; set; }
+
+    public string? FileType { get; set; }
 }
