@@ -69,20 +69,20 @@ public partial class PayrollSettlementForm
         context.PreventNavigation();
     }
 
-    private async Task LoadPayrollSettlementsAsync()
-    {
-        var responseHttp = await Repository.GetAsync<List<PayrollSettlementDTO>>("/api/PayrollSettlements/Sett");
+    //private async Task LoadPayrollSettlementsAsync()
+    //{
+    //    var responseHttp = await Repository.GetAsync<List<PayrollSettlementDTO>>("/api/PayrollSettlements/Sett");
 
-        if (responseHttp.Error)
-        {
-            var message = await responseHttp.GetErrorMessageAsync();
-            await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-            return;
-        }
-        PayrollSettlementDTO.Clear();
-        PayrollSettlementDTO.AddRange(responseHttp.Response!);
-        CalculateTotals();
-    }
+    //    if (responseHttp.Error)
+    //    {
+    //        var message = await responseHttp.GetErrorMessageAsync();
+    //        await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+    //        return;
+    //    }
+    //    PayrollSettlementDTO.Clear();
+    //    PayrollSettlementDTO.AddRange(responseHttp.Response!);
+    //    CalculateTotals();
+    //}
 
     private void AmountChanged(PayrollSettlementDTO item, int value)
     {

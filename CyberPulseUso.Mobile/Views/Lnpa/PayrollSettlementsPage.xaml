@@ -10,21 +10,38 @@
           RowDefinitions="Auto,Auto,*,Auto"
           RowSpacing="10">
 
-        <!-- Búsqueda -->
+        <!-- Búsqueda y acciones -->
         <Grid Grid.Row="0"
-              ColumnDefinitions="*,Auto"
+              ColumnDefinitions="*,Auto,Auto"
               ColumnSpacing="8">
 
             <SearchBar
                 x:Name="SearchBar"
+                Grid.Column="0"
                 Placeholder="Buscar por fecha, cargo o trabajador"
                 Text="{Binding Filter}" />
 
-            <Button
+            <ImageButton
                 Grid.Column="1"
-                Text="Buscar"
+                Source="icon_search.svg"
+                WidthRequest="35"
+                HeightRequest="35"
+                BackgroundColor="Transparent"
+                Aspect="AspectFit"
                 VerticalOptions="Center"
                 Clicked="OnSearchClicked" />
+
+            <ImageButton
+                Grid.Column="2"
+                Source="icon_add.svg"
+                WidthRequest="35"
+                HeightRequest="35"
+                BackgroundColor="Transparent"
+                Aspect="AspectFit"
+                VerticalOptions="Center"
+                IsVisible="{Binding IsWorker}"
+                Clicked="OnCreateClicked" />
+
         </Grid>
 
         <!-- Cargando -->
@@ -105,52 +122,38 @@
                                         FontAttributes="Bold"
                                         FontSize="16"
                                         BindingContextChanged="OnTotalToPayBindingContextChanged" />
-                                                            </VerticalStackLayout>
+                                </VerticalStackLayout>
 
                             </Grid>
-                            <!--<Grid ColumnDefinitions="*,*">                            
-                                <VerticalStackLayout>
-                                    <Label Text="Devengado" FontSize="12" />
-                                    <Label
-                                        Text="{Binding AccruedValue, StringFormat='{0:N2}'}"
-                                        FontAttributes="Bold" />
-                                </VerticalStackLayout>
-
-                                <VerticalStackLayout Grid.Column="1">
-                                    <Label Text="Deducido" FontSize="12" />
-                                    <Label
-                                        Text="{Binding DeductedValue, StringFormat='{0:N2}'}"
-                                        FontAttributes="Bold" />
-                                </VerticalStackLayout>
-                            </Grid>-->
 
                             <Grid ColumnDefinitions="*,Auto">
-
-                                <!--<VerticalStackLayout>
-                                    <Label Text="Total a pagar" FontSize="12" />
-                                    <Label
-                                        Text="0.00"
-                                        FontAttributes="Bold"
-                                        FontSize="16"
-                                        BindingContextChanged="OnTotalToPayBindingContextChanged" />
-                                </VerticalStackLayout>-->
 
                                 <HorizontalStackLayout
                                     Grid.Column="1"
                                     Spacing="12"
                                     VerticalOptions="Center">
 
-
-
                                     <ImageButton
-                                        Source="pdf.png"
+                                        Source="icon_pdf.svg"
                                         WidthRequest="28"
                                         HeightRequest="28"
                                         BackgroundColor="Transparent"
+                                        Aspect="AspectFit"
                                         Clicked="OnPdfClicked"
                                         CommandParameter="{Binding .}" />
 
+                                    <ImageButton
+                                        Source="icon_edit.svg"
+                                        WidthRequest="28"
+                                        HeightRequest="28"
+                                        BackgroundColor="Transparent"
+                                        Aspect="AspectFit"
+                                        IsVisible="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                                            Path=BindingContext.IsWorker}"
+                                        Clicked="OnEditClicked"
+                                        CommandParameter="{Binding .}" />
                                 </HorizontalStackLayout>
+                                                                
                             </Grid>
 
                         </VerticalStackLayout>
@@ -162,26 +165,43 @@
 
         <!-- Paginación -->
         <Grid Grid.Row="3"
-              ColumnDefinitions="Auto,*,Auto"
-              VerticalOptions="Center">
+              ColumnDefinitions="*,Auto,Auto,Auto,Auto,*"
+              VerticalOptions="Center"
+              ColumnSpacing="4">
 
-            <Button
-                Text="Anterior"
+            <ImageButton
+                Grid.Column="1"
+                Source="icon_previous.svg"
+                WidthRequest="35"
+                HeightRequest="35"
+                BackgroundColor="Transparent"
+                Aspect="AspectFit"
                 Clicked="OnPreviousPageClicked" />
 
             <Label
-                x:Name="PageInfoLabel"
-                Grid.Column="1"
-                Text="Página 1"
-                HorizontalOptions="Center"
-                VerticalOptions="Center" />
-
-            <Button
-                Text="Siguiente"
                 Grid.Column="2"
+                Text="{Binding Page}"
+                VerticalOptions="Center"
+                FontAttributes="Bold"
+                FontSize="15"
+                HorizontalOptions="Center" />
+
+            <Label
+                Grid.Column="3"
+                Text="{Binding TotalPages, StringFormat='de {0}'}"
+                VerticalOptions="Center"
+                FontSize="15"
+                HorizontalOptions="Center" />
+
+            <ImageButton
+                Grid.Column="4"
+                Source="icon_next.svg"
+                WidthRequest="35"
+                HeightRequest="35"
+                BackgroundColor="Transparent"
+                Aspect="AspectFit"
                 Clicked="OnNextPageClicked" />
 
         </Grid>
-
     </Grid>
 </ContentPage>

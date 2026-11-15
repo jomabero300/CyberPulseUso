@@ -1,5 +1,4 @@
-﻿
-using CyberPulseUso.Mobile.Services.Interfaces;
+﻿using CyberPulseUso.Mobile.Services.Interfaces;
 using CyberPulseUso.Mobile.Views;
 using CyberPulseUso.Mobile.Views.Gene;
 using CyberPulseUso.Mobile.Views.Lnpa;
@@ -12,6 +11,8 @@ public partial class AppShell : Shell
     private readonly IServiceProvider _serviceProvider;
     private readonly IAuthenticationService _authenticationService;
     private bool _initializationStarted;
+    private bool _isLoggingOut;
+    private ShellItem? _welcomeShellItem;
 
     public AppShell(IAuthenticationService authenticationService, ITokenService tokenService, IServiceProvider serviceProvider)
     {
@@ -47,6 +48,7 @@ public partial class AppShell : Shell
 
         _tokenService = tokenService;
         _serviceProvider = serviceProvider;
+        _welcomeShellItem = Items.FirstOrDefault();
     }
 
     protected override async void OnAppearing()
@@ -75,23 +77,56 @@ public partial class AppShell : Shell
         }
     }
 
-
-
-    //private async void OnExitMenuItemClicked(object? sender, EventArgs e)
+    //private void AddHomeFlyoutItem()
     //{
-    //    bool confirm = await DisplayAlertAsync(
-    //        "Salir",
-    //        "¿Desea cerrar la aplicación?",
-    //        "Sí",
-    //        "No");
-
-    //    if (!confirm)
+    //    // Evitar agregar Inicio más de una vez.
+    //    if (Items.Any(x => x.Route == "Home"))
     //        return;
 
-    //    Application.Current?.Quit();
+    //    var homeContent = new ShellContent
+    //    {
+    //        Title = "Inicio",
+    //        Route = "HomePage",
+    //        ContentTemplate = new DataTemplate(
+    //            () => _serviceProvider.GetRequiredService<HomePage>())
+    //    };
+
+    //    var homeSection = new ShellSection
+    //    {
+    //        Items = { homeContent }
+    //    };
+
+    //    var homeItem = new FlyoutItem
+    //    {
+    //        Title = "Inicio",
+    //        Route = "Home"
+    //    };
+
+
+    //    homeItem.Items.Add(homeSection);
+
+    //    Items.Add(homeItem);
+
+    //    AddProfileFlyoutItem();
+
+    //    AddUsersFlyoutItem();
+
+    //    AddCategoriesFlyoutItem();
+
+    //    AddGroupsFlyoutItem();
+
+    //    AddChargesFlyoutItem();
+
+    //    AddConventionsFlyoutItem();
+
+    //    AddConventionValuesFlyoutItem();
+
+    //    AddLaborRemunerationParametersFlyoutItem();
+
+    //    AddPayrollSettlementsFlyoutItem();
     //}
 
-    private void AddHomeFlyoutItem()
+    private void AddHomeFlyoutItem(string userType)
     {
         // Evitar agregar Inicio más de una vez.
         if (Items.Any(x => x.Route == "Home"))
@@ -113,27 +148,44 @@ public partial class AppShell : Shell
         var homeItem = new FlyoutItem
         {
             Title = "Inicio",
-            Route = "Home"
+            Route = "Home",
+            Icon = "icon_home.svg"
         };
 
-
         homeItem.Items.Add(homeSection);
-
         Items.Add(homeItem);
+
+        // El perfil siempre está disponible.
         AddProfileFlyoutItem();
-        AddUsersFlyoutItem();
-        AddCategoriesFlyoutItem();
-        AddGroupsFlyoutItem();
-        AddChargesFlyoutItem();
-        AddConventionsFlyoutItem();
-        AddConventionValuesFlyoutItem();
-        AddLaborRemunerationParametersFlyoutItem();
 
-        AddPayrollSettlementsFlyoutItem();
+        // Normalizar el perfil recibido del JWT.
+        var role = userType?.Trim();
 
+        bool isAdmin =
+            string.Equals(role, "SAdm", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(role, "Admi", StringComparison.OrdinalIgnoreCase);
+
+        bool isWorker =
+            string.Equals(role, "work", StringComparison.OrdinalIgnoreCase);
+
+        // Módulos exclusivos de administradores.
+        if (isAdmin)
+        {
+            AddUsersFlyoutItem();
+            AddCategoriesFlyoutItem();
+            AddGroupsFlyoutItem();
+            AddChargesFlyoutItem();
+            AddConventionsFlyoutItem();
+            AddConventionValuesFlyoutItem();
+            AddLaborRemunerationParametersFlyoutItem();
+        }
+
+        // Administradores y trabajadores pueden consultar liquidaciones.
+        if (isAdmin || isWorker)
+        {
+            AddPayrollSettlementsFlyoutItem();
+        }
     }
-
-
 
 
     public async Task NavigateToHomeAsync()
@@ -184,7 +236,7 @@ public partial class AppShell : Shell
 
         FlyoutHeaderView.BindingContext = user;
 
-        AddHomeFlyoutItem();
+        AddHomeFlyoutItem(user?.UserType ?? string.Empty);
 
         await GoToAsync("//Home");
     }
@@ -209,7 +261,8 @@ public partial class AppShell : Shell
         var profileItem = new FlyoutItem
         {
             Title = "Mi perfil",
-            Route = "Profile"
+            Route = "Profile",
+            Icon = "icon_profile.svg"
         };
 
         profileItem.Items.Add(profileSection);
@@ -237,7 +290,8 @@ public partial class AppShell : Shell
         var usersItem = new FlyoutItem
         {
             Title = "Usuarios",
-            Route = "Users"
+            Route = "Users",
+            Icon = "icon_users.svg"
         };
 
         usersItem.Items.Add(usersSection);
@@ -265,7 +319,8 @@ public partial class AppShell : Shell
         var categoriesItem = new FlyoutItem
         {
             Title = "Categorías",
-            Route = "Categories"
+            Route = "Categories",
+            Icon = "icon_categories.svg"
         };
 
         categoriesItem.Items.Add(categoriesSection);
@@ -293,7 +348,8 @@ public partial class AppShell : Shell
         var groupsItem = new FlyoutItem
         {
             Title = "Grupos",
-            Route = "Groups"
+            Route = "Groups",
+            Icon = "icon_groups.svg"
         };
 
         groupsItem.Items.Add(groupsSection);
@@ -321,7 +377,8 @@ public partial class AppShell : Shell
         var chargesItem = new FlyoutItem
         {
             Title = "Cargos",
-            Route = "Charges"
+            Route = "Charges",
+            Icon = "icon_charges.svg"
         };
 
         chargesItem.Items.Add(chargesSection);
@@ -348,7 +405,8 @@ public partial class AppShell : Shell
         var conventionsItem = new FlyoutItem
         {
             Title = "Convenios",
-            Route = "Conventions"
+            Route = "Conventions",
+            Icon = "icon_conventions.svg"
         };
 
         conventionsItem.Items.Add(conventionsSection);
@@ -375,7 +433,8 @@ public partial class AppShell : Shell
         var item = new FlyoutItem
         {
             Title = "Valores de convenios",
-            Route = "ConventionValues"
+            Route = "ConventionValues",
+            Icon = "icon_benefits.svg"
         };
 
         item.Items.Add(section);
@@ -409,9 +468,6 @@ public partial class AppShell : Shell
         item.Items.Add(section);
         Items.Add(item);
     }
-
-
-
     private void AddPayrollSettlementsFlyoutItem()
     {
         if (Items.Any(x => x.Route == "PayrollSettlements"))
@@ -433,12 +489,53 @@ public partial class AppShell : Shell
         var payrollSettlementsItem = new FlyoutItem
         {
             Title = "Liquidación de nómina",
-            Route = "PayrollSettlements"
+            Route = "PayrollSettlements",
+            Icon = "icon_payroll.svg"
         };
 
         payrollSettlementsItem.Items.Add(payrollSettlementsSection);
         Items.Add(payrollSettlementsItem);
     }
+
+    private async void OnLogoutMenuItemClicked(object? sender, EventArgs e)
+    {
+        if (_isLoggingOut)
+            return;
+        
+        FlyoutIsPresented = false;
+
+        bool confirm = await DisplayAlertAsync(
+            "Cerrar sesión",
+            "¿Está seguro de que desea cerrar sesión?",
+            "Sí, salir",
+            "Cancelar");
+
+        if (!confirm)
+            return;
+
+        _isLoggingOut = true;
+
+        try
+        {
+            await _authenticationService.LogoutAsync();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine(
+                $"Error al cerrar sesión en el servidor: {ex.Message}");
+        }
+        finally
+        {
+            FlyoutIsPresented = false;
+
+            ClearUserMenu();
+
+            await GoToAsync("//Welcome");
+
+            _isLoggingOut = false;
+        }
+    }
+
     public async Task RefreshFlyoutHeaderAsync()
     {
         var user = await _tokenService.GetUserSessionAsync();
@@ -469,5 +566,20 @@ public partial class AppShell : Shell
                 await Shell.Current.DisplayAlertAsync("Error descargando imagen", ex.Message, "Aceptar");
             }
         }
+    }
+
+
+
+    private void ClearUserMenu()
+    {
+        foreach (var item in Items.ToList())
+        {
+            if (!ReferenceEquals(item, _welcomeShellItem))
+            {
+                Items.Remove(item);
+            }
+        }
+
+        FlyoutHeaderView.BindingContext = null;
     }
 }

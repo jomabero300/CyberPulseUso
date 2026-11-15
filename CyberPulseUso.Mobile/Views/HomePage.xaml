@@ -27,18 +27,6 @@
                     FontSize="12"
                     TextColor="#BFDBFE"/>
             </VerticalStackLayout>
-
-            <Button
-                Grid.Column="1"
-                Text="Salir"
-                Clicked="OnLogoutClicked"
-                BackgroundColor="#C9152B"
-                TextColor="White"
-                FontSize="13"
-                FontAttributes="Bold"
-                CornerRadius="10"
-                Padding="14,8"
-                VerticalOptions="Center"/>
         </Grid>
 
         <!-- Contenido -->

@@ -158,6 +158,11 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
     {
         var response = await _modelUnitOfWork.GetAsync(fecha, id, userid, true);
 
+        if (!response.WasSuccess || response.Result is null)
+        {
+            return BadRequest(response.Message);
+        }
+
         var pdf = LiquidacionDocument.GenerarReportePdf(response.Result!);
 
         return File(pdf, "application/pdf", "PayrollPdf.pdf");

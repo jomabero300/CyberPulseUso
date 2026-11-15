@@ -6,6 +6,7 @@ namespace CyberPulseUso.Mobile.Views.Lnpa;
 public partial class LaborRemunerationParametersPage : ContentPage
 {
     private readonly LaborRemunerationParametersViewModel _viewModel;
+
     public LaborRemunerationParametersPage(LaborRemunerationParametersViewModel viewModel)
     {
         InitializeComponent();

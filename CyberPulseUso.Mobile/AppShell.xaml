@@ -75,7 +75,7 @@
                         LineBreakMode="TailTruncation"/>
 
                     <Label
-                        Text="{Binding UserType}"
+                        Text="{Binding UserTypeDisplay}"
                         FontSize="12"
                         TextColor="#64748B"/>
 
@@ -88,6 +88,19 @@
             </Grid>
         </Grid>
     </Shell.FlyoutHeader>
+
+    <Shell.FlyoutFooter>
+        <Grid Padding="20,12">
+            <Button
+            Text="Salir"
+            ImageSource="icon_power.svg"
+            ContentLayout="Left,12"
+            BackgroundColor="Transparent"
+            TextColor="#1E293B"
+            HorizontalOptions="Fill"
+            Clicked="OnLogoutMenuItemClicked"/>
+        </Grid>
+    </Shell.FlyoutFooter>
 
     <ShellContent
         Route="Welcome"

@@ -177,15 +177,6 @@
                                 FontSize="13"
                                 Padding="5"/>
 
-                            <!--<Label Text="Reenviar correo de activación"
-                                           TextColor="#F3A43F"
-                                           FontSize="13"
-                                           HorizontalTextAlignment="Center">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnResendConfirmationTapped"/>
-                                </Label.GestureRecognizers>
-                            </Label>-->
-
                         </VerticalStackLayout>
 
 

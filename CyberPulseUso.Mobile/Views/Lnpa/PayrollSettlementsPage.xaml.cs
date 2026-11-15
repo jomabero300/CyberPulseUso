@@ -30,6 +30,8 @@ public partial class PayrollSettlementsPage : ContentPage
             _userSession?.UserType == "Admi" ||
             _userSession?.UserType == "SAdm";
 
+        _viewModel.IsWorker = _userSession?.UserType == "work";
+
         await _viewModel.LoadAsync();
 
         if (!string.IsNullOrWhiteSpace(_viewModel.ErrorMessage))
@@ -121,7 +123,6 @@ public partial class PayrollSettlementsPage : ContentPage
         }
     }
 
-
     private void OnTotalToPayBindingContextChanged(object? sender, EventArgs e)
     {
         if (sender is Label label &&
@@ -129,6 +130,90 @@ public partial class PayrollSettlementsPage : ContentPage
         {
             label.Text = (settlement.AccruedValue - settlement.DeductedValue)
                 .ToString("N2");
+        }
+    }
+
+    private async void OnEditClicked(object? sender, EventArgs e)
+    {
+        if (_viewModel.IsBusy ||
+            sender is not ImageButton button ||
+            button.CommandParameter is not PayrollSettlement settlement)
+            return;
+
+        try
+        {
+            _viewModel.IsBusy = true;
+
+            var payrollSettlements = await _viewModel.GetForEditAsync(
+                settlement.Date,
+                settlement.ChargeId,
+                settlement.UserId!);
+
+            if (payrollSettlements == null || payrollSettlements.Count == 0)
+            {
+                await DisplayAlertAsync(
+                    "Editar liquidación",
+                    !string.IsNullOrWhiteSpace(_viewModel.ErrorMessage)
+                        ? _viewModel.ErrorMessage
+                        : "No se encontraron conceptos para esta liquidación.",
+                    "Aceptar");
+
+                return;
+            }
+
+            var editPage = new PayrollSettlementEditPage(
+                settlement,
+                payrollSettlements,
+                _viewModel);
+
+            await Navigation.PushAsync(editPage);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Error", ex.Message, "Aceptar");
+        }
+        finally
+        {
+            _viewModel.IsBusy = false;
+        }
+    }
+    private async void OnCreateClicked(object? sender, EventArgs e)
+    {
+        if (_viewModel.IsBusy)
+            return;
+
+        try
+        {
+            _viewModel.IsBusy = true;
+
+            var settlements = await _viewModel.GetForCreateAsync();
+
+            if (settlements == null || settlements.Count == 0)
+            {
+                await DisplayAlertAsync(
+                    "Crear liquidación",
+                    !string.IsNullOrWhiteSpace(_viewModel.ErrorMessage)
+                        ? _viewModel.ErrorMessage
+                        : "No se encontraron conceptos para crear la liquidación.",
+                    "Aceptar");
+
+                return;
+            }
+
+            var createPage = new PayrollSettlementCreatePage(
+                settlements,
+                _viewModel,
+                _tokenService);
+
+            await Navigation.PushAsync(createPage);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Error", ex.Message, "Aceptar");
+        }
+        finally
+        {
+            _viewModel.IsBusy = false;
         }
     }
 }

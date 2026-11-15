@@ -391,38 +391,50 @@ public class PayrollSettlementRepository : GenericRepository<PayrollSettlement>,
         .OrderBy(x => x.PayrollConceptId)
         .ToList();
 
+        //hacer lso calculos
 
-        //var unitValue = combinedResult.Where(x => x.PayrollConceptId == 1 || x.PayrollConceptId == 2).Sum(x => x.UnitValue);
+        // 1. Sumar el UnitValue de los conceptos 1 y 2
+        double valorTotal = combinedResult
+            .Where(x => x.PayrollConceptId == 1 || x.PayrollConceptId == 2)
+            .Sum(x => x.UnitValue);
+        var concept5 = combinedResult.FirstOrDefault(x => x.PayrollConceptId == 5);
+        if (concept5 != null)
+        {
+            // Usamos sufijos 'm' si UnitValue es de tipo decimal para evitar divisiones de enteros/dobles
+            concept5.UnitValue = (valorTotal) / (7 * 0.75);
+        }
 
-        //var result = combinedResult.Select(x =>
-        //{
-        //    if (x.PayrollConceptId == 5)
-        //    {
-        //        x.UnitValue = unitValue / 7 * 0.75;
-        //    }
+        var concept6 = combinedResult.FirstOrDefault(x => x.PayrollConceptId == 6);
 
-        //    if (x.PayrollConceptId == 6)
-        //    {
-        //        x.UnitValue = unitValue / 7 * 2.1;
-        //    }
+        if (concept6 != null)
+        {
+            // Usamos sufijos 'm' si UnitValue es de tipo decimal para evitar divisiones de enteros/dobles
+            concept6.UnitValue = (valorTotal) / (7 * 2.1);
+        }
+        var concept11 = combinedResult.FirstOrDefault(x => x.PayrollConceptId == 11);
 
-        //    if (x.PayrollConceptId == 11)
-        //    {
-        //        x.UnitValue = unitValue * 0.9;
-        //    }
+        if (concept11 != null)
+        {
+            // Usamos sufijos 'm' si UnitValue es de tipo decimal para evitar divisiones de enteros/dobles
+            concept11.UnitValue = valorTotal * 0.9;
+        }
+        var concept12 = combinedResult.FirstOrDefault(x => x.PayrollConceptId == 12);
 
-        //    if (x.PayrollConceptId == 12)
-        //    {
-        //        x.UnitValue = unitValue;
-        //    }
-        //    if (x.PayrollConceptId == 13)
-        //    {
-        //        x.UnitValue = unitValue * 2;
-        //    }
+        if (concept12 != null)
+        {
+            // Usamos sufijos 'm' si UnitValue es de tipo decimal para evitar divisiones de enteros/dobles
+            concept12.UnitValue = valorTotal;
+        }
 
-        //    return x;
-        //}).OrderBy(x => x.PayrollConceptId)
-        //.ToList();
+        var concept13 = combinedResult.FirstOrDefault(x => x.PayrollConceptId == 12);
+
+        if (concept13 != null)
+        {
+            // Usamos sufijos 'm' si UnitValue es de tipo decimal para evitar divisiones de enteros/dobles
+            concept13.UnitValue = valorTotal*2;
+        }
+
+
 
         return new ActionResponse<IEnumerable<PayrollSettlementDTO>>
         {
@@ -557,6 +569,15 @@ public class PayrollSettlementRepository : GenericRepository<PayrollSettlement>,
                     x.Date.Minute == fecha.Minute &&
                     x.UserId == id)
                     .ToListAsync();
+
+        if (_result.Count == 0)
+        {
+            return new ActionResponse<LiquidacionReportModel>
+            {
+                WasSuccess = false,
+                Message = "No se encontraron registros para generar la liquidación."
+            };
+        }
 
         var result = new LiquidacionReportModel()
         {

@@ -1,8 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using CyberPulseUso.Mobile.Services.Interfaces;
+using CyberPulseUso.Shared.Entities.Lnpa;
+using CyberPulseUso.Shared.EntitiesDTO.Lnpa;
+using CyberPulseUso.Shared.Responses;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using CyberPulseUso.Mobile.Services.Interfaces;
-using CyberPulseUso.Shared.Entities.Lnpa;
 namespace CyberPulseUso.Mobile.ViewModels.Lnpa;
 
 public class PayrollSettlementsViewModel : INotifyPropertyChanged
@@ -18,7 +20,6 @@ public class PayrollSettlementsViewModel : INotifyPropertyChanged
     private bool _isBusy;
     private string _errorMessage = string.Empty;
     private bool _isAdministrator;
-
     public bool IsAdministrator
     {
         get => _isAdministrator;
@@ -28,6 +29,21 @@ public class PayrollSettlementsViewModel : INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
+
+    private bool _isWorker;
+
+    public bool IsWorker
+    {
+        get => _isWorker;
+        set
+        {
+            if (_isWorker == value) return;
+            _isWorker = value;
+            OnPropertyChanged();
+        }
+    }
+
+
     public ObservableCollection<PayrollSettlement> PayrollSettlements { get; } = [];
 
     public int Page
@@ -208,10 +224,7 @@ public class PayrollSettlementsViewModel : INotifyPropertyChanged
         }
     }
 
-    public async Task<byte[]?> GeneratePdfAsync(
-        DateTime date,
-        int chargeId,
-        string userId)
+    public async Task<byte[]?> GeneratePdfAsync(DateTime date, int chargeId, string userId)
     {
         if (IsBusy)
             return null;
@@ -240,11 +253,78 @@ public class PayrollSettlementsViewModel : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    private void OnPropertyChanged(
-        [CallerMemberName] string? propertyName = null)
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(
             this,
             new PropertyChangedEventArgs(propertyName));
+    }
+
+    public async Task<List<PayrollSettlementDTO>?> GetForEditAsync(DateTime date, int chargeId, string userId)
+    {
+        try
+        {
+            ErrorMessage = string.Empty;
+
+            var formattedDate = Uri.EscapeDataString(
+                date.ToString("yyyy-MM-ddTHH:mm:ss"));
+
+            var url = $"{_baseUrl}/full/{formattedDate}/{chargeId}/{Uri.EscapeDataString(userId)}";
+
+            return await _apiRepository.GetAsync<List<PayrollSettlementDTO>>(url);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+            return null;
+        }
+    }
+
+    public async Task<List<PayrollSettlement>?> UpdateFullAsync(
+        List<PayrollSettlementDTO> settlements)
+    {
+        return await _apiRepository.PutAsync<
+            List<PayrollSettlementDTO>,
+            List<PayrollSettlement>>(
+                $"{_baseUrl}/full",
+                settlements);
+    }
+
+    public async Task<List<PayrollSettlementDTO>?> GetForCreateAsync()
+    {
+        try
+        {
+            ErrorMessage = string.Empty;
+
+            var response = await _apiRepository.GetAsync<
+                IEnumerable<PayrollSettlementDTO>>(
+                    $"{_baseUrl}/Sett");
+
+            return response?.ToList();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+            return null;
+        }
+    }
+    public async Task<List<PayrollSettlement>?> CreateFullAsync(
+        List<PayrollSettlementDTO> settlements)
+    {
+        try
+        {
+            ErrorMessage = string.Empty;
+
+            return await _apiRepository.PostAsync<
+                List<PayrollSettlementDTO>,
+                List<PayrollSettlement>>(
+                    $"{_baseUrl}/full",
+                    settlements);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+            return null;
+        }
     }
 }

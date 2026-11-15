@@ -105,6 +105,9 @@ public static class MauiProgram
         builder.Services.AddTransient<PayrollSettlementsPage>();
         builder.Services.AddTransient<PayrollSettlementsViewModel>();
 
+        builder.Services.AddTransient<LaborRemunerationParametersValuesPage>();
+        builder.Services.AddTransient<LaborRemunerationParametersValuesViewModel>();
+
 #if DEBUG
         builder.Logging.AddDebug();
 #endif

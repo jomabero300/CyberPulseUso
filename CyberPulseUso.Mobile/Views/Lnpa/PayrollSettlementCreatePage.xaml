@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CyberPulseUso.Mobile.Views.Lnpa.PayrollSettlementCreatePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Crear liquidación">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <ScrollView x:Name="PayrollScrollView" Grid.Row="0">
+            <VerticalStackLayout
+                Padding="15"
+                Spacing="12">
+
+                <Label
+                    Text="Crear liquidación"
+                    FontSize="22"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center" />
+
+                <!-- Datos generales -->
+                <Border
+                    Padding="12"
+                    Stroke="LightGray"
+                    StrokeThickness="1">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10" />
+                    </Border.StrokeShape>
+
+                    <VerticalStackLayout Spacing="10">
+
+                        <Label
+                            Text="Datos generales"
+                            FontSize="18"
+                            FontAttributes="Bold" />
+
+                        <Grid
+                            ColumnDefinitions="Auto,*"
+                            RowDefinitions="Auto,Auto,Auto"
+                            ColumnSpacing="12"
+                            RowSpacing="10">
+
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Text="Fecha:"
+                                FontAttributes="Bold" />
+
+                            <Label
+                                x:Name="DateValueLabel"
+                                Grid.Row="0"
+                                Grid.Column="1" />
+
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Text="Trabajador:"
+                                FontAttributes="Bold" />
+
+                            <Label
+                                x:Name="WorkerNameValueLabel"
+                                Grid.Row="1"
+                                Grid.Column="1" />
+
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Text="Cargo:"
+                                FontAttributes="Bold" />
+
+                            <Label
+                                x:Name="ChargeNameValueLabel"
+                                Grid.Row="2"
+                                Grid.Column="1" />
+
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Conceptos -->
+                <Label
+                    Text="Conceptos de la liquidación"
+                    FontSize="18"
+                    FontAttributes="Bold"
+                    Margin="0,10,0,0" />
+
+                <VerticalStackLayout
+                    BindableLayout.ItemsSource="{Binding PayrollSettlements}"
+                    Spacing="10">
+
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+
+                            <Border
+                                Padding="12"
+                                Stroke="LightGray"
+                                StrokeThickness="1">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10" />
+                                </Border.StrokeShape>
+
+                                <VerticalStackLayout Spacing="8">
+
+                                    <Label
+                                        Text="{Binding Name}"
+                                        FontSize="16"
+                                        FontAttributes="Bold" />
+
+                                    <Grid
+                                        ColumnDefinitions="*,*"
+                                        RowDefinitions="Auto,Auto"
+                                        ColumnSpacing="12"
+                                        RowSpacing="8">
+
+                                        <VerticalStackLayout Grid.Row="0" Grid.Column="0">
+                                            <Label Text="Cantidad" FontSize="12" />
+                                            <Entry
+                                                Text="{Binding Amount, Mode=TwoWay}"
+                                                Keyboard="Numeric"
+                                                FontSize="14" 
+                                                Loaded="OnAmountEntryLoaded"/>
+                                        </VerticalStackLayout>
+
+                                        <VerticalStackLayout Grid.Row="0" Grid.Column="1">
+                                            <Label Text="Valor unitario" FontSize="12" />
+                                            <Label
+                                                Text="{Binding UnitValue, StringFormat='{0:N2}'}"
+                                                FontSize="14" />
+                                        </VerticalStackLayout>
+
+                                        <VerticalStackLayout Grid.Row="1" Grid.Column="0">
+                                            <Label Text="Devengado" FontSize="12" />
+                                            <Label
+                                                Text="{Binding AccruedValue, StringFormat='{0:N2}'}"
+                                                FontSize="14"
+                                                FontAttributes="Bold" />
+                                        </VerticalStackLayout>
+
+                                        <VerticalStackLayout Grid.Row="1" Grid.Column="1">
+                                            <Label Text="Deducido" FontSize="12" />
+                                            <Label
+                                                Text="{Binding DeductedValue, StringFormat='{0:N2}'}"
+                                                FontSize="14"
+                                                FontAttributes="Bold" />
+                                        </VerticalStackLayout>
+
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </Border>
+
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Totales siempre visibles -->
+        <Border
+            Grid.Row="1"
+            Padding="12"
+            Stroke="LightGray"
+            StrokeThickness="1">
+
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10" />
+            </Border.StrokeShape>
+
+            <VerticalStackLayout Spacing="8">
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+
+                    <VerticalStackLayout Grid.Column="0" Spacing="3">
+                        <Label
+                            Text="Total devengado"
+                            FontSize="12"
+                            FontAttributes="Bold" />
+
+                        <Label
+                            Text="{Binding TotalAccruedValue, StringFormat='{0:N2}'}"
+                            FontSize="16"
+                            FontAttributes="Bold" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="1" Spacing="3">
+                        <Label
+                            Text="Total deducido"
+                            FontSize="12"
+                            FontAttributes="Bold" />
+
+                        <Label
+                            Text="{Binding TotalDeductedValue, StringFormat='{0:N2}'}"
+                            FontSize="16"
+                            FontAttributes="Bold" />
+                    </VerticalStackLayout>
+
+                </Grid>
+
+                <BoxView
+                    HeightRequest="1"
+                    Color="LightGray" />
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label
+                        Text="TOTAL A PAGAR"
+                        FontSize="17"
+                        FontAttributes="Bold"
+                        VerticalOptions="Center" />
+
+                    <Label
+                        Grid.Column="1"
+                        Text="{Binding TotalToPay, StringFormat='{0:N2}'}"
+                        FontSize="20"
+                        FontAttributes="Bold"
+                        VerticalOptions="Center" />
+                </Grid>
+
+                <ImageButton
+                    Source="icon_save.svg"
+                    WidthRequest="42"
+                    HeightRequest="42"
+                    BackgroundColor="Transparent"
+                    Padding="5"
+                    Aspect="AspectFit"
+                    HorizontalOptions="Center"
+                    Clicked="OnSaveClicked" />
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</ContentPage>
