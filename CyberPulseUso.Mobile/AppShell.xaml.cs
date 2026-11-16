@@ -2,6 +2,8 @@
 using CyberPulseUso.Mobile.Views;
 using CyberPulseUso.Mobile.Views.Gene;
 using CyberPulseUso.Mobile.Views.Lnpa;
+using CyberPulseUso.Mobile.Views.Lnpa.LaborRemunerationParametersValues;
+using CyberPulseUso.Mobile.Views.Lnpa.PayrollConcepts;
 
 namespace CyberPulseUso.Mobile;
 
@@ -77,55 +79,6 @@ public partial class AppShell : Shell
         }
     }
 
-    //private void AddHomeFlyoutItem()
-    //{
-    //    // Evitar agregar Inicio más de una vez.
-    //    if (Items.Any(x => x.Route == "Home"))
-    //        return;
-
-    //    var homeContent = new ShellContent
-    //    {
-    //        Title = "Inicio",
-    //        Route = "HomePage",
-    //        ContentTemplate = new DataTemplate(
-    //            () => _serviceProvider.GetRequiredService<HomePage>())
-    //    };
-
-    //    var homeSection = new ShellSection
-    //    {
-    //        Items = { homeContent }
-    //    };
-
-    //    var homeItem = new FlyoutItem
-    //    {
-    //        Title = "Inicio",
-    //        Route = "Home"
-    //    };
-
-
-    //    homeItem.Items.Add(homeSection);
-
-    //    Items.Add(homeItem);
-
-    //    AddProfileFlyoutItem();
-
-    //    AddUsersFlyoutItem();
-
-    //    AddCategoriesFlyoutItem();
-
-    //    AddGroupsFlyoutItem();
-
-    //    AddChargesFlyoutItem();
-
-    //    AddConventionsFlyoutItem();
-
-    //    AddConventionValuesFlyoutItem();
-
-    //    AddLaborRemunerationParametersFlyoutItem();
-
-    //    AddPayrollSettlementsFlyoutItem();
-    //}
-
     private void AddHomeFlyoutItem(string userType)
     {
         // Evitar agregar Inicio más de una vez.
@@ -178,6 +131,9 @@ public partial class AppShell : Shell
             AddConventionsFlyoutItem();
             AddConventionValuesFlyoutItem();
             AddLaborRemunerationParametersFlyoutItem();
+            AddLaborRemunerationParametersValuesFlyoutItem();
+            AddPayrollConceptsFlyoutItem();
+            AddLaborRemunerationParametersOtherValuesFlyoutItem();
         }
 
         // Administradores y trabajadores pueden consultar liquidaciones.
@@ -187,6 +143,30 @@ public partial class AppShell : Shell
         }
     }
 
+    private void AddLaborRemunerationParametersOtherValuesFlyoutItem()
+    {
+        if (Items.Any(x => x.Route == "LaborRemunerationParametersOtherValues"))
+            return;
+        var content = new ShellContent
+        {
+            Title = "Otros valores de remuneración",
+            Route = "LaborRemunerationParametersOtherValuesContent",
+            ContentTemplate = new DataTemplate(
+                () => _serviceProvider.GetRequiredService<LaborRemunerationParametersOtherValuesPage>())
+        };
+        var section = new ShellSection
+        {
+            Items = { content }
+        };
+        var item = new FlyoutItem
+        {
+            Title = "Otros valores de remuneración",
+            Route = "LaborRemunerationParametersOtherValues",
+            Icon = "icon_remunerations.svg"
+        };
+        item.Items.Add(section);
+        Items.Add(item);
+    }
 
     public async Task NavigateToHomeAsync()
     {
@@ -468,6 +448,34 @@ public partial class AppShell : Shell
         item.Items.Add(section);
         Items.Add(item);
     }
+    private void AddLaborRemunerationParametersValuesFlyoutItem()
+    {
+        if (Items.Any(x => x.Route == "LaborRemunerationParametersValues"))
+            return;
+
+        var content = new ShellContent
+        {
+            Title = "Valores de remuneraciones",
+            Route = "LaborRemunerationParametersValuesContent",
+            ContentTemplate = new DataTemplate(
+                () => _serviceProvider.GetRequiredService<LaborRemunerationParametersValuesPage>())
+        };
+
+        var section = new ShellSection
+        {
+            Items = { content }
+        };
+
+        var item = new FlyoutItem
+        {
+            Title = "Valores de remuneraciones",
+            Route = "LaborRemunerationParametersValues",
+            Icon = "icon_remunerations.svg"
+        };
+
+        item.Items.Add(section);
+        Items.Add(item);
+    }
     private void AddPayrollSettlementsFlyoutItem()
     {
         if (Items.Any(x => x.Route == "PayrollSettlements"))
@@ -496,7 +504,30 @@ public partial class AppShell : Shell
         payrollSettlementsItem.Items.Add(payrollSettlementsSection);
         Items.Add(payrollSettlementsItem);
     }
-
+    private void AddPayrollConceptsFlyoutItem()
+    {
+        if (Items.Any(x => x.Route == "PayrollConcepts"))
+            return;
+        var payrollConceptsContent = new ShellContent
+        {
+            Title = "Conceptos de nómina",
+            Route = "PayrollConceptsContent",
+            ContentTemplate = new DataTemplate(
+                () => _serviceProvider.GetRequiredService<PayrollConceptsPage>())
+        };
+        var payrollConceptsSection = new ShellSection
+        {
+            Items = { payrollConceptsContent }
+        };
+        var payrollConceptsItem = new FlyoutItem
+        {
+            Title = "Conceptos de nómina",
+            Route = "PayrollConcepts",
+            Icon = "icon_payroll.svg"
+        };
+        payrollConceptsItem.Items.Add(payrollConceptsSection);
+        Items.Add(payrollConceptsItem);
+    }   
     private async void OnLogoutMenuItemClicked(object? sender, EventArgs e)
     {
         if (_isLoggingOut)

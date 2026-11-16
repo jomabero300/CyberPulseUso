@@ -8,6 +8,8 @@ using CyberPulseUso.Mobile.ViewModels.Lnpa;
 using CyberPulseUso.Mobile.Views;
 using CyberPulseUso.Mobile.Views.Gene;
 using CyberPulseUso.Mobile.Views.Lnpa;
+using CyberPulseUso.Mobile.Views.Lnpa.LaborRemunerationParametersValues;
+using CyberPulseUso.Mobile.Views.Lnpa.PayrollConcepts;
 using Microsoft.Extensions.Logging;
 using System.Net;
 
@@ -107,6 +109,12 @@ public static class MauiProgram
 
         builder.Services.AddTransient<LaborRemunerationParametersValuesPage>();
         builder.Services.AddTransient<LaborRemunerationParametersValuesViewModel>();
+
+        builder.Services.AddTransient<PayrollConceptsViewModel>();
+        builder.Services.AddTransient<PayrollConceptsPage>();
+
+        builder.Services.AddTransient<LaborRemunerationParametersOtherValuesViewModel>();
+        builder.Services.AddTransient<LaborRemunerationParametersOtherValuesPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

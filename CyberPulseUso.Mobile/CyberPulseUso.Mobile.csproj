@@ -100,7 +100,22 @@
 	  <MauiXaml Update="Views\Lnpa\GroupsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\Lnpa\LaborRemunerationParametersOtherValuesPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\Lnpa\LaborRemunerationParametersPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Lnpa\LaborRemunerationParametersValues\LaborRemunerationParametersValuesFormPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Lnpa\LaborRemunerationParametersValues\LaborRemunerationParametersValuesPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Lnpa\PayrollConcepts\PayrollConceptsFormPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Lnpa\PayrollConcepts\PayrollConceptsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Lnpa\PayrollSettlementCreatePage.xaml">

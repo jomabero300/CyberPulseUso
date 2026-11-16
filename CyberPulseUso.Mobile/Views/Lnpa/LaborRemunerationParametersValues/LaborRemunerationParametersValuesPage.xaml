@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CyberPulseUso.Mobile.Views.Lnpa.LaborRemunerationParametersValues.LaborRemunerationParametersValuesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Valores de remuneraciones">
+
+    <Grid Padding="15"
+          RowDefinitions="Auto,Auto,*,Auto"
+          RowSpacing="12">
+
+        <!-- Encabezado -->
+        <Grid Grid.Row="0"
+              ColumnDefinitions="*,Auto">
+
+            <Label Text="Valores de remuneraciones"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center" />
+
+            <HorizontalStackLayout
+                Grid.Column="1"
+                Spacing="10"
+                HorizontalOptions="End">
+
+                <ImageButton
+                    Source="icon_pdf.svg"
+                    Style="{StaticResource IconButtonBase}"
+                    Clicked="OnExportPdfClicked"
+                    ToolTipProperties.Text="Exportar PDF" />
+
+                <ImageButton
+                    Source="icon_excel.svg"
+                    Style="{StaticResource IconButtonBase}"
+                    Clicked="OnExportExcelClicked"
+                    ToolTipProperties.Text="Exportar Excel" />
+
+                <ImageButton
+                    Source="icon_add.svg"
+                    Style="{StaticResource IconButtonBase}"
+                    Clicked="OnAddClicked"
+                    SemanticProperties.Description="Nuevo valor de remuneración" />
+            </HorizontalStackLayout>
+        </Grid>
+
+        <!-- Búsqueda -->
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,Auto"
+              ColumnSpacing="8">
+
+            <Entry Placeholder="Buscar valor de remuneración..."
+                   Text="{Binding Filter}"
+                   ReturnType="Search"
+                   Completed="OnSearchClicked" />
+
+            <ImageButton Grid.Column="1"
+                         Source="icon_search.svg"
+                         Style="{StaticResource IconButtonBase}"
+                         Clicked="OnSearchClicked"
+                         SemanticProperties.Description="Buscar valores" />
+        </Grid>
+
+        <!-- Listado -->
+        <Grid Grid.Row="2">
+
+            <CollectionView
+                ItemsSource="{Binding LaborRemunerationParametersValues}"
+                SelectionMode="None">
+
+                <CollectionView.EmptyView>
+                    <Label Text="No hay valores de remuneración para mostrar."
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           TextColor="Gray" />
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+
+                        <Border Stroke="#CCCCCC"
+                                StrokeThickness="1"
+                                Padding="10"
+                                Margin="0,4"
+                                StrokeShape="RoundRectangle 8">
+
+                            <Grid ColumnDefinitions="*,Auto"
+                                  ColumnSpacing="10">
+
+                                <VerticalStackLayout Grid.Column="0"
+                                                     Spacing="5"
+                                                     VerticalOptions="Center">
+
+                                    <Label Text="{Binding LaborRemunerationParameters.Name}"
+                                           FontAttributes="Bold"
+                                           FontSize="16" />
+
+                                    <Label Text="{Binding Group.Name,
+                                                   StringFormat='Grupo: {0}'}"
+                                           FontSize="13"
+                                           TextColor="Gray" />
+
+                                    <Label Text="{Binding Date,
+                                                   StringFormat='Fecha: {0:dd/MM/yyyy}'}"
+                                           FontSize="13" />
+
+                                    <Label Text="{Binding Value,
+                                                   StringFormat='Valor: {0:N2}'}"
+                                           FontSize="13" />
+
+                                    <Label Text="{Binding Statu.Name,
+                                                   StringFormat='Estado: {0}'}"
+                                           FontSize="13" />
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Column="1"
+                                                     Spacing="5"
+                                                     VerticalOptions="Center">
+
+                                    <ImageButton
+                                        Source="icon_edit.svg"
+                                        Style="{StaticResource IconButtonBase}"
+                                        Clicked="OnEditClicked"
+                                        CommandParameter="{Binding .}"
+                                        SemanticProperties.Description="Editar valor" />
+
+                                    <ImageButton
+                                        Source="icon_delete.svg"
+                                        Style="{StaticResource IconButtonBase}"
+                                        Clicked="OnDeleteClicked"
+                                        CommandParameter="{Binding .}"
+                                        SemanticProperties.Description="Eliminar valor" />
+                                </VerticalStackLayout>
+
+                            </Grid>
+                        </Border>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+        </Grid>
+
+        <!-- Paginación -->
+        <VerticalStackLayout Grid.Row="3"
+                             Spacing="8">
+
+            <Grid ColumnDefinitions="Auto,Auto,Auto,Auto"
+                  HorizontalOptions="Center">
+
+                <ImageButton
+                    Source="icon_previous.svg"
+                    Style="{StaticResource IconButtonBase}"
+                    Clicked="OnPreviousPageClicked"
+                    IsEnabled="{Binding CanGoPrevious}"
+                    SemanticProperties.Description="Página anterior" />
+
+                <Label Grid.Column="1"
+                       Text="{Binding Page, StringFormat='{0}'}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"
+                       FontAttributes="Bold"
+                       Margin="8,0" />
+
+                <Label Grid.Column="2"
+                       Text="{Binding TotalPages, StringFormat='de {0}'}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"
+                       Margin="0,0,8,0" />
+
+                <ImageButton Grid.Column="3"
+                             Source="icon_next.svg"
+                             Style="{StaticResource IconButtonBase}"
+                             Clicked="OnNextPageClicked"
+                             IsEnabled="{Binding CanGoNext}"
+                             SemanticProperties.Description="Página siguiente" />
+            </Grid>
+
+            <Label Text="{Binding TotalRecords, StringFormat='Total de valores: {0}'}"
+                   HorizontalOptions="Center"
+                   FontSize="13" />
+
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentPage>

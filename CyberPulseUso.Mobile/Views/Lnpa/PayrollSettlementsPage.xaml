@@ -96,7 +96,7 @@
                                 FontSize="13"
                                 TextColor="Gray"
                                 IsVisible="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
-                                                    Path=BindingContext.IsAdministrator}" />
+                                                    Path=BindingContext.IsAdministrator}"/>
 
 
                             <Grid ColumnDefinitions="*,*,*" ColumnSpacing="5">

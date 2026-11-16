@@ -25,9 +25,10 @@ public class LaborRemunerationParametersOtherValueRepository : GenericRepository
         var excludedIds = new int[] { 1, 2, 3, 14 };
         var entity = await _context.Set<LaborRemunerationParametersOtherValue>()
                                             .AsNoTracking()
-                                            .Include(x=>x.LRP)                                            
-                                            .Where(x=>x.StatuId==1 && !excludedIds.Contains(x.Id)).ToListAsync();
-        return new ActionResponse<IEnumerable<LaborRemunerationParametersOtherValue>> { WasSuccess = true, Result = entity.OrderBy(x => x.Id).ToList() };
+                                            .Include(x => x.LRP)
+                                            .OrderBy(x => x.LRPId)
+                                            .Where(x => x.StatuId == 1 && !excludedIds.Contains(x.Id)).ToListAsync();
+        return new ActionResponse<IEnumerable<LaborRemunerationParametersOtherValue>> { WasSuccess = true, Result = entity.ToList() };
     }
 
     public override async Task<ActionResponse<LaborRemunerationParametersOtherValue>> GetAsync(int id)
@@ -74,6 +75,7 @@ public class LaborRemunerationParametersOtherValueRepository : GenericRepository
 
     public async Task<ActionResponse<IEnumerable<LaborRemunerationParametersOtherValueCRUDDTO>>> AddAsync(IEnumerable<LaborRemunerationParametersOtherValueCRUDDTO> entity)
     {
+        var excludedIds = new int[] { 1, 2, 3, 14 };
 
         try
         {
@@ -82,7 +84,7 @@ public class LaborRemunerationParametersOtherValueRepository : GenericRepository
             // 1. Obtener los registros actualmente activos
             var currentRecords = await _context
                 .Set<LaborRemunerationParametersOtherValue>()
-                .Where(x => x.StatuId == 1)
+                .Where(x => x.StatuId == 1 && !excludedIds.Contains(x.Id))
                 .ToListAsync();
 
 

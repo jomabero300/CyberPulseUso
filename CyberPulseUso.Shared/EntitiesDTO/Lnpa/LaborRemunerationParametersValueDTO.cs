@@ -34,7 +34,5 @@ public class LaborRemunerationParametersValueDTO
     public GroupDTO? Group { get; set; }
     
     [Required(ErrorMessageResourceName = "RequiredField", ErrorMessageResourceType = typeof(Literals))]
-    public LaborRemunerationParametersDTO? LaborRemunerationParameters { get; set; }
-    
+    public LaborRemunerationParametersDTO? LaborRemunerationParameters { get; set; }   
 }
-

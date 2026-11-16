@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CyberPulseUso.Mobile.Views.Lnpa.LaborRemunerationParametersOtherValuesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Otros valores de remuneración">
+
+    <Grid Padding="15"
+          RowDefinitions="Auto,*,Auto"
+          RowSpacing="12">
+
+        <Label
+            Grid.Row="0"
+            Text="Otros valores de parámetros de remuneración"
+            FontSize="20"
+            FontAttributes="Bold"
+            HorizontalOptions="Center" />
+
+        <Grid Grid.Row="1">
+
+            <CollectionView
+                ItemsSource="{Binding OtherValues}"
+                SelectionMode="None">
+
+                <CollectionView.EmptyView>
+                    <Label
+                        Text="No hay valores para mostrar."
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        TextColor="Gray" />
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+
+                        <Border
+                            Stroke="#D6D6D6"
+                            StrokeThickness="1"
+                            Padding="12"
+                            Margin="0,4"
+                            StrokeShape="RoundRectangle 10">
+
+                            <VerticalStackLayout Spacing="8">
+
+                                <Label
+                                    Text="{Binding LRP.Name}"
+                                    FontAttributes="Bold"
+                                    FontSize="16" />
+
+                                <Entry
+                                    Text="{Binding Value, Mode=TwoWay}"
+                                    Keyboard="Numeric"
+                                    Placeholder="Ingrese el valor" />
+
+                            </VerticalStackLayout>
+
+                        </Border>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+            <ActivityIndicator
+                IsRunning="{Binding IsBusy}"
+                IsVisible="{Binding IsBusy}"
+                HorizontalOptions="Center"
+                VerticalOptions="Center" />
+
+        </Grid>
+
+        <VerticalStackLayout Grid.Row="2" Spacing="8">
+
+            <Label
+                Text="{Binding ErrorMessage}"
+                TextColor="Red"
+                FontSize="13" />
+
+            <ImageButton
+                Source="icon_save.svg"
+                WidthRequest="40"
+                HeightRequest="40"
+                BackgroundColor="Transparent"
+                Aspect="AspectFit"
+                HorizontalOptions="Center"
+                Clicked="OnSaveClicked"
+                SemanticProperties.Description="Guardar valores" />
+
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentPage>

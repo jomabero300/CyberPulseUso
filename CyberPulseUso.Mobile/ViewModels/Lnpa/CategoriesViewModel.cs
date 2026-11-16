@@ -340,7 +340,6 @@ public class CategoriesViewModel : INotifyPropertyChanged
         }
     }
 
-
     private string GetErrorMessage(Exception ex)
     {
         if (ex.Message.Contains("ERR002", StringComparison.OrdinalIgnoreCase))

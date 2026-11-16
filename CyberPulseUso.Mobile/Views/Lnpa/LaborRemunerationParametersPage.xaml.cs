@@ -23,25 +23,25 @@ public partial class LaborRemunerationParametersPage : ContentPage
             await DisplayAlertAsync("Remuneraciones", _viewModel.ErrorMessage, "Aceptar");
     }
 
-    private async void OnSearchClicked(object sender, EventArgs e)
+    private async void OnSearchClicked(object? sender, EventArgs e)
     {
         await _viewModel.SearchAsync();
         await ShowErrorAsync();
     }
 
-    private async void OnNextPageClicked(object sender, EventArgs e)
+    private async void OnNextPageClicked(object? sender, EventArgs e)
     {
         await _viewModel.NextPageAsync();
         await ShowErrorAsync();
     }
 
-    private async void OnPreviousPageClicked(object sender, EventArgs e)
+    private async void OnPreviousPageClicked(object? sender, EventArgs e)
     {
         await _viewModel.PreviousPageAsync();
         await ShowErrorAsync();
     }
 
-    private async void OnAddClicked(object sender, EventArgs e)
+    private async void OnAddClicked(object? sender, EventArgs e)
     {
         string? name = await DisplayPromptAsync(
             "Nueva remuneración",
@@ -59,7 +59,7 @@ public partial class LaborRemunerationParametersPage : ContentPage
         await ShowErrorAsync();
     }
 
-    private async void OnEditClicked(object sender, EventArgs e)
+    private async void OnEditClicked(object? sender, EventArgs e)
     {
         if (sender is not ImageButton button ||
             button.CommandParameter is not LaborRemunerationParameters parameter)
@@ -124,7 +124,7 @@ public partial class LaborRemunerationParametersPage : ContentPage
         return status?.Id;
     }
 
-    private async void OnDeleteClicked(object sender, EventArgs e)
+    private async void OnDeleteClicked(object? sender, EventArgs e)
     {
         if (sender is not ImageButton button ||
             button.CommandParameter is not LaborRemunerationParameters parameter)
@@ -139,7 +139,7 @@ public partial class LaborRemunerationParametersPage : ContentPage
         await ShowErrorAsync();
     }
 
-    private async void OnExportPdfClicked(object sender, EventArgs e)
+    private async void OnExportPdfClicked(object? sender, EventArgs e)
     {
         var file = await _viewModel.ExportPdfAsync();
 
@@ -154,7 +154,7 @@ public partial class LaborRemunerationParametersPage : ContentPage
             $"Remuneraciones_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
     }
 
-    private async void OnExportExcelClicked(object sender, EventArgs e)
+    private async void OnExportExcelClicked(object? sender, EventArgs e)
     {
         var file = await _viewModel.ExportExcelAsync();
 

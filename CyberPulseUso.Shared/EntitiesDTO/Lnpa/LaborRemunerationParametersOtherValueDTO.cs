@@ -23,6 +23,4 @@ public class LaborRemunerationParametersOtherValueDTO
     public StatuDTO? Statu { get; set; }
     
     public LaborRemunerationParametersDTO? LRP { get; set; }
-    
 }
-

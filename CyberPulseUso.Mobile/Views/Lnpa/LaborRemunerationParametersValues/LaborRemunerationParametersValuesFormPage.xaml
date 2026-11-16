@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CyberPulseUso.Mobile.Views.Lnpa.LaborRemunerationParametersValues.LaborRemunerationParametersValuesFormPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Valor de remuneración">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="14">
+
+            <Label
+                x:Name="LblTitle"
+                Text="Valor de remuneración"
+                FontSize="22"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+            <VerticalStackLayout Spacing="5">
+                <Label Text="Parámetro de remuneración" FontAttributes="Bold" />
+                <Picker
+                    x:Name="PkrParameter"
+                    Title="Seleccione un parámetro"
+                    ItemDisplayBinding="{Binding Name}" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="5">
+                <Label Text="Grupo" FontAttributes="Bold" />
+                <Picker
+                    x:Name="PkrGroup"
+                    Title="Seleccione un grupo"
+                    ItemDisplayBinding="{Binding Name}" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="5">
+                <Label Text="Fecha" FontAttributes="Bold" />
+                <DatePicker
+                    x:Name="DtpDate"
+                    Format="dd/MM/yyyy" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="5">
+                <Label Text="Valor" FontAttributes="Bold" />
+                <Entry
+                    x:Name="TxtValue"
+                    Placeholder="Ingrese el valor"
+                    Keyboard="Numeric" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="5">
+                <Label Text="Estado" FontAttributes="Bold" />
+                <Picker
+                    x:Name="PkrStatus"
+                    Title="Seleccione un estado"
+                    ItemDisplayBinding="{Binding Name}" />
+            </VerticalStackLayout>
+
+            <Grid ColumnDefinitions="*,*"
+                  ColumnSpacing="12"
+                  Margin="0,12,0,0">
+
+                <Button
+                    Grid.Column="0"
+                    Text="Guardar"
+                    Clicked="OnSaveClicked" />
+
+                <Button
+                    Grid.Column="1"
+                    Text="Cancelar"
+                    BackgroundColor="Gray"
+                    Clicked="OnCancelClicked" />
+            </Grid>
+
+            <Label
+                x:Name="LblError"
+                TextColor="Red"
+                IsVisible="False"
+                HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

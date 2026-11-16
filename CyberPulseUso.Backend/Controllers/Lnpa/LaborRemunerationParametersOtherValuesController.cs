@@ -38,5 +38,4 @@ public class LaborRemunerationParametersOtherValuesController : GenericControlle
             var response = await _modelUnitOfWork.AddAsync(entity);
         return response.WasSuccess ? Ok(response.Result) : BadRequest(response.Message);
     }
-
 }

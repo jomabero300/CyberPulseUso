@@ -139,7 +139,7 @@ public partial class PayrollSettlementCreatePage : ContentPage
             IsBusy = false;
         }
     }
-    private async void OnSaveClicked(object sender, EventArgs e)
+    private async void OnSaveClicked(object? sender, EventArgs e)
     {
         await SaveAsync();
     }
