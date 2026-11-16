@@ -2,6 +2,8 @@
 using CyberPulseUso.Mobile.Views;
 using CyberPulseUso.Mobile.Views.Gene;
 using CyberPulseUso.Mobile.Views.Lnpa;
+using CyberPulseUso.Mobile.Views.Lnpa.Categories;
+using CyberPulseUso.Mobile.Views.Lnpa.Groups;
 using CyberPulseUso.Mobile.Views.Lnpa.LaborRemunerationParametersValues;
 using CyberPulseUso.Mobile.Views.Lnpa.PayrollConcepts;
 

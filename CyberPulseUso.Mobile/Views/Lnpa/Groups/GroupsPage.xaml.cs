@@ -1,16 +1,17 @@
 using CyberPulseUso.Mobile.ViewModels.Lnpa;
 using CyberPulseUso.Shared.Entities.Lnpa;
 
-namespace CyberPulseUso.Mobile.Views.Lnpa;
+namespace CyberPulseUso.Mobile.Views.Lnpa.Groups;
 
-public partial class CategoriesPage : ContentPage
+public partial class GroupsPage : ContentPage
 {
-    private readonly CategoriesViewModel _viewModel;
-
-    public CategoriesPage(CategoriesViewModel viewModel)
+    private readonly GroupsViewModel _viewModel;
+    public GroupsPage(GroupsViewModel viewModel)
     {
         InitializeComponent();
+
         _viewModel = viewModel;
+
         BindingContext = _viewModel;
     }
     protected override async void OnAppearing()
@@ -40,88 +41,79 @@ public partial class CategoriesPage : ContentPage
         if (_viewModel.IsBusy)
             return;
 
-        var name = await DisplayPromptAsync(
-            "Nueva categoría",
-            "Nombre de la categoría:",
-            "Guardar",
-            "Cancelar",
-            maxLength: 80);
-
-        if (string.IsNullOrWhiteSpace(name))
-            return;
-
-        await _viewModel.CreateAsync(name);
+        await Navigation.PushAsync(new GroupFormPage(_viewModel, null));
     }
 
     private async void OnEditClicked(object? sender, EventArgs e)
     {
         if (_viewModel.IsBusy ||
             sender is not ImageButton button ||
-            button.CommandParameter is not Category category)
+            button.CommandParameter is not Group group)
             return;
 
-        var name = await DisplayPromptAsync(
-            "Editar categoría",
-            "Nombre de la categoría:",
-            "Guardar",
-            "Cancelar",
-            initialValue: category.Name,
-            maxLength: 80);
+        await Navigation.PushAsync(new GroupFormPage(_viewModel, group));
+    }
 
-        if (string.IsNullOrWhiteSpace(name))
-            return;
+    private async Task<Category?> SelectCategoryAsync()
+    {
+        return await SelectCategoryAsync(_viewModel.Categories.ToList());
+    }
 
-        var statusOptions = _viewModel.Statuses
-            .Select(x => x.Name)
-            .ToArray();
-
-        if (statusOptions.Length == 0)
+    private async Task<Category?> SelectCategoryAsync(List<Category> categories)
+    {
+        if (categories.Count == 0)
         {
             await DisplayAlertAsync(
-                "Estados",
-                "No hay estados disponibles.",
+                "Categorías",
+                "No hay categorías disponibles.",
                 "Aceptar");
-            return;
+
+            return null;
         }
 
-        var selectedStatus = await DisplayActionSheetAsync(
-            "Seleccione el estado",
+        var categoryOptions = categories
+            .Select(x => x.Name ?? string.Empty)
+            .ToArray();
+
+        var selectedCategory = await DisplayActionSheetAsync(
+            "Seleccione la categoría",
             "Cancelar",
             null,
-            statusOptions);
+            categoryOptions);
 
-        if (string.IsNullOrWhiteSpace(selectedStatus) ||
-            selectedStatus == "Cancelar")
-            return;
+        if (string.IsNullOrWhiteSpace(selectedCategory) ||
+            selectedCategory == "Cancelar")
+            return null;
 
-        var status = _viewModel.Statuses.FirstOrDefault(
-            x => x.Name == selectedStatus);
-
-        if (status == null)
-            return;
-
-        await _viewModel.UpdateAsync(
-            category.Id,
-            name,
-            status.Id);
+        return categories.FirstOrDefault(
+            x => x.Name == selectedCategory);
     }
+
     private async void OnDeleteClicked(object? sender, EventArgs e)
     {
         if (_viewModel.IsBusy ||
             sender is not ImageButton button ||
-            button.CommandParameter is not Category category)
+            button.CommandParameter is not Group group)
             return;
 
         var confirm = await DisplayAlertAsync(
-            "Eliminar categoría",
-            $"¿Desea eliminar la categoría {category.Name}?",
+            "Eliminar grupo",
+            $"¿Desea eliminar el grupo {group.Name}?",
             "Sí",
             "No");
 
         if (!confirm)
             return;
 
-        await _viewModel.DeleteAsync(category.Id);
+        await _viewModel.DeleteAsync(group.Id);
+
+        if (!string.IsNullOrWhiteSpace(_viewModel.ErrorMessage))
+        {
+            await DisplayAlertAsync(
+                "Error",
+                _viewModel.ErrorMessage,
+                "Aceptar");
+        }
     }
 
     private async void OnExportPdfClicked(object? sender, EventArgs e)
@@ -132,13 +124,19 @@ public partial class CategoriesPage : ContentPage
         {
             if (!string.IsNullOrWhiteSpace(_viewModel.ErrorMessage))
             {
-                await DisplayAlertAsync("Error", _viewModel.ErrorMessage, "Aceptar");
+                await DisplayAlertAsync(
+                    "Error",
+                    _viewModel.ErrorMessage,
+                    "Aceptar");
             }
 
             return;
         }
 
-        await SaveAndOpenFileAsync(fileBytes,"Categorias.pdf","application/pdf");
+        await SaveAndOpenFileAsync(
+            fileBytes,
+            "Grupos.pdf",
+            "application/pdf");
     }
 
     private async void OnExportExcelClicked(object? sender, EventArgs e)
@@ -158,9 +156,11 @@ public partial class CategoriesPage : ContentPage
             return;
         }
 
-        await SaveAndOpenFileAsync(fileBytes, "Categorias.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        await SaveAndOpenFileAsync(
+            fileBytes,
+            "Grupos.xlsx",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     }
-
 
     private async Task SaveAndOpenFileAsync(byte[] fileBytes, string fileName, string contentType)
     {
@@ -186,4 +186,6 @@ public partial class CategoriesPage : ContentPage
                 "Aceptar");
         }
     }
+
+
 }

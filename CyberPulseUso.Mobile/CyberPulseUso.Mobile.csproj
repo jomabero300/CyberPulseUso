@@ -85,7 +85,7 @@
 	  <MauiXaml Update="Views\HomePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\Lnpa\CategoriesPage.xaml">
+	  <MauiXaml Update="Views\Lnpa\Categories\CategoryFormPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Lnpa\ChargesPage.xaml">
@@ -97,7 +97,10 @@
 	  <MauiXaml Update="Views\Lnpa\ConventionValuesPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\Lnpa\GroupsPage.xaml">
+	  <MauiXaml Update="Views\Lnpa\Groups\GroupFormPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Lnpa\Groups\GroupsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Lnpa\LaborRemunerationParametersOtherValuesPage.xaml">
