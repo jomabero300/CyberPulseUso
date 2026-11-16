@@ -3,9 +3,15 @@ using CyberPulseUso.Mobile.Views;
 using CyberPulseUso.Mobile.Views.Gene;
 using CyberPulseUso.Mobile.Views.Lnpa;
 using CyberPulseUso.Mobile.Views.Lnpa.Categories;
+using CyberPulseUso.Mobile.Views.Lnpa.Charges;
+using CyberPulseUso.Mobile.Views.Lnpa.Conventions;
+using CyberPulseUso.Mobile.Views.Lnpa.ConventionValues;
 using CyberPulseUso.Mobile.Views.Lnpa.Groups;
+using CyberPulseUso.Mobile.Views.Lnpa.LaborRemunerationParameter;
 using CyberPulseUso.Mobile.Views.Lnpa.LaborRemunerationParametersValues;
 using CyberPulseUso.Mobile.Views.Lnpa.PayrollConcepts;
+using CyberPulseUso.Shared.Resources;
+using System.Globalization;
 
 namespace CyberPulseUso.Mobile;
 
@@ -149,9 +155,12 @@ public partial class AppShell : Shell
     {
         if (Items.Any(x => x.Route == "LaborRemunerationParametersOtherValues"))
             return;
+
+        var title = GetTitle("laborremunerationparametersothervalues", "Paramtros1");
+
         var content = new ShellContent
         {
-            Title = "Otros valores de remuneración",
+            Title = title,
             Route = "LaborRemunerationParametersOtherValuesContent",
             ContentTemplate = new DataTemplate(
                 () => _serviceProvider.GetRequiredService<LaborRemunerationParametersOtherValuesPage>())
@@ -162,7 +171,7 @@ public partial class AppShell : Shell
         };
         var item = new FlyoutItem
         {
-            Title = "Otros valores de remuneración",
+            Title = title,
             Route = "LaborRemunerationParametersOtherValues",
             Icon = "icon_remunerations.svg"
         };
@@ -256,9 +265,11 @@ public partial class AppShell : Shell
         if (Items.Any(x => x.Route == "Users"))
             return;
 
+        var title = GetTitle("Users", "Usuarios1");
+
         var usersContent = new ShellContent
         {
-            Title = "Usuarios",
+            Title = title,
             Route = "UsersContent",
             ContentTemplate = new DataTemplate(
                 () => _serviceProvider.GetRequiredService<UsersPage>())
@@ -271,7 +282,7 @@ public partial class AppShell : Shell
 
         var usersItem = new FlyoutItem
         {
-            Title = "Usuarios",
+            Title = title,
             Route = "Users",
             Icon = "icon_users.svg"
         };
@@ -285,9 +296,11 @@ public partial class AppShell : Shell
         if (Items.Any(x => x.Route == "Categories"))
             return;
 
+        var title = GetTitle("Categories", "Categorías1");
+
         var categoriesContent = new ShellContent
         {
-            Title = "Categorías",
+            Title = title,
             Route = "CategoriesContent",
             ContentTemplate = new DataTemplate(
                 () => _serviceProvider.GetRequiredService<CategoriesPage>())
@@ -300,7 +313,7 @@ public partial class AppShell : Shell
 
         var categoriesItem = new FlyoutItem
         {
-            Title = "Categorías",
+            Title = title,
             Route = "Categories",
             Icon = "icon_categories.svg"
         };
@@ -314,9 +327,11 @@ public partial class AppShell : Shell
         if (Items.Any(x => x.Route == "Groups"))
             return;
 
+        var title = GetTitle("Groups", "Grupos1");
+
         var groupsContent = new ShellContent
         {
-            Title = "Grupos",
+            Title = title,
             Route = "GroupsContent",
             ContentTemplate = new DataTemplate(
                 () => _serviceProvider.GetRequiredService<GroupsPage>())
@@ -329,7 +344,7 @@ public partial class AppShell : Shell
 
         var groupsItem = new FlyoutItem
         {
-            Title = "Grupos",
+            Title = title,
             Route = "Groups",
             Icon = "icon_groups.svg"
         };
@@ -343,9 +358,11 @@ public partial class AppShell : Shell
         if (Items.Any(x => x.Route == "Charges"))
             return;
 
+        var title = GetTitle("Charges", "Cargos1");
+
         var chargesContent = new ShellContent
         {
-            Title = "Cargos",
+            Title = title,
             Route = "ChargesContent",
             ContentTemplate = new DataTemplate(
                 () => _serviceProvider.GetRequiredService<ChargesPage>())
@@ -358,7 +375,7 @@ public partial class AppShell : Shell
 
         var chargesItem = new FlyoutItem
         {
-            Title = "Cargos",
+            Title = title,
             Route = "Charges",
             Icon = "icon_charges.svg"
         };
@@ -371,9 +388,11 @@ public partial class AppShell : Shell
         if (Items.Any(x => x.Route == "Conventions"))
             return;
 
+        var title = GetTitle("Conventions", "Convenciones1");
+
         var conventionsContent = new ShellContent
         {
-            Title = "Convenios",
+            Title = title,
             Route = "ConventionsContent",
             ContentTemplate = new DataTemplate(
                 () => _serviceProvider.GetRequiredService<ConventionsPage>())
@@ -386,7 +405,7 @@ public partial class AppShell : Shell
 
         var conventionsItem = new FlyoutItem
         {
-            Title = "Convenios",
+            Title = title,
             Route = "Conventions",
             Icon = "icon_conventions.svg"
         };
@@ -399,9 +418,11 @@ public partial class AppShell : Shell
         if (Items.Any(x => x.Route == "ConventionValues"))
             return;
 
+        var title = GetTitle("ConventionValues", "Beneficios1");
+
         var content = new ShellContent
         {
-            Title = "Beneficios",
+            Title = title,
             Route = "ConventionValuesContent",
             ContentTemplate = new DataTemplate(
                 () => _serviceProvider.GetRequiredService<ConventionValuesPage>())
@@ -414,7 +435,7 @@ public partial class AppShell : Shell
 
         var item = new FlyoutItem
         {
-            Title = "Valores de convenios",
+            Title = title,
             Route = "ConventionValues",
             Icon = "icon_benefits.svg"
         };
@@ -427,9 +448,11 @@ public partial class AppShell : Shell
         if (Items.Any(x => x.Route == "LaborRemunerationParameters"))
             return;
 
+        var title = GetTitle("LaborRemunerationParameters", "Remuneraciones1");
+
         var content = new ShellContent
         {
-            Title = "Remuneraciones",
+            Title = title,
             Route = "LaborRemunerationParametersContent",
             ContentTemplate = new DataTemplate(
                 () => _serviceProvider.GetRequiredService<LaborRemunerationParametersPage>())
@@ -442,7 +465,7 @@ public partial class AppShell : Shell
 
         var item = new FlyoutItem
         {
-            Title = "Remuneraciones",
+            Title = title,
             Route = "LaborRemunerationParameters",
             Icon = "icon_remunerations.svg"
         };
@@ -455,9 +478,11 @@ public partial class AppShell : Shell
         if (Items.Any(x => x.Route == "LaborRemunerationParametersValues"))
             return;
 
+        var title = GetTitle("LaborRemunerationParametersValues", "Valores de remuneraciones1");
+
         var content = new ShellContent
         {
-            Title = "Valores de remuneraciones",
+            Title = title,
             Route = "LaborRemunerationParametersValuesContent",
             ContentTemplate = new DataTemplate(
                 () => _serviceProvider.GetRequiredService<LaborRemunerationParametersValuesPage>())
@@ -470,7 +495,7 @@ public partial class AppShell : Shell
 
         var item = new FlyoutItem
         {
-            Title = "Valores de remuneraciones",
+            Title = title,
             Route = "LaborRemunerationParametersValues",
             Icon = "icon_remunerations.svg"
         };
@@ -483,9 +508,11 @@ public partial class AppShell : Shell
         if (Items.Any(x => x.Route == "PayrollSettlements"))
             return;
 
+        var title = GetTitle("Payrollsettlements", "Liquidación de nómina1");
+                              
         var payrollSettlementsContent = new ShellContent
         {
-            Title = "Liquidación de nómina",
+            Title = title,
             Route = "PayrollSettlementsContent",
             ContentTemplate = new DataTemplate(
                 () => _serviceProvider.GetRequiredService<PayrollSettlementsPage>())
@@ -498,7 +525,7 @@ public partial class AppShell : Shell
 
         var payrollSettlementsItem = new FlyoutItem
         {
-            Title = "Liquidación de nómina",
+            Title = title,
             Route = "PayrollSettlements",
             Icon = "icon_payroll.svg"
         };
@@ -510,9 +537,12 @@ public partial class AppShell : Shell
     {
         if (Items.Any(x => x.Route == "PayrollConcepts"))
             return;
+
+        var title = GetTitle("PayrollConcepts", "Conceptos de nómina1");
+
         var payrollConceptsContent = new ShellContent
         {
-            Title = "Conceptos de nómina",
+            Title = title,
             Route = "PayrollConceptsContent",
             ContentTemplate = new DataTemplate(
                 () => _serviceProvider.GetRequiredService<PayrollConceptsPage>())
@@ -523,7 +553,7 @@ public partial class AppShell : Shell
         };
         var payrollConceptsItem = new FlyoutItem
         {
-            Title = "Conceptos de nómina",
+            Title = title,
             Route = "PayrollConcepts",
             Icon = "icon_payroll.svg"
         };
@@ -601,8 +631,6 @@ public partial class AppShell : Shell
         }
     }
 
-
-
     private void ClearUserMenu()
     {
         foreach (var item in Items.ToList())
@@ -614,5 +642,9 @@ public partial class AppShell : Shell
         }
 
         FlyoutHeaderView.BindingContext = null;
+    }
+    private static string GetTitle(string resourceKey, string defaultValue)
+    {
+        return Literals.ResourceManager.GetString(resourceKey, CultureInfo.CurrentUICulture) ?? defaultValue;
     }
 }

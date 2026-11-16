@@ -1,19 +1,17 @@
 using CyberPulseUso.Mobile.ViewModels.Lnpa;
 using CyberPulseUso.Shared.Entities.Lnpa;
 
-namespace CyberPulseUso.Mobile.Views.Lnpa;
+namespace CyberPulseUso.Mobile.Views.Lnpa.Charges;
 
-public partial class ConventionsPage : ContentPage
+public partial class ChargesPage : ContentPage
 {
-    private readonly ConventionsViewModel _viewModel;
-
-    public ConventionsPage(ConventionsViewModel viewModel)
+    private readonly ChargesViewModel _viewModel;
+    public ChargesPage(ChargesViewModel viewModel)
     {
         InitializeComponent();
         _viewModel = viewModel;
         BindingContext = _viewModel;
     }
-
     protected override async void OnAppearing()
     {
         base.OnAppearing();
@@ -34,105 +32,68 @@ public partial class ConventionsPage : ContentPage
         if (_viewModel.IsBusy)
             return;
 
-        var name = await DisplayPromptAsync(
-            "Nuevo convenio",
-            "Nombre del convenio:",
-            "Continuar",
-            "Cancelar",
-            maxLength: 80);
-
-        if (string.IsNullOrWhiteSpace(name))
-            return;
-
-        await _viewModel.CreateAsync(name);
-
-        if (!string.IsNullOrWhiteSpace(_viewModel.ErrorMessage))
-        {
-            await DisplayAlertAsync(
-                "Error",
-                _viewModel.ErrorMessage,
-                "Aceptar");
-        }
+        await Navigation.PushAsync(
+            new ChargesFormPage(_viewModel, null));
     }
 
     private async void OnEditClicked(object? sender, EventArgs e)
     {
         if (_viewModel.IsBusy ||
             sender is not ImageButton button ||
-            button.CommandParameter is not Convention convention)
+            button.CommandParameter is not Charge charge)
             return;
 
-        var name = await DisplayPromptAsync(
-            "Editar convenio",
-            "Nombre del convenio:",
-            "Continuar",
-            "Cancelar",
-            initialValue: convention.Name,
-            maxLength: 80);
+        await Navigation.PushAsync(new ChargesFormPage(_viewModel, charge));
+    }
+    private async Task<Group?> SelectGroupAsync()
+        => await SelectGroupAsync(_viewModel.Groups.ToList());
 
-        if (string.IsNullOrWhiteSpace(name))
-            return;
+    private async Task<Group?> SelectGroupAsync(List<Group> groups)
+    {
+        if (groups.Count == 0)
+        {
+            await DisplayAlertAsync(
+                "Grupos",
+                "No hay grupos disponibles.",
+                "Aceptar");
+            return null;
+        }
 
-        var statusOptions = _viewModel.Statuses
-            .Select(x => x.Name)
+        var groupOptions = groups
+            .Select(x => x.Name ?? string.Empty)
             .ToArray();
 
-        if (statusOptions.Length == 0)
-        {
-            await DisplayAlertAsync(
-                "Estados",
-                "No hay estados disponibles.",
-                "Aceptar");
-            return;
-        }
-
-        var selectedStatus = await DisplayActionSheetAsync(
-            "Seleccione el estado",
+        var selectedGroup = await DisplayActionSheetAsync(
+            "Seleccione el grupo",
             "Cancelar",
             null,
-            statusOptions);
+            groupOptions);
 
-        if (string.IsNullOrWhiteSpace(selectedStatus) ||
-            selectedStatus == "Cancelar")
-            return;
+        if (string.IsNullOrWhiteSpace(selectedGroup) ||
+            selectedGroup == "Cancelar")
+            return null;
 
-        var status = _viewModel.Statuses.FirstOrDefault(
-            x => x.Name == selectedStatus);
-
-        if (status == null)
-            return;
-
-        await _viewModel.UpdateAsync(
-            convention.Id,
-            name,
-            status.Id);
-
-        if (!string.IsNullOrWhiteSpace(_viewModel.ErrorMessage))
-        {
-            await DisplayAlertAsync(
-                "Error",
-                _viewModel.ErrorMessage,
-                "Aceptar");
-        }
+        return groups.FirstOrDefault(
+            x => x.Name == selectedGroup);
     }
 
     private async void OnDeleteClicked(object? sender, EventArgs e)
     {
         if (_viewModel.IsBusy ||
             sender is not ImageButton button ||
-            button.CommandParameter is not Convention convention)
+            button.CommandParameter is not Charge charge)
             return;
 
         var confirm = await DisplayAlertAsync(
-            "Eliminar convenio",
-            $"¿Desea eliminar el convenio {convention.Name}?",
+            "Eliminar cargo",
+            $"¿Desea eliminar el cargo {charge.Name}?",
             "Sí",
             "No");
 
         if (!confirm)
             return;
 
-        await _viewModel.DeleteAsync(convention.Id);
+        await _viewModel.DeleteAsync(charge.Id);
 
         if (!string.IsNullOrWhiteSpace(_viewModel.ErrorMessage))
         {
@@ -162,7 +123,7 @@ public partial class ConventionsPage : ContentPage
 
         await SaveAndOpenFileAsync(
             fileBytes,
-            "Convenios.pdf",
+            "Cargos.pdf",
             "application/pdf");
     }
 
@@ -185,7 +146,7 @@ public partial class ConventionsPage : ContentPage
 
         await SaveAndOpenFileAsync(
             fileBytes,
-            "Convenios.xlsx",
+            "Cargos.xlsx",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     }
 

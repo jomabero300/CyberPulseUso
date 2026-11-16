@@ -9,7 +9,11 @@ using CyberPulseUso.Mobile.Views;
 using CyberPulseUso.Mobile.Views.Gene;
 using CyberPulseUso.Mobile.Views.Lnpa;
 using CyberPulseUso.Mobile.Views.Lnpa.Categories;
+using CyberPulseUso.Mobile.Views.Lnpa.Charges;
+using CyberPulseUso.Mobile.Views.Lnpa.Conventions;
+using CyberPulseUso.Mobile.Views.Lnpa.ConventionValues;
 using CyberPulseUso.Mobile.Views.Lnpa.Groups;
+using CyberPulseUso.Mobile.Views.Lnpa.LaborRemunerationParameter;
 using CyberPulseUso.Mobile.Views.Lnpa.LaborRemunerationParametersValues;
 using CyberPulseUso.Mobile.Views.Lnpa.PayrollConcepts;
 using Microsoft.Extensions.Logging;
@@ -59,8 +63,6 @@ public static class MauiProgram
                 Timeout = TimeSpan.FromSeconds(
                     ApiConfiguration.TimeoutSeconds)
             };
-
-
         });
         builder.Services.AddTransient<IApiRepository, ApiRepository>();
         builder.Services.AddSingleton<ITokenService, TokenService>();

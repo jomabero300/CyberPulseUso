@@ -964,7 +964,7 @@
     <value>Beneficios</value>
   </data>
   <data name="LaborRemunerationParameters" xml:space="preserve">
-    <value>Remunaración</value>
+    <value>Remunaraciones</value>
   </data>
   <data name="LaborRemunerationParameterss" xml:space="preserve">
     <value>Remunaraciones</value>
@@ -1013,5 +1013,17 @@
   </data>
   <data name="laborremunerationparametersothervalues" xml:space="preserve">
     <value>Parametros</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Usuarios</value>
+  </data>
+  <data name="Groups" xml:space="preserve">
+    <value>Grupos</value>
+  </data>
+  <data name="laborremunerationparameter" xml:space="preserve">
+    <value>Remuneración</value>
+  </data>
+  <data name="LaborRemunerationParametersValues" xml:space="preserve">
+    <value>Remuneraciones Valor</value>
   </data>
 </root>

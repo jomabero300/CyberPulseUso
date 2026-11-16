@@ -1,19 +1,18 @@
 using CyberPulseUso.Mobile.ViewModels.Lnpa;
 using CyberPulseUso.Shared.Entities.Lnpa;
-
-namespace CyberPulseUso.Mobile.Views.Lnpa;
+namespace CyberPulseUso.Mobile.Views.Lnpa.LaborRemunerationParameter;
 
 public partial class LaborRemunerationParametersPage : ContentPage
 {
     private readonly LaborRemunerationParametersViewModel _viewModel;
-
     public LaborRemunerationParametersPage(LaborRemunerationParametersViewModel viewModel)
     {
         InitializeComponent();
+
         _viewModel = viewModel;
+
         BindingContext = _viewModel;
     }
-
     protected override async void OnAppearing()
     {
         base.OnAppearing();
@@ -43,54 +42,23 @@ public partial class LaborRemunerationParametersPage : ContentPage
 
     private async void OnAddClicked(object? sender, EventArgs e)
     {
-        string? name = await DisplayPromptAsync(
-            "Nueva remuneración",
-            "Ingrese la descripción:",
-            "Guardar",
-            "Cancelar",
-            "Descripción",
-            170,
-            Keyboard.Text);
-
-        if (string.IsNullOrWhiteSpace(name))
+        if (_viewModel.IsBusy)
             return;
 
-        await _viewModel.CreateAsync(name);
-        await ShowErrorAsync();
+        await Navigation.PushAsync(
+            new LaborRemunerationParametersFormPage(_viewModel, null));
     }
 
     private async void OnEditClicked(object? sender, EventArgs e)
     {
-        if (sender is not ImageButton button ||
+        if (_viewModel.IsBusy ||
+            sender is not ImageButton button ||
             button.CommandParameter is not LaborRemunerationParameters parameter)
             return;
 
-        string? name = await DisplayPromptAsync(
-            "Editar remuneración",
-            "Ingrese la descripción:",
-            "Continuar",
-            "Cancelar",
-            "Descripción",
-            170,
-            Keyboard.Text,
-            parameter.Name ?? string.Empty);
-
-        if (string.IsNullOrWhiteSpace(name))
-            return;
-
-        int? statusId = await SelectStatusAsync(parameter.StatuId);
-
-        if (statusId == null)
-            return;
-
-        await _viewModel.UpdateAsync(
-            parameter.Id,
-            name,
-            statusId.Value);
-
-        await ShowErrorAsync();
+        await Navigation.PushAsync(
+            new LaborRemunerationParametersFormPage(_viewModel, parameter));
     }
-
     private async Task<int?> SelectStatusAsync(int selectedStatusId)
     {
         var statuses = _viewModel.Statuses.ToList();

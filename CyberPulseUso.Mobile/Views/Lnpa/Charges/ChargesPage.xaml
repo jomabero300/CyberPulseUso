@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="CyberPulseUso.Mobile.Views.Lnpa.ChargesPage"
+    x:Class="CyberPulseUso.Mobile.Views.Lnpa.Charges.ChargesPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="Cargos">
@@ -121,24 +121,24 @@
             VerticalOptions="Center"
             Spacing="15">
 
-                <ImageButton
+            <ImageButton
                     Source="icon_previous.svg"
                     Style="{StaticResource IconButtonBase}"
                     Clicked="OnPreviousPageClicked"
                     IsEnabled="{Binding CanGoPrevious}"
                     ToolTipProperties.Text="Página anterior" />
 
-                <Label
+            <Label
                     Text="{Binding Page, StringFormat='{}{0}'}"
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
                     FontAttributes="Bold" />
 
-                <Label
+            <Label
                     Text="de"
                     VerticalOptions="Center" />
 
-                <Label
+            <Label
                     Text="{Binding TotalPages}"
                     VerticalOptions="Center"
                     FontAttributes="Bold" />

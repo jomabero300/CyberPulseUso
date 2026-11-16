@@ -1078,6 +1078,15 @@ namespace CyberPulseUso.Shared.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Groups.
+        /// </summary>
+        public static string Groups {
+            get {
+                return ResourceManager.GetString("Groups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Hello.
         /// </summary>
         public static string Hello {
@@ -1204,7 +1213,16 @@ namespace CyberPulseUso.Shared.Resources {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Remunaration.
+        ///   Busca una cadena traducida similar a Remuneration.
+        /// </summary>
+        public static string laborremunerationparameter {
+            get {
+                return ResourceManager.GetString("laborremunerationparameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Remunarations.
         /// </summary>
         public static string LaborRemunerationParameters {
             get {
@@ -1236,6 +1254,15 @@ namespace CyberPulseUso.Shared.Resources {
         public static string LaborRemunerationParametersValue {
             get {
                 return ResourceManager.GetString("LaborRemunerationParametersValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Remunerations Value.
+        /// </summary>
+        public static string LaborRemunerationParametersValues {
+            get {
+                return ResourceManager.GetString("LaborRemunerationParametersValues", resourceCulture);
             }
         }
         
@@ -2622,6 +2649,15 @@ namespace CyberPulseUso.Shared.Resources {
         public static string UserRegister {
             get {
                 return ResourceManager.GetString("UserRegister", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Users.
+        /// </summary>
+        public static string Users {
+            get {
+                return ResourceManager.GetString("Users", resourceCulture);
             }
         }
         

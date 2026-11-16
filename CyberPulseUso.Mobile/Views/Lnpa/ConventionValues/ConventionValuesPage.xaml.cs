@@ -1,20 +1,17 @@
-
 using CyberPulseUso.Mobile.ViewModels.Lnpa;
 using CyberPulseUso.Shared.Entities.Lnpa;
 
-namespace CyberPulseUso.Mobile.Views.Lnpa;
+namespace CyberPulseUso.Mobile.Views.Lnpa.ConventionValues;
 
 public partial class ConventionValuesPage : ContentPage
 {
     private readonly ConventionValuesViewModel _viewModel;
-
     public ConventionValuesPage(ConventionValuesViewModel viewModel)
     {
         InitializeComponent();
         _viewModel = viewModel;
         BindingContext = _viewModel;
     }
-
     protected override async void OnAppearing()
     {
         base.OnAppearing();
@@ -35,36 +32,7 @@ public partial class ConventionValuesPage : ContentPage
         if (_viewModel.IsBusy)
             return;
 
-        if (_viewModel.Conventions.Count == 0)
-        {
-            await DisplayAlertAsync(
-                "Convenios",
-                "No hay convenios disponibles.",
-                "Aceptar");
-            return;
-        }
-
-        var convention = await SelectConventionAsync();
-
-        if (convention == null)
-            return;
-
-        var date = await SelectDateAsync(DateTime.Today);
-
-        if (date == null)
-            return;
-
-        var prince = await GetPrinceAsync();
-
-        if (prince == null)
-            return;
-
-        await _viewModel.CreateAsync(
-            convention.Id,
-            date.Value,
-            prince.Value);
-
-        await ShowErrorAsync();
+        await Navigation.PushAsync(new ConventionValuesFormPage(_viewModel, null));
     }
 
     private async void OnEditClicked(object? sender, EventArgs e)
@@ -74,62 +42,9 @@ public partial class ConventionValuesPage : ContentPage
             button.CommandParameter is not ConventionValue value)
             return;
 
-        var convention = await SelectConventionAsync(value.ConventionId);
-
-        if (convention == null)
-            return;
-
-        var date = await SelectDateAsync(value.Date);
-
-        if (date == null)
-            return;
-
-        var prince = await GetPrinceAsync(value.Prince);
-
-        if (prince == null)
-            return;
-
-        if (_viewModel.Statuses.Count == 0)
-        {
-            await DisplayAlertAsync(
-                "Estados",
-                "No hay estados disponibles.",
-                "Aceptar");
-            return;
-        }
-
-        var statusOptions = _viewModel.Statuses
-            .Select(x => x.Name ?? string.Empty)
-            .ToArray();
-
-        var selectedStatus = await DisplayActionSheetAsync(
-            "Seleccione el estado",
-            "Cancelar",
-            null,
-            statusOptions);
-
-        if (string.IsNullOrWhiteSpace(selectedStatus) ||
-            selectedStatus == "Cancelar")
-            return;
-
-        var status = _viewModel.Statuses.FirstOrDefault(
-            x => x.Name == selectedStatus);
-
-        if (status == null)
-            return;
-
-        await _viewModel.UpdateAsync(
-            value.Id,
-            convention.Id,
-            date.Value,
-            prince.Value,
-            status.Id);
-
-        await ShowErrorAsync();
+        await Navigation.PushAsync(new ConventionValuesFormPage(_viewModel, value));
     }
-
-    private async Task<Convention?> SelectConventionAsync(
-        int? selectedId = null)
+    private async Task<Convention?> SelectConventionAsync(int? selectedId = null)
     {
         if (_viewModel.Conventions.Count == 0)
             return null;
@@ -295,7 +210,7 @@ public partial class ConventionValuesPage : ContentPage
     {
         if (!string.IsNullOrWhiteSpace(_viewModel.ErrorMessage))
         {
-            await DisplayAlertAsync("Error",_viewModel.ErrorMessage,"Aceptar");
+            await DisplayAlertAsync("Error", _viewModel.ErrorMessage, "Aceptar");
         }
     }
 }
