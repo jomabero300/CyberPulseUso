@@ -69,21 +69,6 @@ public partial class PayrollSettlementForm
         context.PreventNavigation();
     }
 
-    //private async Task LoadPayrollSettlementsAsync()
-    //{
-    //    var responseHttp = await Repository.GetAsync<List<PayrollSettlementDTO>>("/api/PayrollSettlements/Sett");
-
-    //    if (responseHttp.Error)
-    //    {
-    //        var message = await responseHttp.GetErrorMessageAsync();
-    //        await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-    //        return;
-    //    }
-    //    PayrollSettlementDTO.Clear();
-    //    PayrollSettlementDTO.AddRange(responseHttp.Response!);
-    //    CalculateTotals();
-    //}
-
     private void AmountChanged(PayrollSettlementDTO item, int value)
     {
         item.Amount = value;
@@ -106,6 +91,21 @@ public partial class PayrollSettlementForm
         // Total devengado
         totalAccruedValue = PayrollSettlementDTO?.Sum(x => x.AccruedValue) ?? 0d;
 
+        //otros pagos
+        var OtherPaymentsConcept = PayrollSettlementDTO!.FirstOrDefault(x => x.PayrollConceptId==14);
+
+        if(OtherPaymentsConcept is not null)
+        {
+            OtherPaymentsConcept.AccruedValue = OtherPaymentsConcept.Amount;
+        }
+        //otros descuentos
+        var OtherDeductionsConcept = PayrollSettlementDTO!.FirstOrDefault(x => x.PayrollConceptId == 15);
+
+        if (OtherDeductionsConcept is not null)
+        {
+            OtherDeductionsConcept.DeductedValue = OtherDeductionsConcept.Amount;
+        }
+
         // Buscar el concepto de retención en la fuente
         var withholdingConcept = PayrollSettlementDTO!.FirstOrDefault(x => x.PayrollConceptId == 16);
 
@@ -117,14 +117,22 @@ public partial class PayrollSettlementForm
 
         //aportes a dalud y pension
         var HealthConcept = PayrollSettlementDTO!.FirstOrDefault(x => x.PayrollConceptId == 17);
-        var PensionConcept = PayrollSettlementDTO!.FirstOrDefault(x => x.PayrollConceptId == 18);
 
         if (HealthConcept is not null)
         {
             //Salu y pension
             HealthConcept!.DeductedValue = totalAccruedValue * HealthConcept.Amount / 100d;
+        }
+
+        var PensionConcept = PayrollSettlementDTO!.FirstOrDefault(x => x.PayrollConceptId == 18);
+
+        if (PensionConcept is not null)
+        {
+            //Salu y pension
             PensionConcept!.DeductedValue = totalAccruedValue * PensionConcept.Amount / 100d;
         }
+
+
 
         //DESCUENTO CUOTA SINDICAL 2%
         var UnionDuesDeduction = PayrollSettlementDTO!.FirstOrDefault(x => x.PayrollConceptId == 19);

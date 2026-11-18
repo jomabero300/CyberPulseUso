@@ -16,7 +16,7 @@
                    HorizontalTextAlignment="Center"
                    TextColor="#171717"/>
 
-            <Label Text="USO - ARAUCA"
+            <Label Text="SUBDIRECTIVA - ARAUCA"
                    FontSize="18"
                    HorizontalTextAlignment="Center"
                    TextColor="#2563EB"/>
@@ -99,7 +99,7 @@
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Padding="12"
-                      ColumnDefinitions="*">
+                                        ColumnDefinitions="*">
 
                                         <Label Text="{Binding Name}"
                                            FontSize="14"
@@ -124,11 +124,6 @@
                                StringFormat='País seleccionado: {0}'}"
                                TextColor="#2563EB"
                                FontSize="12"/>
-
-                    <Label Text="Fotografía"
-                           FontAttributes="Bold"
-                           TextColor="#334155"/>
-
 
                     <Label Text="Fotografía"
                            FontAttributes="Bold"
@@ -189,6 +184,7 @@
                     </Border>
 
                     <Button Text="Regresar"
+                            Command="{Binding ReturnCommand}"
                             BackgroundColor="Transparent"
                             TextColor="#2563EB"/>
 

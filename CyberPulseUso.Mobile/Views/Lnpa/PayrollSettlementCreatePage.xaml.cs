@@ -57,6 +57,16 @@ public partial class PayrollSettlementCreatePage : ContentPage
 
         double totalAccruedValue = PayrollSettlements.Sum(x => x.AccruedValue);
 
+
+
+        var OtherPaymentsConcept = PayrollSettlements.FirstOrDefault(x => x.PayrollConceptId == 14);
+        if (OtherPaymentsConcept is not null)
+            OtherPaymentsConcept.AccruedValue = OtherPaymentsConcept.Amount;
+
+        var OtherDeductionsConcept = PayrollSettlements.FirstOrDefault(x => x.PayrollConceptId == 15);
+        if (OtherDeductionsConcept is not null)
+            OtherDeductionsConcept.AccruedValue = OtherDeductionsConcept.Amount;
+
         var withholdingConcept = PayrollSettlements.FirstOrDefault(x => x.PayrollConceptId == 16);
         if (withholdingConcept is not null)
             withholdingConcept.DeductedValue = totalAccruedValue * withholdingConcept.Amount / 100d;

@@ -50,8 +50,23 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 
-//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7093") });
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://cyberpulseusoapi.runasp.net") });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7093") });
+//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://cyberpulseusoapi.runasp.net") });
+//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["ApiSettings:BaseUrl"]!) });
+
+
+//var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"];
+
+//if (string.IsNullOrWhiteSpace(apiBaseUrl))
+//{
+//    throw new InvalidOperationException(
+//        "No se encontró ApiSettings:BaseUrl en la configuración.");
+//}
+
+//builder.Services.AddScoped(sp => new HttpClient
+//{
+//    BaseAddress = new Uri(apiBaseUrl)
+//});
 
 
 builder.Services.AddScoped<IRepository, Repository>();
@@ -72,6 +87,14 @@ builder.Services.AddScoped<ISqlInjValRepository, SqlInjValRepository>();
 builder.Services.AddCascadingAuthenticationState();
 
 var app = builder.Build();
+
+Console.WriteLine($"API CONFIGURADA: {app.Configuration["ApiSettings:BaseUrl"]}");
+Console.WriteLine("----------------------------------");
+Console.WriteLine($"AMBIENTE: {app.Environment.EnvironmentName}");
+Console.WriteLine($"API URL: {app.Configuration["ApiSettings:BaseUrl"]}");
+Console.WriteLine("----------------------------------");
+
+
 app.UseRequestLocalization(localizationOptions);
 
 // Configure the HTTP request pipeline.

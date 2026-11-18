@@ -603,10 +603,10 @@ public partial class AppShell : Shell
     {
         var user = await _tokenService.GetUserSessionAsync();
 
-        await Shell.Current.DisplayAlertAsync(
-            "Prueba",
-            $"Usuario: {user?.Email}\nFoto: {user?.Photo}",
-            "Aceptar");
+        //await Shell.Current.DisplayAlertAsync(
+        //    "Prueba",
+        //    $"Usuario: {user?.Email}\nFoto: {user?.Photo}",
+        //    "Aceptar");
 
         FlyoutHeaderView.BindingContext = user;
         if (user is not null && !string.IsNullOrWhiteSpace(user.Photo))
@@ -614,15 +614,10 @@ public partial class AppShell : Shell
             try
             {
                 using var httpClient = new HttpClient();
-                var bytes = await httpClient.GetByteArrayAsync(user.Photo);
 
-                await MainThread.InvokeOnMainThreadAsync(async () =>
-                {
-                    await Shell.Current.DisplayAlertAsync(
-                        "Prueba de imagen",
-                        $"Imagen descargada correctamente.\nTamaño: {bytes.Length} bytes",
-                        "Aceptar");
-                });
+                user.Photo = user.Photo.Replace('\\', '/');
+
+                var bytes = await httpClient.GetByteArrayAsync(user.Photo);
             }
             catch (Exception ex)
             {

@@ -119,8 +119,7 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
 
             var result = await _userUnitOfWork.GetUserAsync(email);
 
-            Console.WriteLine(
-                $"[LIQ] Consulta usuario: {stopwatch.ElapsedMilliseconds} ms");
+            //Console.WriteLine($"[LIQ] Consulta usuario: {stopwatch.ElapsedMilliseconds} ms");
 
             if (result == null)
                 return Unauthorized();
@@ -137,8 +136,7 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
                 chargeId,
                 userId);
 
-            Console.WriteLine(
-                $"[LIQ] Consulta liquidación: {stopwatch.ElapsedMilliseconds} ms");
+            //Console.WriteLine($"[LIQ] Consulta liquidación: {stopwatch.ElapsedMilliseconds} ms");
 
             if (response.WasSuccess)
                 return Ok(response.Result);
@@ -147,7 +145,7 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[LIQ] ERROR: {ex}");
+            //Console.WriteLine($"[LIQ] ERROR: {ex}");
 
             return BadRequest(ex.Message);
         }

@@ -16,12 +16,12 @@
                 HorizontalOptions="Center">
 
                 <Border
-             WidthRequest="180"
-    HeightRequest="180"
-    BackgroundColor="White"
-    Stroke="#F3A43F"
-    StrokeThickness="2"
-    HorizontalOptions="Center">
+                    WidthRequest="250"
+                    HeightRequest="250"
+                    BackgroundColor="White"
+                    Stroke="#ffffff"
+                    StrokeThickness="2"
+                    HorizontalOptions="Center">
 
                     <Border.StrokeShape>
                         <Ellipse/>
@@ -35,7 +35,7 @@
                 <VerticalStackLayout Spacing="10">
 
                     <Label
-                        Text="USO - ARAUCA"
+                        Text="SUBDIRECTIVA - ARAUCA"
                         FontSize="29"
                         FontAttributes="Bold"
                         TextColor="#171717"
@@ -61,8 +61,75 @@
                         HorizontalTextAlignment="Center"
                         HorizontalOptions="Center"
                         MaximumWidthRequest="320"/>
-                </VerticalStackLayout>
 
+
+                    <Label
+                        Text="Síguenos en nuestras redes sociales"
+                        FontSize="15"
+                        FontAttributes="Bold"
+                        TextColor="#333333"
+                        HorizontalTextAlignment="Center"
+                        Margin="0,20,0,5"/>
+
+                    <FlexLayout
+                        Direction="Row"
+                        Wrap="Wrap"
+                        JustifyContent="Center"
+                        AlignItems="Center">
+
+                        <ImageButton Source="icon_facebook.svg"
+                             WidthRequest="35"
+                             HeightRequest="35"
+                             BackgroundColor="Transparent"
+                             Margin="7"
+                             Clicked="Facebook_Clicked"/>
+
+                        <ImageButton Source="icon_instagram.svg"
+                             WidthRequest="35"
+                             HeightRequest="35"
+                             BackgroundColor="Transparent"
+                             Margin="7"
+                             Clicked="Instagram_Clicked"/>
+
+                        <ImageButton Source="icon_tiktok.svg"
+                             WidthRequest="35"
+                             HeightRequest="35"
+                             BackgroundColor="Transparent"
+                             Margin="7"
+                             Clicked="TikTok_Clicked"/>
+
+                        <ImageButton Source="icon_youtube.svg"
+                             WidthRequest="35"
+                             HeightRequest="35"
+                             BackgroundColor="Transparent"
+                             Margin="7"
+                             Clicked="YouTube_Clicked"/>
+
+                        <ImageButton Source="icon_x.svg"
+                             WidthRequest="35"
+                             HeightRequest="35"
+                             BackgroundColor="Transparent"
+                             Margin="7"
+                             Clicked="X_Clicked"/>
+
+                        <ImageButton Source="icon_whatsapp.svg"
+                             WidthRequest="35"
+                             HeightRequest="35"
+                             BackgroundColor="Transparent"
+                             Margin="7"
+                             Clicked="WhatsApp_Clicked"/>
+
+                        <ImageButton Source="icon_telegram.svg"
+                             WidthRequest="35"
+                             HeightRequest="35"
+                             BackgroundColor="Transparent"
+                             Margin="7"
+                             Clicked="Telegram_Clicked"/>
+
+                    </FlexLayout>
+
+                </VerticalStackLayout>
+                
             </VerticalStackLayout>
 
             <VerticalStackLayout

@@ -48,14 +48,23 @@ public partial class PayrollSettlementEditPage : ContentPage
         // 2. Obtener el total devengado.
         double totalAccruedValue = PayrollSettlements.Sum(x => x.AccruedValue);
 
+
+
+        var OtherPaymentsConcept = PayrollSettlements.FirstOrDefault(x => x.PayrollConceptId == 14);
+        if (OtherPaymentsConcept is not null)
+            OtherPaymentsConcept.AccruedValue = OtherPaymentsConcept.Amount;
+
+        var OtherDeductionsConcept = PayrollSettlements.FirstOrDefault(x => x.PayrollConceptId == 15);
+        if (OtherDeductionsConcept is not null)
+            OtherDeductionsConcept.AccruedValue = OtherDeductionsConcept.Amount;
+
+
         // 3. Retención: concepto 16.
-        var withholdingConcept = PayrollSettlements
-            .FirstOrDefault(x => x.PayrollConceptId == 16);
+        var withholdingConcept = PayrollSettlements.FirstOrDefault(x => x.PayrollConceptId == 16);
 
         if (withholdingConcept is not null)
         {
-            withholdingConcept.DeductedValue =
-                totalAccruedValue * withholdingConcept.Amount / 100d;
+            withholdingConcept.DeductedValue = totalAccruedValue * withholdingConcept.Amount / 100d;
         }
 
         // 4. Salud: concepto 17.

@@ -29,7 +29,7 @@
                         HorizontalTextAlignment="Center"
                         TextColor="{AppThemeBinding Light=#171717, Dark=White}" />
 
-                    <Label Text="USO - ARAUCA"
+                    <Label Text="SUBDIRECTIVA - ARAUCA"
                            FontSize="18"
                            TextColor="#2563EB"
                            HorizontalTextAlignment="Center"/>

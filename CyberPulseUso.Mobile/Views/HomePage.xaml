@@ -17,7 +17,7 @@
 
             <VerticalStackLayout Spacing="3">
                 <Label
-                    Text="CyberPulse Uso"
+                    Text="Subdirectiva Uso"
                     FontSize="21"
                     FontAttributes="Bold"
                     TextColor="White"/>

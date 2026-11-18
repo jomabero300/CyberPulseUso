@@ -104,7 +104,7 @@ public class LaborRemunerationParameterssController : GenericController<LaborRem
                 Estado = x.Statu?.Name
             }).ToList();
 
-            byte[] fileBytes = GeneExcel.GenerarReporte(excelData, "Parámetros de Remuneración laboral");
+            byte[] fileBytes = GeneExcel.GenerarReporte(excelData, "Remuneracion_laboral");
             string nombreArchivo = $"LRP_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
             string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 

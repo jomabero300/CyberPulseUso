@@ -20,7 +20,7 @@
             <!-- Identificación de la aplicación -->
             <VerticalStackLayout Spacing="4">
                 <Label
-                    Text="USO ARAUCA"
+                    Text="SUBDIRECTIVA ARAUCA"
                     FontSize="23"
                     FontAttributes="Bold"
                     TextColor="#1E293B"/>
@@ -42,7 +42,7 @@
                 <Border
                     WidthRequest="60"
                     HeightRequest="60"
-                    Stroke="#CBD5E1"
+                    Stroke="#FFFFFF"
                     StrokeThickness="1"
                     BackgroundColor="#FFFFFF"
                     StrokeShape="RoundRectangle 30"

@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CyberPulseUso.Mobile.Configuration;
 using CyberPulseUso.Mobile.Services.Interfaces;
 using CyberPulseUso.Shared.Entities.Gene;
 using CyberPulseUso.Shared.Entities.Lnpa;
@@ -324,7 +325,7 @@ public partial class ProfileViewModel : ObservableObject
 
         OnPropertyChanged(nameof(User));
 
-        User.Photo = Convert.ToBase64String(memoryStream.ToArray());
+        //User.Photo = Convert.ToBase64String(memoryStream.ToArray());
 
         LoadProfileImage();
     }
@@ -370,7 +371,7 @@ public partial class ProfileViewModel : ObservableObject
             // Actualizar los identificadores seleccionados.
             User.CountryId = SelectedCountry.Id;
             User.ChargeId = SelectedCharge?.Id;
-
+       
             // Conservar la preferencia de sesión.
             var rememberMe = await _tokenService.GetRememberMeAsync();
 
@@ -439,7 +440,7 @@ public partial class ProfileViewModel : ObservableObject
 
     private void LoadProfileImage()
     {
-        if (string.IsNullOrWhiteSpace(User.Photo))
+        if (string.IsNullOrWhiteSpace(User?.Photo))
         {
             ProfileImage = null;
             return;
@@ -449,8 +450,7 @@ public partial class ProfileViewModel : ObservableObject
         {
             var imageBytes = Convert.FromBase64String(User.Photo);
 
-            ProfileImage = ImageSource.FromStream(
-                () => new MemoryStream(imageBytes));
+            ProfileImage = ImageSource.FromStream(                () => new MemoryStream(imageBytes));
         }
         catch (FormatException ex)
         {

@@ -93,7 +93,7 @@ public partial class RegisterViewModel : ObservableObject
     }
 
 
-    [RelayCommand]
+    [RelayCommand] 
     private async Task SelectImageAsync()
     {
         try
@@ -112,8 +112,7 @@ public partial class RegisterViewModel : ObservableObject
         }
     }
 
-
-    [RelayCommand]
+    [RelayCommand] 
     private async Task TakePhotoAsync()
     {
         try

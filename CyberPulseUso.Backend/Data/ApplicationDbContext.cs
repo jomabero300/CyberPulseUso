@@ -1,9 +1,8 @@
 using CyberPulseUso.Shared.Entities.Gene;
+using CyberPulseUso.Shared.Entities.Lnpa;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-
-
-using CyberPulseUso.Shared.Entities.Lnpa;
+using System.Reflection.Emit;
 namespace CyberPulseUso.Backend.Data;
 
 public class ApplicationDbContext : IdentityDbContext<User>
@@ -128,6 +127,10 @@ public class ApplicationDbContext : IdentityDbContext<User>
             .HasForeignKey(x => x.LRPId)
             .IsRequired(false);
 
+
+        // Creación del índice
+        builder.Entity<Category>()
+            .HasIndex(x => x.Name);
 
         DisableCascadingDelete(builder);
 

@@ -48,16 +48,10 @@ public partial class PayrollSettlementCreate
         }
         payrollSettlementDTO.Clear();
         payrollSettlementDTO.AddRange(responseHttp.Response!);
-
     }
 
     private async Task CreateAsync()
     {
-        //if (_sqlValidator.HasSqlInjection(payrollSettlementDTO!.Amount.ToString()))
-        //{
-        //    Snackbar.Add(Localizer["ERR010"], Severity.Error);
-        //    return;
-        //}
         var responseHttp = await Repository.PostAsync("/api/payrollsettlements/full", payrollSettlementDTO);
 
         if (responseHttp.Error)

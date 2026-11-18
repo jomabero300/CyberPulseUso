@@ -8,8 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Images\Reports\" />
-    <Folder Include="wwwroot\Images\Users\" />
+    <Compile Remove="wwwroot\Images\Users\**" />
+    <Content Remove="wwwroot\Images\Users\**" />
+    <EmbeddedResource Remove="wwwroot\Images\Users\**" />
+    <None Remove="wwwroot\Images\Users\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\Reports\Users\" />
     <PackageReference Include="ClosedXML" Version="0.105.1" />
     <PackageReference Include="MailKit" Version="4.18.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.13" />

@@ -426,7 +426,7 @@ public class PayrollSettlementRepository : GenericRepository<PayrollSettlement>,
             concept12.UnitValue = valorTotal;
         }
 
-        var concept13 = combinedResult.FirstOrDefault(x => x.PayrollConceptId == 12);
+        var concept13 = combinedResult.FirstOrDefault(x => x.PayrollConceptId == 13);
 
         if (concept13 != null)
         {
