@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="Iniciar sesión"
-    BackgroundColor="#F5F7FB"
+    BackgroundColor="#F9F9F8"
     Shell.NavBarIsVisible="False">
 
     <ScrollView>
@@ -18,6 +18,202 @@
                 VerticalOptions="Center">
 
                 <!-- Encabezado -->
+                <VerticalStackLayout Spacing="8"
+                                     HorizontalOptions="Center">
+
+                    <Label
+                        Text="UNIÓN SINDICAL OBRERA"
+                        FontSize="20"
+                        FontAttributes="Bold"
+                        HorizontalOptions="Center"
+                        HorizontalTextAlignment="Center"
+                        TextColor="#211E18" />
+
+                    <Label Text="SUBDIRECTIVA - ARAUCA"
+                           FontSize="18"
+                           TextColor="#294E45"
+                           FontAttributes="Bold"
+                           HorizontalTextAlignment="Center"/>
+
+                    <Label Text="Bienvenido de nuevo"
+                           FontSize="23"
+                           FontAttributes="Bold"
+                           TextColor="#211E18"
+                           Margin="0,18,0,0"
+                           HorizontalTextAlignment="Center"/>
+
+                    <Label Text="Ingresa tus credenciales para continuar"
+                           FontSize="13"
+                           TextColor="#5A554E"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+
+                <!-- Formulario -->
+                <Border BackgroundColor="#FFFFFF"
+                        Stroke="#E5E3DF"
+                        StrokeThickness="1"
+                        Padding="22">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+
+                    <VerticalStackLayout Spacing="17">
+
+                        <VerticalStackLayout Spacing="7">
+                            <Label Text="Correo electrónico"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="#211E18"/>
+
+                            <Entry
+                                Placeholder="correo@ejemplo.com"
+                                Keyboard="Email"
+                                Text="{Binding Email}"
+                                TextColor="#211E18"
+                                PlaceholderColor="#9E9A92"
+                                FontSize="14"
+                                ClearButtonVisibility="WhileEditing"/>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="7">
+                            <Label Text="Contraseña"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="#211E18"/>
+
+                            <Entry
+                                Placeholder="Ingresa tu contraseña"
+                                IsPassword="True"
+                                Text="{Binding Password}"
+                                TextColor="#211E18"
+                                PlaceholderColor="#9E9A92"
+                                FontSize="14"/>
+                        </VerticalStackLayout>
+
+                        <!-- Mantener sesión -->
+                        <HorizontalStackLayout Spacing="8"
+                                               VerticalOptions="Center">
+
+                            <CheckBox
+                                IsChecked="{Binding RememberMe}"
+                                Color="#294E45"
+                                VerticalOptions="Center"/>
+
+                            <Label Text="Mantener la sesión abierta"
+                                   FontSize="13"
+                                   TextColor="#5A554E"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+
+                        <!-- Mensaje de error -->
+                        <Label Text="{Binding ErrorMessage}"
+                               TextColor="#D93438"
+                               FontSize="12"
+                               HorizontalTextAlignment="Center"/>
+
+                        <!-- Botón de ingreso -->
+                        <Button
+                            Text="Iniciar sesión"
+                            Command="{Binding LoginCommand}"
+                            BackgroundColor="#294E45"
+                            TextColor="#FFFFFF"
+                            FontAttributes="Bold"
+                            FontSize="15"
+                            HeightRequest="52"
+                            CornerRadius="12"/>
+
+                        <ActivityIndicator
+                            IsRunning="{Binding IsBusy}"
+                            IsVisible="{Binding IsBusy}"
+                            Color="#294E45"
+                            HorizontalOptions="Center"/>
+
+
+                        <!-- Opciones de autenticación -->
+                        <VerticalStackLayout Spacing="14"
+                                     HorizontalOptions="Center"
+                                     Margin="0,5,0,0">
+
+
+                            <Button Text="Registrarme"
+                                    Clicked="OnRegisterTapped"
+                                    BackgroundColor="Transparent"
+                                    TextColor="#294E45"
+                                    FontAttributes="Bold"
+                                    Padding="5">
+
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup>
+                                        <VisualState Name="Normal">
+                                            <VisualState.Setters>
+                                                <Setter Property="Opacity" Value="1"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+
+                                        <VisualState Name="Pressed">
+                                            <VisualState.Setters>
+                                                <Setter Property="Opacity" Value="0.5"/>
+                                                <Setter Property="Scale" Value="0.96"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </Button>
+
+
+                            <Button Text="¿Olvidaste tu contraseña?"
+                                Clicked="OnRecoverPasswordTapped"
+                                BackgroundColor="Transparent"
+                                TextColor="#294E45"
+                                FontSize="13"
+                                Padding="5"/>
+
+
+
+                            <Button Text="Reenviar correo de activación"
+                                Clicked="OnResendTokenTapped"
+                                BackgroundColor="Transparent"
+                                TextColor="#294E45"
+                                FontSize="13"
+                                Padding="5"/>
+
+                        </VerticalStackLayout>
+
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Pie -->
+                <Label Text="CyberPulse Uso © 2026"
+                       FontSize="11"
+                       TextColor="#777777"
+                       HorizontalTextAlignment="Center"/>
+
+            </VerticalStackLayout>
+        </Grid>
+    </ScrollView>
+</ContentPage>
+<!--<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CyberPulseUso.Mobile.Views.LoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Iniciar sesión"
+    BackgroundColor="#F5F7FB"
+    Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <Grid Padding="28,40"
+              RowDefinitions="*,Auto,*"
+              VerticalOptions="Fill">
+
+            <VerticalStackLayout
+                Grid.Row="1"
+                Spacing="22"
+                VerticalOptions="Center">
+
+                --><!-- Encabezado --><!--
                 <VerticalStackLayout Spacing="8"
                                      HorizontalOptions="Center">
 
@@ -47,7 +243,7 @@
                            HorizontalTextAlignment="Center"/>
                 </VerticalStackLayout>
 
-                <!-- Formulario -->
+                --><!-- Formulario --><!--
                 <Border BackgroundColor="White"
                         Stroke="#E2E8F0"
                         StrokeThickness="1"
@@ -90,7 +286,7 @@
                                 FontSize="14"/>
                         </VerticalStackLayout>
 
-                        <!-- Mantener sesión -->
+                        --><!-- Mantener sesión --><!--
                         <HorizontalStackLayout Spacing="8"
                                                VerticalOptions="Center">
 
@@ -105,13 +301,13 @@
                                    VerticalOptions="Center"/>
                         </HorizontalStackLayout>
 
-                        <!-- Mensaje de error -->
+                        --><!-- Mensaje de error --><!--
                         <Label Text="{Binding ErrorMessage}"
                                TextColor="#DC2626"
                                FontSize="12"
                                HorizontalTextAlignment="Center"/>
 
-                        <!-- Botón de ingreso -->
+                        --><!-- Botón de ingreso --><!--
                         <Button
                             Text="Iniciar sesión"
                             Command="{Binding LoginCommand}"
@@ -129,7 +325,7 @@
                             HorizontalOptions="Center"/>
 
 
-                        <!-- Opciones de autenticación -->
+                        --><!-- Opciones de autenticación --><!--
                         <VerticalStackLayout Spacing="14"
                                      HorizontalOptions="Center"
                                      Margin="0,5,0,0">
@@ -183,7 +379,7 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Pie -->
+                --><!-- Pie --><!--
                 <Label Text="CyberPulse Uso © 2026"
                        FontSize="11"
                        TextColor="#94A3B8"
@@ -192,4 +388,4 @@
             </VerticalStackLayout>
         </Grid>
     </ScrollView>
-</ContentPage>
+</ContentPage>-->

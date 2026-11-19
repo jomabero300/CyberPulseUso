@@ -6,6 +6,110 @@
     BackgroundColor="#FFFFFF"
     Shell.NavBarIsVisible="False">
 
+    <Grid BackgroundColor="#FFFFFF">
+        <Grid Padding="28" RowDefinitions="*,Auto">
+
+            <VerticalStackLayout
+                Grid.Row="0"
+                Spacing="24"
+                VerticalOptions="Center"
+                HorizontalOptions="Center">
+
+                <!-- Imagen sin bordes ni contenedor circular -->
+                <Image
+                    Source="uso.jpg"
+                    WidthRequest="220"
+                    HeightRequest="220"
+                    Aspect="AspectFit"
+                    HorizontalOptions="Center"/>
+
+                <VerticalStackLayout Spacing="10">
+
+                    <Label
+                        Text="SUBDIRECTIVA - ARAUCA"
+                        FontSize="29"
+                        FontAttributes="Bold"
+                        TextColor="#211E18"
+                        HorizontalTextAlignment="Center"/>
+
+                    <BoxView
+                        HeightRequest="4"
+                        WidthRequest="75"
+                        Color="#294E45"
+                        HorizontalOptions="Center"/>
+
+                    <Label
+                        Text="Bienvenido"
+                        FontSize="23"
+                        FontAttributes="Bold"
+                        TextColor="#294E45"
+                        HorizontalTextAlignment="Center"/>
+
+                    <Label
+                        Text="Gestiona tu información de manera sencilla, segura y desde cualquier lugar."
+                        FontSize="15"
+                        TextColor="#555555"
+                        HorizontalTextAlignment="Center"
+                        HorizontalOptions="Center"
+                        MaximumWidthRequest="320"/>
+
+                    <Label
+                        Text="Síguenos en nuestras redes sociales"
+                        FontSize="15"
+                        FontAttributes="Bold"
+                        TextColor="#211E18"
+                        HorizontalTextAlignment="Center"
+                        Margin="0,20,0,5"/>
+
+                    <FlexLayout
+                        Direction="Row"
+                        Wrap="Wrap"
+                        JustifyContent="Center"
+                        AlignItems="Center">
+
+                        <ImageButton Source="icon_facebook.svg"
+                             WidthRequest="35"
+                             HeightRequest="35"
+                             BackgroundColor="Transparent"
+                             Margin="7"
+                             Clicked="Facebook_Clicked"/>
+                    </FlexLayout>
+
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout
+                Grid.Row="1"
+                Spacing="15">
+
+                <Button
+                    Text="Siguiente"
+                    Clicked="OnNextClicked"
+                    BackgroundColor="#294E45"
+                    TextColor="#FFFFFF"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    HeightRequest="54"
+                    CornerRadius="12"/>
+
+                <Label
+                    Text="USO - Arauca © 2026"
+                    FontSize="11"
+                    TextColor="#777777"
+                    HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+
+        </Grid>
+    </Grid>
+</ContentPage>
+    <!--<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CyberPulseUso.Mobile.Views.WelcomePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#FFFFFF"
+    Shell.NavBarIsVisible="False">
+
     <Grid BackgroundColor="White">
         <Grid  Padding="28" RowDefinitions="*,Auto">
 
@@ -84,7 +188,7 @@
                              Margin="7"
                              Clicked="Facebook_Clicked"/>
 
-                        <ImageButton Source="icon_instagram.svg"
+                        --><!--<ImageButton Source="icon_instagram.svg"
                              WidthRequest="35"
                              HeightRequest="35"
                              BackgroundColor="Transparent"
@@ -124,7 +228,7 @@
                              HeightRequest="35"
                              BackgroundColor="Transparent"
                              Margin="7"
-                             Clicked="Telegram_Clicked"/>
+                             Clicked="Telegram_Clicked"/>--><!--
 
                     </FlexLayout>
 
@@ -155,4 +259,4 @@
 
         </Grid>
     </Grid>
-</ContentPage>
+</ContentPage>-->

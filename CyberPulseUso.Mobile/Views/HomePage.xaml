@@ -4,11 +4,88 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="Inicio"
+    BackgroundColor="#F9F9F8">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Encabezado con Verde Oscuro (#294E45) -->
+        <Grid
+            Grid.Row="0"
+            Padding="20,18"
+            BackgroundColor="#294E45"
+            ColumnDefinitions="*,Auto">
+
+            <VerticalStackLayout Spacing="3">
+                <Label
+                    Text="Subdirectiva Uso"
+                    FontSize="21"
+                    FontAttributes="Bold"
+                    TextColor="#FFFFFF"/>
+
+                <Label
+                    Text="Panel principal"
+                    FontSize="12"
+                    TextColor="#C6D33D"/>
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- Contenido -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="22" Spacing="20">
+
+                <VerticalStackLayout Spacing="5">
+                    <Label
+                        Text="¡Bienvenido!"
+                        FontSize="26"
+                        FontAttributes="Bold"
+                        TextColor="#211E18"/>
+
+                    <Label
+                        Text="Desde aquí podrás acceder a las funcionalidades de la aplicación."
+                        FontSize="14"
+                        TextColor="#5A554E"/>
+                </VerticalStackLayout>
+
+                <Border
+                    BackgroundColor="#FFFFFF"
+                    Stroke="#E5E3DF"
+                    StrokeThickness="1"
+                    Padding="20">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="18"/>
+                    </Border.StrokeShape>
+
+                    <VerticalStackLayout Spacing="10">
+                        <Label
+                            Text="Panel de control"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            TextColor="#211E18"/>
+
+                        <Label
+                            Text="Tus módulos y opciones estarán disponibles aquí."
+                            FontSize="14"
+                            TextColor="#5A554E"/>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>    
+    <!--<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CyberPulseUso.Mobile.Views.HomePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Inicio"
     BackgroundColor="#F5F7FB">
 
     <Grid RowDefinitions="Auto,*">
 
-        <!-- Encabezado -->
+        --><!-- Encabezado --><!--
         <Grid
             Grid.Row="0"
             Padding="20,18"
@@ -29,7 +106,7 @@
             </VerticalStackLayout>
         </Grid>
 
-        <!-- Contenido -->
+        --><!-- Contenido --><!--
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Padding="22" Spacing="20">
 
@@ -74,4 +151,6 @@
         </ScrollView>
 
     </Grid>
-</ContentPage>
+</ContentPage>-->
+    
+    

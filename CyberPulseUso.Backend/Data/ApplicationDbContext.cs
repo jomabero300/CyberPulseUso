@@ -1,8 +1,9 @@
 using CyberPulseUso.Shared.Entities.Gene;
 using CyberPulseUso.Shared.Entities.Lnpa;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
+using Group = CyberPulseUso.Shared.Entities.Lnpa.Group;
 namespace CyberPulseUso.Backend.Data;
 
 public class ApplicationDbContext : IdentityDbContext<User>
@@ -103,11 +104,11 @@ public class ApplicationDbContext : IdentityDbContext<User>
             .IsUnique();
 
         builder.Entity<Charge>()
-            .HasIndex(x => new {x.GroupId,x.Name })
+            .HasIndex(x => new { x.GroupId, x.Name })
             .IsUnique();
 
         builder.Entity<Group>()
-            .HasIndex(x => new {x.CategoryId,x.Name })
+            .HasIndex(x => new { x.CategoryId, x.Name })
             .IsUnique();
 
         builder.Entity<PayrollConcept>()
@@ -115,9 +116,9 @@ public class ApplicationDbContext : IdentityDbContext<User>
             .IsUnique();
 
         builder.Entity<User>()
-            .HasOne(x=>x.Charge)
-            .WithMany(x=>x.Users)
-            .HasForeignKey(x=>x.ChargeId)
+            .HasOne(x => x.Charge)
+            .WithMany(x => x.Users)
+            .HasForeignKey(x => x.ChargeId)
             .IsRequired(false);
 
 
@@ -129,8 +130,22 @@ public class ApplicationDbContext : IdentityDbContext<User>
 
 
         // Creación del índice
+
+        builder.Entity<User>()
+            .HasIndex(x => x.LastName);
+
+        builder.Entity<User>()
+            .HasIndex(x => x.FirstName);
+
+        builder.Entity<Charge>()
+            .HasIndex(x => x.Name);
+
         builder.Entity<Category>()
             .HasIndex(x => x.Name);
+
+        builder.Entity<PayrollSettlement>()
+            .HasIndex(x => x.UserId);
+
 
         DisableCascadingDelete(builder);
 

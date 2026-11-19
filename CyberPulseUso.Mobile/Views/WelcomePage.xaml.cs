@@ -17,7 +17,7 @@ public partial class WelcomePage : ContentPage
     }
 
     private async void Facebook_Clicked(object sender, EventArgs e)
-        => await OpenSocialNetwork("https://www.facebook.com/");
+        => await OpenSocialNetwork("https://www.facebook.com/usosubarauca/");
 
     private async void Instagram_Clicked(object sender, EventArgs e)
         => await OpenSocialNetwork("https://www.instagram.com/");

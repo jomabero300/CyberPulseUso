@@ -1,9 +1,11 @@
 ﻿using CyberPulseUso.Shared.Entities.Gene;
 using CyberPulseUso.Shared.Resources;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CyberPulseUso.Shared.Entities.Lnpa;
+
 
 [Table("Categories", Schema = "Lnpa")]
 public class Category

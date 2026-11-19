@@ -50,9 +50,9 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7093") });
+//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7093") });
 //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://cyberpulseusoapi.runasp.net") });
-//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["ApiSettings:BaseUrl"]!) });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["ApiSettings:BaseUrl"]!) });
 
 
 //var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"];
