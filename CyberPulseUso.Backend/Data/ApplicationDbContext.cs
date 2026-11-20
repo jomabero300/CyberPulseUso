@@ -1,8 +1,8 @@
 using CyberPulseUso.Shared.Entities.Gene;
 using CyberPulseUso.Shared.Entities.Lnpa;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 using Group = CyberPulseUso.Shared.Entities.Lnpa.Group;
 namespace CyberPulseUso.Backend.Data;
 
@@ -40,17 +40,17 @@ public class ApplicationDbContext : IdentityDbContext<User>
 
         builder.Entity<City>()
             .HasIndex(x => new { x.StateId, x.Name })
-            .IsUnique();
+            .IsUnique()
+            .HasDatabaseName("IX_Cities_StateId_Name");
 
         builder.Entity<Country>()
             .HasIndex(x => x.Name)
-            .IsUnique();
+            .IsUnique()
+            .HasDatabaseName("IX_Countries_Name");
 
         builder.Entity<Neighborhood>()
             .HasIndex(x => new { x.CityId, x.Name })
             .IsUnique();
-
-
 
         builder.Entity<RefreshToken>(entity =>
         {
@@ -128,7 +128,6 @@ public class ApplicationDbContext : IdentityDbContext<User>
             .HasForeignKey(x => x.LRPId)
             .IsRequired(false);
 
-
         // Creación del índice
 
         builder.Entity<User>()
@@ -145,6 +144,27 @@ public class ApplicationDbContext : IdentityDbContext<User>
 
         builder.Entity<PayrollSettlement>()
             .HasIndex(x => x.UserId);
+
+
+        builder.Entity<LaborRemunerationParametersValue>(entity =>
+        {
+            entity.ToTable("LaborRemunerationParametersValues", "Lnpa");
+
+            entity.HasIndex(e => new { e.StatuId, e.LRPId })
+                .IncludeProperties(e => new { e.GroupId, e.Date, e.Value })
+                .HasDatabaseName("IX_LaborRemunerationParametersValues_StatuId_LRPId_Incl");
+        });
+
+        // 2. Índice cubridor para [Lnpa].[LaborRemunerationParametersOtherValues]
+        builder.Entity<LaborRemunerationParametersOtherValue>(entity =>
+        {
+            entity.ToTable("LaborRemunerationParametersOtherValues", "Lnpa");
+
+            entity.HasIndex(e => new { e.StatuId, e.LRPId })
+                .IncludeProperties(e => new { e.Value })
+                .HasDatabaseName("IX_LaborRemunerationParametersOtherValues_StatuId_LRPId_Incl");
+        });
+
 
 
         DisableCascadingDelete(builder);
