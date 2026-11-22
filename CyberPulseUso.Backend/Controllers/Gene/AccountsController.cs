@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.IdentityModel.Tokens;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -224,11 +225,18 @@ public class AccountsController : ControllerBase
     [HttpPost("Login")]
     public async Task<IActionResult> LoginAsync([FromBody] LoginDTO model)
     {
+
         var result = await _userUnitOfWork.LoginAsync(model);
+
         if (result.Succeeded)
         {
             var user = await _userUnitOfWork.GetUserAsync(model.Email);
+
+
+
             if (user == null) return Unauthorized();
+
+
             await _userUnitOfWork.ResetAccessFailedCountAsync(user);
 
             // Revocar la sesión anterior asociada a la cookie actual.
@@ -244,6 +252,7 @@ public class AccountsController : ControllerBase
                 {
                     await _userUnitOfWork.RevokeRefreshTokenFamilyAsync(storedRefreshToken.FamilyId,DateTime.UtcNow);
                 }
+
             }
 
             // Generar Access Token.
@@ -269,12 +278,14 @@ public class AccountsController : ControllerBase
                     SessionExpiresAt = sessionExpiration
                 };
 
-                await _userUnitOfWork.CreateRefreshTokenAsync(
-                    refreshTokenEntity);
+                //await _userUnitOfWork.CreateRefreshTokenAsync(refreshTokenEntity);
+
+                //SetRefreshTokenCookie(refreshToken, refreshTokenEntity.SessionExpiresAt);
+
+                await _userUnitOfWork.CreateRefreshTokenAsync(refreshTokenEntity);
 
                 SetRefreshTokenCookie(refreshToken, refreshTokenEntity.SessionExpiresAt);
-                // Entregar el token original al Frontend.
-                //tokenDTO.RefreshToken = refreshToken;
+
             }
             else
             {
@@ -284,6 +295,8 @@ public class AccountsController : ControllerBase
             }
 
             tokenDTO.RefreshToken = null; // No se envía el Refresh Token en la respuesta.
+
+
             return Ok(tokenDTO);
             //return Ok(BuildToken(user));
         }

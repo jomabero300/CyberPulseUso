@@ -1,7 +1,6 @@
 ﻿using CyberPulseUso.Mobile.Services.Interfaces;
 using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.EntitiesDTO.Lnpa;
-using CyberPulseUso.Shared.Responses;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;

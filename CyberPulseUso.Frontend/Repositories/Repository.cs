@@ -215,10 +215,10 @@ public class Repository : IRepository
 
             stopwatch.Stop();
 
-            Console.WriteLine(
-                $"[API] {request.Method} {requestPath} => " +
-                $"{(int)response.StatusCode} {response.StatusCode} " +
-                $"| Tiempo: {stopwatch.ElapsedMilliseconds} ms");
+            //Console.WriteLine(
+            //    $"[API] {request.Method} {requestPath} => " +
+            //    $"{(int)response.StatusCode} {response.StatusCode} " +
+            //    $"| Tiempo: {stopwatch.ElapsedMilliseconds} ms");
 
             return response;
         }
@@ -226,10 +226,10 @@ public class Repository : IRepository
         {
             stopwatch.Stop();
 
-            Console.WriteLine(
-                $"[API TIMEOUT/CANCELACIÓN] {request.Method} {requestPath} " +
-                $"| Tiempo: {stopwatch.ElapsedMilliseconds} ms " +
-                $"| Mensaje: {ex.Message}");
+            //Console.WriteLine(
+            //    $"[API TIMEOUT/CANCELACIÓN] {request.Method} {requestPath} " +
+            //    $"| Tiempo: {stopwatch.ElapsedMilliseconds} ms " +
+            //    $"| Mensaje: {ex.Message}");
 
             throw;
         }
@@ -237,10 +237,10 @@ public class Repository : IRepository
         {
             stopwatch.Stop();
 
-            Console.WriteLine(
-                $"[API ERROR] {request.Method} {requestPath} " +
-                $"| Tiempo: {stopwatch.ElapsedMilliseconds} ms " +
-                $"| Error: {ex.Message}");
+            //Console.WriteLine(
+            //    $"[API ERROR] {request.Method} {requestPath} " +
+            //    $"| Tiempo: {stopwatch.ElapsedMilliseconds} ms " +
+            //    $"| Error: {ex.Message}");
 
             throw;
         }

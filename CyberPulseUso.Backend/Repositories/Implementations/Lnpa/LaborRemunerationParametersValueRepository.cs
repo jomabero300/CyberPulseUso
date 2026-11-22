@@ -167,4 +167,28 @@ public class LaborRemunerationParametersValueRepository : GenericRepository<Labo
             targetProperty.SetValue(target, value);
         }
     }
+
+    public async Task<ActionResponse<IEnumerable<LaborRemunerationParametersValuePivotDTO>>> GetPivotAsync()
+    {
+        try
+        {
+            var result = await _context.Database
+                .SqlQueryRaw<LaborRemunerationParametersValuePivotDTO>("EXEC Lnpa.Lrpv_Pivot")
+                .ToListAsync();
+
+            return new ActionResponse<IEnumerable<LaborRemunerationParametersValuePivotDTO>>
+            {
+                WasSuccess = true,
+                Result = result
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ActionResponse<IEnumerable<LaborRemunerationParametersValuePivotDTO>>
+            {
+                WasSuccess = false,
+                Message = ex.Message
+            };
+        }
+    }
 }

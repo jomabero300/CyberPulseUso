@@ -5,6 +5,7 @@ using CyberPulseUso.Shared.Resources;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
+using System.Diagnostics;
 
 namespace CyberPulseUso.Frontend.Components.Pages.Auth;
 
@@ -54,24 +55,32 @@ public partial class Login
     }
     private async Task LoginAsync()
     {
+        var total = Stopwatch.StartNew();
+        var etapa = Stopwatch.StartNew();
+
         if (wasClore)
         {
             NavigationManager.NavigateTo("/");
             return;
         }
 
+        etapa.Restart();
 
-        if (_sqlValidator.HasSqlInjection(loginDTO.Email) ||
-            _sqlValidator.HasSqlInjection(loginDTO.Password))
+
+        var hasEmailInjection = _sqlValidator.HasSqlInjection(loginDTO.Email);
+        var hasPasswordInjection = _sqlValidator.HasSqlInjection(loginDTO.Password);
+
+
+        if (hasEmailInjection || hasPasswordInjection)
         {
-            //Datos del formulario no v lidos
             Snackbar.Add(Localizer["ERR010"], Severity.Error);
             return;
         }
 
-
         try
         {
+            etapa.Restart();
+
             var response = await LoginService.LoginWithCredentialsAsync("/api/accounts/Login", loginDTO);
 
             if (!response.Ok)
@@ -80,8 +89,9 @@ public partial class Login
 
                 return;
             }
-
+            etapa.Restart();
             MudDialog.Close(DialogResult.Ok(true));
+
         }
         catch (Exception ex)
         {

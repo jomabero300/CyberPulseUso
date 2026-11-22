@@ -58,7 +58,7 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
     {
         IQueryable<Category> query = _context.Set<Category>().AsNoTracking();
         query = query.Include(x => x.Statu);
-        
+
         if (!string.IsNullOrWhiteSpace(pagination.Filter))
         {
             var filter = pagination.Filter.Trim().ToLower();
@@ -73,6 +73,8 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
             Result = await query.Paginate(pagination).ToListAsync()
         };
     }
+
+
 
     public async Task<ActionResponse<Category>> AddAsync(CategoryDTO entity)
     {
@@ -116,6 +118,7 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
         var totalRecords = await query.CountAsync();
         return new ActionResponse<int> { WasSuccess = true, Result = totalRecords };
     }
+
 
     public async Task<ActionResponse<Category>> UpdateAsync(CategoryDTO entity)
     {

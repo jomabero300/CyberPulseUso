@@ -26,7 +26,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="QuestPDF" Version="2026.9.1" /><Folder Include="Controllers\Gene\" /><Folder Include="UnitsOfWork\Implementations\Gene\" /><Folder Include="UnitsOfWork\Interfaces\Gene\" /><Folder Include="UnitsOfWork\" /><Folder Include="UnitsOfWork\Interfaces\" /><Folder Include="UnitsOfWork\Implementations\" /></ItemGroup>
+    <PackageReference Include="QuestPDF" Version="2026.9.1" /><Folder Include="Controllers\Gene\" /><Folder Include="UnitsOfWork\Implementations\Gene\" /><Folder Include="UnitsOfWork\Interfaces\Gene\" /></ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CyberPulseUso.Shared\CyberPulseUso.Shared.csproj" />

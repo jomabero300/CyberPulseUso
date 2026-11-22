@@ -6,6 +6,8 @@ public class LaborRemunerationParametersValuePivotDTO
 {
     public int LRPId { get; set; }
 
+    public string Name { get; set; } = null!;
+
     [Column("Groupo VI")]
     public decimal? GroupVI { get; set; }
 

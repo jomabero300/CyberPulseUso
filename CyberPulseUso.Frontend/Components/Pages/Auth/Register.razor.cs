@@ -116,7 +116,7 @@ public partial class Register
             return;
         }
 
-        userDTO.UserType = UserType.User;
+        userDTO.UserType = UserType.work;
         userDTO.UserName = userDTO.Email;
         userDTO.Country = selectedCountry;
         userDTO.CountryId = selectedCountry.Id;

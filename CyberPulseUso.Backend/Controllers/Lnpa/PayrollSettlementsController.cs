@@ -11,6 +11,7 @@ using CyberPulseUso.Shared.EntitiesDTO.Lnpa;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace CyberPulseUso.Backend.Controllers.Lnpa;
 
@@ -46,16 +47,22 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
     [HttpGet("paginated")]
     public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
     {
+
         if (User.IsInRole("work"))
         {
             var email = User.Identity?.Name;
+
             if (string.IsNullOrWhiteSpace(email)) return Unauthorized();
+
             var result = await _userUnitOfWork.GetUserAsync(email);
+
             if (result.ChargeId == null) return BadRequest("El usuario no tiene un cargo asignado.");
+
             pagination.Email = result.Id;
         }
 
         var response = await _modelUnitOfWork.GetAsync(pagination);
+
         return response.WasSuccess ? Ok(response.Result) : BadRequest(response.Message);
     }
 
@@ -86,9 +93,13 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
         if (User.IsInRole("work"))
         {
             var email = User.Identity?.Name;
+
             if (string.IsNullOrWhiteSpace(email)) return Unauthorized();
+
             var result = await _userUnitOfWork.GetUserAsync(email);
+
             if (result.ChargeId == null) return BadRequest("El usuario no tiene un cargo asignado.");
+
             pagination.Email = result.Id;
         }
 
@@ -132,11 +143,7 @@ public class PayrollSettlementsController : GenericController<PayrollSettlement>
 
             stopwatch.Restart();
 
-            var response = await _modelUnitOfWork.GetLiqAsync(
-                chargeId,
-                userId);
-
-            //Console.WriteLine($"[LIQ] Consulta liquidación: {stopwatch.ElapsedMilliseconds} ms");
+            var response = await _modelUnitOfWork.GetLiqAsync(chargeId, userId);
 
             if (response.WasSuccess)
                 return Ok(response.Result);

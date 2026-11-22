@@ -92,8 +92,6 @@ public static class LiquidacionDocument
         });
     }
 
-
-
     private static void ComposeContent(IContainer container, LiquidacionReportModel model)
     {
         container.Layers(layers =>
@@ -203,87 +201,6 @@ public static class LiquidacionDocument
                 .FontColor(Colors.Grey.Lighten3);
         });
     }
-
-
-    //private static void ComposeContent(IContainer container, LiquidacionReportModel model)
-    //{
-    //    container.PaddingTop(15).Column(column =>
-    //    {
-    //        // Tabla de Conceptos Financieros
-    //        column.Item().Table(table =>
-    //        {
-    //            table.ColumnsDefinition(columns =>
-    //            {
-    //                // CORRECCIÓN APLICADA: Se usa estrictamente RelativeColumn para tablas
-    //                columns.RelativeColumn(4); // Concepto
-    //                columns.RelativeColumn(1); // Cantidad
-    //                columns.RelativeColumn(2); // Valor Unitario
-    //                columns.RelativeColumn(2); // Devengado Total
-    //                columns.RelativeColumn(2); // Deducido
-    //            });
-
-    //            // Encabezados de la Tabla
-    //            table.Header(header =>
-    //            {
-    //                header.Cell().Element(StyleHeaderCell).Text("CONCEPTO").Bold().FontColor(Colors.White);
-    //                header.Cell().Element(StyleHeaderCell).Text("CANT.").Bold().FontColor(Colors.White);
-    //                header.Cell().Element(StyleHeaderCell).Text("VALOR UNITARIO").Bold().FontColor(Colors.White);
-    //                header.Cell().Element(StyleHeaderCell).Text("DEVENGADO TOTAL").Bold().FontColor(Colors.White);
-    //                header.Cell().Element(StyleHeaderCell).Text("DEDUCIDO").Bold().FontColor(Colors.White);
-
-    //                IContainer StyleHeaderCell(IContainer c) => c.Background(PrimaryColor).Padding(6).AlignCenter();
-    //            });
-
-    //            // Renderizado de las filas de forma dinámica
-    //            foreach (var item in model.Items)
-    //            {
-    //                table.Cell().Element(StyleCell).Text(item.Concepto);
-    //                table.Cell().Element(StyleCell).AlignCenter().Text(item.Cantidad?.ToString() ?? "-");
-    //                table.Cell().Element(StyleCell).AlignRight().Text(item.ValorUnitario > 0 ? item.ValorUnitario.ToString("C0") : "-");
-    //                table.Cell().Element(StyleCell).AlignRight().Text(item.DevengadoTotal > 0 ? item.DevengadoTotal.ToString("C0") : "-");
-    //                table.Cell().Element(StyleCell).AlignRight().Text(item.Deducido > 0 ? item.Deducido.ToString("C0") : "-");
-
-    //                IContainer StyleCell(IContainer c) => c.BorderBottom(1).BorderColor(BorderColor).Padding(3.5f);
-    //            }
-    //        });
-
-    //        // Resumen de Totales y Barra de Progresos Visuales
-    //        column.Item().PaddingTop(10).Row(row =>
-    //        {
-    //            row.RelativeItem(2).Column(c =>
-    //            {
-    //                c.Item().Text("RESUMEN DE TOTALES").FontSize(10).Bold().FontColor(PrimaryColor);
-
-    //                // Barra de progreso proporcional automatizada (Ingresos vs Deducciones)
-    //                double totalComposicion = model.TotalIngresos + model.TotalDeducciones;
-    //                float porcentajeIngresos = totalComposicion > 0 ? (float)(model.TotalIngresos / totalComposicion) : 1f;
-
-    //                c.Item().PaddingTop(4).Height(10).Background(BorderColor).Row(bar =>
-    //                {
-    //                    bar.RelativeItem(porcentajeIngresos * 100).Background(AccentColor);
-    //                    bar.RelativeItem((1 - porcentajeIngresos) * 100).Background(Colors.Red.Lighten2);
-    //                });
-    //            });
-
-    //            row.RelativeItem(1); // Espacio separador intermedio
-
-    //            // Bloque de Cierre y Saldos Totales
-    //            row.RelativeItem(2).Table(t =>
-    //            {
-    //                t.ColumnsDefinition(cd => { cd.RelativeColumn(); cd.RelativeColumn(); });
-
-    //                t.Cell().Padding(3).Text("TOTAL INGRESOS:").Bold();
-    //                t.Cell().Padding(3).AlignRight().Text(model.TotalIngresos.ToString("C0")).FontColor(AccentColor).Bold();
-
-    //                t.Cell().Padding(3).Text("TOTAL DEDUCCIONES:").Bold();
-    //                t.Cell().Padding(3).AlignRight().Text(model.TotalDeducciones.ToString("C0")).FontColor(Colors.Red.Medium).Bold();
-
-    //                t.Cell().Background(PrimaryColor).Padding(5).Text("TOTAL A PAGAR:").Bold().FontColor(Colors.White);
-    //                t.Cell().Background(PrimaryColor).Padding(5).AlignRight().Text(model.TotalAPagar.ToString("C0")).Bold().FontColor(Colors.White).FontSize(9.5f);
-    //            });
-    //        });
-    //    });
-    //}
 
     private static void ComposeFooter(IContainer container, LiquidacionReportModel model)
     {

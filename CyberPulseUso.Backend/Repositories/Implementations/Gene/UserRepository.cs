@@ -47,19 +47,31 @@ public class UserRepository : IUserRepository
     public async Task<User> GetUserAsync(Guid userId) { var user = await _context.Users.Include(x => x.Country).Include(x => x.Charge).FirstOrDefaultAsync(x => x.Id == userId.ToString()); if (user != null && !string.IsNullOrWhiteSpace(user.Photo)) user.Photo = $"{_configuration["UrlBackend"]}{_configuration["FolderUsers"]}{user.Photo}"; return user!; }
     public async Task<User> GetUserAsync(string email)
     {
-        //var user = await _context.Users.AsNoTracking().Include(x => x.Country).Include(x => x.Charge).FirstOrDefaultAsync(x => x.Email == email); 
-
-
-        //var query = await _context.Set<Category>().Include(x => x.Statu).AsNoTracking().OrderBy(x => x.Name).ToListAsync();
         var user = await _context.Set<User>().Include(x => x.Country).Include(x => x.Charge).AsNoTracking().FirstOrDefaultAsync(x => x.Email == email);
-
 
         if (user != null && !string.IsNullOrWhiteSpace(user.Photo))
             user.Photo = $"{_configuration["UrlBackend"]}{_configuration["FolderUsers"]}{user.Photo}";
         return user!;
     }
     public async Task<bool> IsUserInRoleAsync(User user, string roleName) => await _userManager.IsInRoleAsync(user, roleName);
-    public async Task<SignInResult> LoginAsync(LoginDTO model) => await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
+    //public async Task<SignInResult> LoginAsync(LoginDTO model) => await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
+
+
+    public async Task<SignInResult> LoginAsync(LoginDTO model)
+    {
+        var user = await _userManager.FindByEmailAsync(model.Email);
+
+        if (user == null)
+            return SignInResult.Failed;
+
+        return await _signInManager.CheckPasswordSignInAsync(
+            user,
+            model.Password,
+            lockoutOnFailure: true);
+    }
+
+
+
     public async Task LogoutAsync() => await _signInManager.SignOutAsync();
     public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string password)
     {

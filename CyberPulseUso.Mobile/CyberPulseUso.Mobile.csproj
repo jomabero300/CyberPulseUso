@@ -139,6 +139,9 @@
 	  <MauiXaml Update="Views\Lnpa\LaborRemunerationParameter\LaborRemunerationParametersPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\Lnpa\LaborRemunerationReport\LaborRemunerationReportPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\Lnpa\PayrollConcepts\PayrollConceptsFormPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

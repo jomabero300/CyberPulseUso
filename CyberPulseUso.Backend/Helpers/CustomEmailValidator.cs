@@ -11,6 +11,7 @@ public class CustomEmailValidator : IUserValidator<User>
         "yahoo.com",
         "outlook.com",
         "hotmail.com",
+        "yopmail.com",
         "sierracol.com",
         "sena.edu.co"
     };

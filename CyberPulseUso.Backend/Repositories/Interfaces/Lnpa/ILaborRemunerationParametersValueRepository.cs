@@ -15,4 +15,5 @@ public interface ILaborRemunerationParametersValueRepository
     Task<IEnumerable<LaborRemunerationParametersValue>> GetComboAsync();
     Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination);
     Task<ActionResponse<LaborRemunerationParametersValue>> UpdateAsync(LaborRemunerationParametersValueDTO entity);
+    Task<ActionResponse<IEnumerable<LaborRemunerationParametersValuePivotDTO>>> GetPivotAsync();
 }

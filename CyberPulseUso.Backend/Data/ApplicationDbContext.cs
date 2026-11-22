@@ -2,7 +2,6 @@ using CyberPulseUso.Shared.Entities.Gene;
 using CyberPulseUso.Shared.Entities.Lnpa;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 using Group = CyberPulseUso.Shared.Entities.Lnpa.Group;
 namespace CyberPulseUso.Backend.Data;
 
@@ -28,9 +27,13 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<Group> Groups { get; set; }
     public DbSet<LaborRemunerationParameters> LaborRemunerationParameterses { get; set; }
     public DbSet<LaborRemunerationParametersValue> LaborRemunerationParametersValues { get; set; }
+    public DbSet<NormativeArticle> NormativeArticles { get; set; }
+    public DbSet<NormativeChapter> NormativeChapters { get; set; }
+    public DbSet<Normative> Normatives { get; set; }
     public DbSet<PayrollConcept> PayrollConcepts { get; set; }
     public DbSet<PayrollSettlement> PayrollSettlements { get; set; }
     public DbSet<LaborRemunerationParametersOtherValue> LaborRemunerationParametersOtherValues { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -111,9 +114,70 @@ public class ApplicationDbContext : IdentityDbContext<User>
             .HasIndex(x => new { x.CategoryId, x.Name })
             .IsUnique();
 
+        builder.Entity<Normative>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+                entity.HasIndex(x => x.Name);
+
+                entity.Property(x => x.Name)
+                    .HasMaxLength(200)
+                    .IsRequired();
+
+                entity.Property(x => x.Description)
+                    .IsRequired();
+
+                entity.HasMany(x => x.Chapters)
+                    .WithOne(x => x.Normative)
+                    .HasForeignKey(x => x.NormativeId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+        builder.Entity<NormativeChapter>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+                entity.HasIndex(x => new { x.Name,x.NormativeId });
+
+                entity.Property(x => x.Name)
+                    .HasMaxLength(150)
+                    .IsRequired();
+
+                entity.Property(x => x.Description)
+                    .IsRequired();
+
+                entity.HasIndex(x => new { x.NormativeId, x.SortOrder });
+
+                entity.HasMany(x => x.Articles)
+                    .WithOne(x => x.NormativeChapter)
+                    .HasForeignKey(x => x.NormativeChapterId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+        builder.Entity<NormativeArticle>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+                entity.HasIndex(x => new { x.Name, x.NormativeChapterId });
+                entity.Property(x => x.Name)
+                    .HasMaxLength(200)
+                    .IsRequired();
+
+                entity.Property(x => x.Description)
+                    .IsRequired();
+
+                entity.Property(x => x.Content)
+                    .IsRequired();
+
+                entity.HasIndex(x => new { x.NormativeChapterId, x.SortOrder });
+            });
+
         builder.Entity<PayrollConcept>()
             .HasIndex(x => x.Name)
             .IsUnique();
+
+        builder.Entity<PayrollConcept>()
+            .HasOne(x => x.LRP)
+            .WithMany(x => x.PayrollConcepts)
+            .HasForeignKey(x => x.LRPId)
+            .IsRequired(false);
 
         builder.Entity<User>()
             .HasOne(x => x.Charge)
@@ -122,11 +186,6 @@ public class ApplicationDbContext : IdentityDbContext<User>
             .IsRequired(false);
 
 
-        builder.Entity<PayrollConcept>()
-            .HasOne(x => x.LRP)
-            .WithMany(x => x.PayrollConcepts)
-            .HasForeignKey(x => x.LRPId)
-            .IsRequired(false);
 
         // Creación del índice
 

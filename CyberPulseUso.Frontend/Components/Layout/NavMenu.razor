@@ -20,6 +20,26 @@
                 <MudNavLink Href="payrollconcepts" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Approval" IconColor="Color.Warning"> @Localizer["PayrollConcepts"]</MudNavLink>
                 <MudNavLink Href="laborremunerationparametersothervalues" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.FoodBank" IconColor="Color.Secondary"> @Localizer["laborremunerationparametersothervalues"]</MudNavLink>
              </MudNavGroup>
+
+             <MudNavGroup Title="@Localizer["Reports"]" Icon="@Icons.Material.Filled.Settings" Expanded="false">
+
+                <MudNavLink Href="laborremunerationreport"
+                            Match="NavLinkMatch.Prefix"
+                            Icon="@Icons.Material.Filled.PictureAsPdf"
+                            IconColor="Color.Error">
+                    Remuneración laboral
+                </MudNavLink>
+
+@*                 <MudButton StartIcon="@Icons.Material.Filled.PictureAsPdf"
+                           Color="Color.Error"
+                           Variant="Variant.Text"
+                           Size="Size.Small"
+                           Style="margin-left: 24px; font-size: 0.75rem;text-transform: none;"
+                           OnClick="GenerarReportePivotAsync">
+                    Remuneración laboral
+                </MudButton>
+ *@             </MudNavGroup>
+
         </Authorized>
     </AuthorizeView>
 

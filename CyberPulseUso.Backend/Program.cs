@@ -113,7 +113,17 @@ builder.Services.AddScoped<IPayrollSettlementRepository, PayrollSettlementReposi
 builder.Services.AddScoped<IPayrollSettlementUnitOfWork, PayrollSettlementUnitOfWork>();
 
 builder.Services.AddScoped<ILaborRemunerationParametersOtherValueRepository, LaborRemunerationParametersOtherValueRepository>();
-builder.Services.AddScoped<ILaborRemunerationParametersOtherValueUnitOfWork, LaborRemunerationParametersOtherValueUnitOfWork>(); 
+builder.Services.AddScoped<ILaborRemunerationParametersOtherValueUnitOfWork, LaborRemunerationParametersOtherValueUnitOfWork>();
+
+// Normatives Repositories
+builder.Services.AddScoped<INormativeRepository, NormativeRepository>();
+builder.Services.AddScoped<INormativeChapterRepository, NormativeChapterRepository>();
+builder.Services.AddScoped<INormativeArticleRepository, NormativeArticleRepository>();
+
+// Normatives UnitOfWork
+builder.Services.AddScoped<INormativeUnitOfWork, NormativeUnitOfWork>();
+builder.Services.AddScoped<INormativeChapterUnitOfWork, NormativeChapterUnitOfWork>();
+builder.Services.AddScoped<INormativeArticleUnitOfWork, NormativeArticleUnitOfWork>();
 
 builder.Services.AddScoped<IMailHelper, MailHelper>();
 

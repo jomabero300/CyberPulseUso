@@ -113,9 +113,6 @@ public class AuthenticationProviderJWT : AuthenticationStateProvider, ILoginServ
 
             if (!result.Ok)
             {
-                Console.WriteLine(
-                    $"[AUTH REFRESH ERROR] Status: {result.Status} | Body: {result.Body}");
-
                 ClearSession();
                 return false;
             }
@@ -142,8 +139,6 @@ public class AuthenticationProviderJWT : AuthenticationStateProvider, ILoginServ
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error renovando sesión: {ex}");
-
             ClearSession();
 
             return false;
@@ -163,19 +158,10 @@ public class AuthenticationProviderJWT : AuthenticationStateProvider, ILoginServ
 
     public async Task InitializeAsync()
     {
-        Console.WriteLine("[AUTH] InitializeAsync INICIADO");
-
         if (string.IsNullOrWhiteSpace(_accessToken))
         {
-            Console.WriteLine("[AUTH] No hay Access Token. Iniciando RefreshAsync.");
-
             var result = await RefreshAsync();
 
-            Console.WriteLine($"[AUTH] Resultado de RefreshAsync: {result}");
-        }
-        else
-        {
-            Console.WriteLine("[AUTH] Ya existe un Access Token.");
         }
     }
 
@@ -219,7 +205,6 @@ public class AuthenticationProviderJWT : AuthenticationStateProvider, ILoginServ
         NotifyAuthenticationStateChanged(
             Task.FromResult(authState));
 
-        Console.WriteLine($"[Auth] Access Token actualizado: {DateTime.Now:HH:mm:ss}");
     }
 
     private AuthenticationState BuildAuthenticationState(string token)

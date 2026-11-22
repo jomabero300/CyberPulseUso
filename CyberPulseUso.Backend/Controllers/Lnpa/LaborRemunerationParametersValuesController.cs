@@ -115,4 +115,19 @@ public class LaborRemunerationParametersValuesController : GenericController<Lab
             return File(fileBytes, contentType, nombreArchivo);
         }
     }
+
+    [HttpGet("Pdf/Pivot")]
+    public async Task<IActionResult> GetPivotPdfAsync()
+    {
+        var response = await _modelUnitOfWork.GetPivotAsync();
+
+        if (!response.WasSuccess || response.Result == null)
+            return BadRequest(response);
+
+        var rutaPath = _env.WebRootPath;
+
+        var pdf = LRPV.LRPVPivotPdf(response.Result.ToList(),rutaPath);
+
+        return File(pdf,"application/pdf",$"ParametrosRemuneracion_{DateTime.Now:yyyyMMddHHmmss}.pdf");
+    }
 }

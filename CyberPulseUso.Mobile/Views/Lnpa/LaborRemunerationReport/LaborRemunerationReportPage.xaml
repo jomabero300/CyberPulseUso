@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CyberPulseUso.Mobile.Views.Lnpa.LaborRemunerationReport.LaborRemunerationReportPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Remuneración laboral">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="20"
+            Spacing="20">
+
+            <!-- Encabezado -->
+            <VerticalStackLayout
+                Spacing="8"
+                HorizontalOptions="Center">
+
+                <Label
+                    Text="📄"
+                    FontSize="55"
+                    HorizontalTextAlignment="Center" />
+
+                <Label
+                    Text="Remuneración laboral"
+                    FontSize="22"
+                    FontAttributes="Bold"
+                    HorizontalTextAlignment="Center" />
+
+                <Label
+                    Text="Reporte general de remuneraciones laborales"
+                    FontSize="14"
+                    HorizontalTextAlignment="Center"
+                    TextColor="Gray" />
+
+            </VerticalStackLayout>
+
+            <!-- Información -->
+            <Border
+                Padding="15"
+                Stroke="#CCCCCC"
+                StrokeThickness="1">
+
+                <VerticalStackLayout Spacing="10">
+
+                    <Label
+                        Text="Generar reporte"
+                        FontSize="18"
+                        FontAttributes="Bold" />
+
+                    <Label
+                        Text="Presione el botón para consultar y generar el reporte en formato PDF."
+                        FontSize="14" />
+
+                    <Button
+                        Text="Generar reporte PDF"
+                        Clicked="OnExportPdfClicked"
+                        BackgroundColor="#D32F2F"
+                        TextColor="White"
+                        CornerRadius="10"
+                        HeightRequest="50"
+                        IsEnabled="{Binding CanGenerate}" />
+
+                    <ActivityIndicator
+                        IsRunning="{Binding IsBusy}"
+                        IsVisible="{Binding IsBusy}"
+                        HorizontalOptions="Center"
+                        Color="#D32F2F" />
+
+                    <Label
+                        Text="Generando reporte..."
+                        IsVisible="{Binding IsBusy}"
+                        HorizontalTextAlignment="Center"
+                        FontSize="13" />
+
+                    <Label
+                        Text="{Binding ErrorMessage}"
+                        TextColor="Red"
+                        FontSize="13"
+                        HorizontalTextAlignment="Center" />
+
+                </VerticalStackLayout>
+
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

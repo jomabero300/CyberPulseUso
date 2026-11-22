@@ -88,13 +88,6 @@ builder.Services.AddCascadingAuthenticationState();
 
 var app = builder.Build();
 
-Console.WriteLine($"API CONFIGURADA: {app.Configuration["ApiSettings:BaseUrl"]}");
-Console.WriteLine("----------------------------------");
-Console.WriteLine($"AMBIENTE: {app.Environment.EnvironmentName}");
-Console.WriteLine($"API URL: {app.Configuration["ApiSettings:BaseUrl"]}");
-Console.WriteLine("----------------------------------");
-
-
 app.UseRequestLocalization(localizationOptions);
 
 // Configure the HTTP request pipeline.

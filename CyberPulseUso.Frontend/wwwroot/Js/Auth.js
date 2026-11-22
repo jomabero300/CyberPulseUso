@@ -1,4 +1,5 @@
-﻿window.cyberPulseAuth = {
+﻿
+window.cyberPulseAuth = {
     request: async function (url, method, body) {
 
         const sendRequest = async () => {

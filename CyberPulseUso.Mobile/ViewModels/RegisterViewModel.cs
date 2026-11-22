@@ -182,7 +182,7 @@ public partial class RegisterViewModel : ObservableObject
 
         User.CountryId = SelectedCountry.Id;
         User.Country = SelectedCountry;
-        User.UserType = UserType.User;
+        User.UserType = UserType.work;
         User.Language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
         var validationResults = new List<ValidationResult>();

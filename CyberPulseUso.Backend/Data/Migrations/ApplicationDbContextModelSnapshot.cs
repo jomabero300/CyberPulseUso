@@ -42,7 +42,8 @@ namespace CyberPulseUso.Backend.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("StateId", "Name")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("IX_Cities_StateId_Name");
 
                     b.ToTable("Cities", "Gene");
                 });
@@ -67,7 +68,8 @@ namespace CyberPulseUso.Backend.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("IX_Countries_Name");
 
                     b.ToTable("Countries", "Gene");
                 });
@@ -358,6 +360,10 @@ namespace CyberPulseUso.Backend.Data.Migrations
 
                     b.HasIndex("CountryId");
 
+                    b.HasIndex("FirstName");
+
+                    b.HasIndex("LastName");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -415,6 +421,8 @@ namespace CyberPulseUso.Backend.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name");
 
                     b.HasIndex("StatuId");
 
@@ -555,7 +563,10 @@ namespace CyberPulseUso.Backend.Data.Migrations
 
                     b.HasIndex("LRPId");
 
-                    b.HasIndex("StatuId");
+                    b.HasIndex("StatuId", "LRPId")
+                        .HasDatabaseName("IX_LaborRemunerationParametersOtherValues_StatuId_LRPId_Incl");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("StatuId", "LRPId"), new[] { "Value" });
 
                     b.ToTable("LaborRemunerationParametersOtherValues", "Lnpa");
                 });
@@ -589,9 +600,102 @@ namespace CyberPulseUso.Backend.Data.Migrations
 
                     b.HasIndex("LRPId");
 
-                    b.HasIndex("StatuId");
+                    b.HasIndex("StatuId", "LRPId")
+                        .HasDatabaseName("IX_LaborRemunerationParametersValues_StatuId_LRPId_Incl");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("StatuId", "LRPId"), new[] { "GroupId", "Date", "Value" });
 
                     b.ToTable("LaborRemunerationParametersValues", "Lnpa");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.Normative", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1700)
+                        .HasColumnType("varchar(1700)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Normatives", "Lnpa");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.NormativeArticle", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(2700)
+                        .HasColumnType("varchar(2700)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<int>("NormativeChapterId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormativeChapterId", "SortOrder");
+
+                    b.ToTable("NormativeArticles", "Lnpa");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.NormativeChapter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(70)
+                        .HasColumnType("varchar(70)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<int>("NormativeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormativeId", "SortOrder");
+
+                    b.ToTable("NormativeChapters", "Lnpa");
                 });
 
             modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.PayrollConcept", b =>
@@ -1020,6 +1124,28 @@ namespace CyberPulseUso.Backend.Data.Migrations
                     b.Navigation("Statu");
                 });
 
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.NormativeArticle", b =>
+                {
+                    b.HasOne("CyberPulseUso.Shared.Entities.Lnpa.NormativeChapter", "NormativeChapter")
+                        .WithMany("Articles")
+                        .HasForeignKey("NormativeChapterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("NormativeChapter");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.NormativeChapter", b =>
+                {
+                    b.HasOne("CyberPulseUso.Shared.Entities.Lnpa.Normative", "Normative")
+                        .WithMany("Chapters")
+                        .HasForeignKey("NormativeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Normative");
+                });
+
             modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.PayrollConcept", b =>
                 {
                     b.HasOne("CyberPulseUso.Shared.Entities.Lnpa.LaborRemunerationParameters", "LRP")
@@ -1158,6 +1284,16 @@ namespace CyberPulseUso.Backend.Data.Migrations
             modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.LaborRemunerationParameters", b =>
                 {
                     b.Navigation("PayrollConcepts");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.Normative", b =>
+                {
+                    b.Navigation("Chapters");
+                });
+
+            modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.NormativeChapter", b =>
+                {
+                    b.Navigation("Articles");
                 });
 
             modelBuilder.Entity("CyberPulseUso.Shared.Entities.Lnpa.PayrollConcept", b =>

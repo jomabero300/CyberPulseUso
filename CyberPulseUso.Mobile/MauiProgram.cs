@@ -15,6 +15,7 @@ using CyberPulseUso.Mobile.Views.Lnpa.ConventionValues;
 using CyberPulseUso.Mobile.Views.Lnpa.Groups;
 using CyberPulseUso.Mobile.Views.Lnpa.LaborRemunerationParameter;
 using CyberPulseUso.Mobile.Views.Lnpa.LaborRemunerationParametersValues;
+using CyberPulseUso.Mobile.Views.Lnpa.LaborRemunerationReport;
 using CyberPulseUso.Mobile.Views.Lnpa.PayrollConcepts;
 using Microsoft.Extensions.Logging;
 using System.Net;
@@ -119,6 +120,10 @@ public static class MauiProgram
 
         builder.Services.AddTransient<LaborRemunerationParametersOtherValuesViewModel>();
         builder.Services.AddTransient<LaborRemunerationParametersOtherValuesPage>();
+
+        builder.Services.AddTransient<LaborRemunerationReportPage>();
+        builder.Services.AddTransient<LaborRemunerationReportViewModel>();
+
 
 #if DEBUG
         builder.Logging.AddDebug();

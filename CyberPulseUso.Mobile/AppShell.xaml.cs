@@ -9,6 +9,7 @@ using CyberPulseUso.Mobile.Views.Lnpa.ConventionValues;
 using CyberPulseUso.Mobile.Views.Lnpa.Groups;
 using CyberPulseUso.Mobile.Views.Lnpa.LaborRemunerationParameter;
 using CyberPulseUso.Mobile.Views.Lnpa.LaborRemunerationParametersValues;
+using CyberPulseUso.Mobile.Views.Lnpa.LaborRemunerationReport;
 using CyberPulseUso.Mobile.Views.Lnpa.PayrollConcepts;
 using CyberPulseUso.Shared.Resources;
 using System.Globalization;
@@ -142,6 +143,7 @@ public partial class AppShell : Shell
             AddLaborRemunerationParametersValuesFlyoutItem();
             AddPayrollConceptsFlyoutItem();
             AddLaborRemunerationParametersOtherValuesFlyoutItem();
+            AddLaborRemunerationReportFlyoutItem();
         }
 
         // Administradores y trabajadores pueden consultar liquidaciones.
@@ -559,7 +561,41 @@ public partial class AppShell : Shell
         };
         payrollConceptsItem.Items.Add(payrollConceptsSection);
         Items.Add(payrollConceptsItem);
-    }   
+    }
+    private void AddLaborRemunerationReportFlyoutItem()
+    {
+        if (Items.Any(x => x.Route == "LaborRemunerationReport"))
+            return;
+
+        var title = GetTitle(
+            "LaborRemunerationReport",
+            "Remuneración laboral");
+
+        var content = new ShellContent
+        {
+            Title = title,
+            Route = "LaborRemunerationReportContent",
+            ContentTemplate = new DataTemplate(
+                () => _serviceProvider.GetRequiredService<LaborRemunerationReportPage>())
+        };
+
+        var section = new ShellSection
+        {
+            Items = { content }
+        };
+
+        var item = new FlyoutItem
+        {
+            Title = title,
+            Route = "LaborRemunerationReport",
+            Icon = "icon_remunerations.svg"
+        };
+
+        item.Items.Add(section);
+        Items.Add(item);
+    }
+
+
     private async void OnLogoutMenuItemClicked(object? sender, EventArgs e)
     {
         if (_isLoggingOut)

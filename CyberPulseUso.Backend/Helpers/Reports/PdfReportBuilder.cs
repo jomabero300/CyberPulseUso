@@ -1,4 +1,6 @@
-﻿using QuestPDF.Fluent;
+﻿using CyberPulseUso.Shared.EntitiesDTO.Lnpa.Reports;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
@@ -6,49 +8,72 @@ namespace CyberPulseUso.Backend.Helpers.Reports;
 
 public class PdfReportBuilder
 {
+    private static readonly string PrimaryColor = "#1A365D";   // Azul oscuro ejecutivo
+    private static readonly string AccentColor = "#3182CE";    // Azul brillante para totales
+    private static readonly string BgColor = "#F7FAFC";        // Gris claro de fondo
+    private static readonly string BorderColor = "#E2E8F0";    // Gris de bordes
+    
     private static void ComposeHeader(IContainer container, string rutaPath, string titulo)
     {
+        const float tamañoDeLetra = 0.7f;
+        var imagePath = Path.Combine(rutaPath, "Images", "Reports", "Logo.jpg");
+
         container.Row(row =>
         {
-            const float tamañoDeLetra = 0.8f;
-            var imagePath = Path.Combine(rutaPath, "Images", "Reports", "Logo.jpg");
+            // IZQUIERDA: LOGO
+            row.ConstantItem(65)
+                .Height(1.8f, Unit.Centimetre)
+                .AlignLeft()
+                .AlignMiddle()
+                .Image(imagePath)
+                .FitArea();
 
-            row.RelativeItem().Column(column =>
-            {
-                column.Item().Scale(tamañoDeLetra).PaddingTop(1)
-                    .Text($"Fecha: {DateTime.Now:dd/MM/yyyy HH:mm}");
-                column.Item().Scale(tamañoDeLetra).Text("USO - Subdirectiva Arauca");
-                column.Item().Scale(tamañoDeLetra).Text("Carrera 22 No. 25-163");
-                column.Item().Scale(tamañoDeLetra).Text("Nit: 000.000.000-1");
-                column.Item().Scale(0.9f).Text(titulo)
-                    .FontSize(15).Bold().FontColor(Colors.Blue.Darken2).AlignCenter();
-            });
+            // CENTRO: TÍTULO
+            row.RelativeItem()
+                .AlignCenter()
+                .AlignMiddle()
+                .Text(titulo)
+                .FontSize(16)
+                .Bold()
+                .FontColor(PrimaryColor)
+                .AlignCenter();
 
-            row.ConstantItem(100).Height(2, Unit.Centimetre).Image(imagePath);
+            // DERECHA: INFORMACIÓN
+            row.ConstantItem(155)
+                .Background(BgColor)
+                .Border(1)
+                .BorderColor(BorderColor)
+                .Padding(4)
+                .AlignMiddle()
+                .Column(c =>
+                {
+                    c.Item().Scale(tamañoDeLetra).Text(t => { t.Span("Fecha: ").Bold(); t.Span($"{DateTime.Now:dd/MM/yyyy HH:mm}"); });
+                    c.Item().Scale(tamañoDeLetra).Text(t => { t.Span("USO - ").Bold(); t.Span("Subdirectiva Arauca"); });
+                    c.Item().Scale(tamañoDeLetra).Text(t => { t.Span("Carrera ").Bold(); t.Span("22 No. 25-163"); });
+                    c.Item().Scale(tamañoDeLetra).Text(t => { t.Span("Nit: ").Bold(); t.Span("800.217.208-1"); });
+                });
         });
     }
+
     private static void ComposeFooter(IContainer container, int totalRegistros)
     {
         const float tamañoDeLetraTitle = 0.8f;
 
-        container.Row(row =>
+        container.BorderTop(1).BorderColor(BorderColor).PaddingTop(4).Row(row =>
         {
-            row.ConstantItem(150).Text("Total de registros:");
-            row.RelativeItem().Text(totalRegistros.ToString()).Bold();
+            row.ConstantItem(150).Text("Total de registros:").FontSize(7.5f).Italic(); 
+            row.RelativeItem().Text(totalRegistros.ToString()).FontSize(7.5f).Bold();
             row.RelativeItem().Scale(tamañoDeLetraTitle).Text(text =>
             {
-                text.Span("Subdirectiva Arauca - ");
-                text.CurrentPageNumber();
-                text.Span(" de ");
-                text.TotalPages();
+                text.Span("Subdirectiva Arauca - ").FontSize(7.5f).Bold();
+                text.CurrentPageNumber().FontSize(7.5f).Bold();
+                text.Span(" de ").FontSize(7.5f).Bold();
+                text.TotalPages().FontSize(7.5f).Bold();
             });
         });
     }
 
-    private static void GenericTable<T>(
-        IContainer container,
-        IReadOnlyList<T> entity,
-        IReadOnlyList<ColumnDefinitionPdf<T>> columns)
+    private static void GenericTable<T>(IContainer container, IReadOnlyList<T> entity, IReadOnlyList<ColumnDefinitionPdf<T>> columns)
     {
         const float tamañoDeLetra = 0.6f;
 
@@ -75,7 +100,7 @@ public class PdfReportBuilder
                         .Scale(tamañoDeLetra)
                         .Element(HeaderCellStyle)
                         .AlignCenter()
-                        .Text(col.Header);
+                        .Text(col.Header).FontColor(Colors.White);
                 }
             });
 
@@ -100,9 +125,8 @@ public class PdfReportBuilder
             }
 
             static IContainer HeaderCellStyle(IContainer c) =>
-                c.DefaultTextStyle(x => x.SemiBold())
+                c.DefaultTextStyle(x => x.SemiBold()).Background(PrimaryColor).Padding(6).AlignCenter()
                  .PaddingVertical(5)
-                 .BorderBottom(1)
                  .BorderColor(Colors.Black);
 
             static IContainer BodyCellStyle(IContainer c) =>
@@ -112,11 +136,7 @@ public class PdfReportBuilder
         });
     }
 
-    public static byte[] GeneratePdf<T>(
-        IEnumerable<T> entity,
-        string rutaPath,
-        string title,
-        IReadOnlyList<ColumnDefinitionPdf<T>> columns)
+    public static byte[] GeneratePdf<T>(IEnumerable<T> entity, string rutaPath, string title, IReadOnlyList<ColumnDefinitionPdf<T>> columns, bool landscape = false)
     {
         QuestPDF.Settings.License = LicenseType.Community;
 
@@ -126,6 +146,7 @@ public class PdfReportBuilder
         {
             container.Page(page =>
             {
+                page.Size(landscape ? PageSizes.A4.Landscape() : PageSizes.A4);
                 page.Margin(30);
                 page.Header().Element(c => ComposeHeader(c, rutaPath, title));
                 page.Content().PaddingVertical(10).Column(col =>

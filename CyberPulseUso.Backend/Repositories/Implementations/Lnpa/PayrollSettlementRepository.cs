@@ -1,16 +1,14 @@
 using CyberPulseUso.Backend.Data;
 using CyberPulseUso.Backend.Helpers;
 using CyberPulseUso.Backend.Repositories.Interfaces.Lnpa;
-using CyberPulseUso.Shared.Entities.Gene;
 using CyberPulseUso.Shared.Entities.Lnpa;
 using CyberPulseUso.Shared.EntitiesDTO;
 using CyberPulseUso.Shared.EntitiesDTO.Gene;
 using CyberPulseUso.Shared.EntitiesDTO.Lnpa;
 using CyberPulseUso.Shared.EntitiesDTO.Lnpa.Reports;
 using CyberPulseUso.Shared.Responses;
-using DocumentFormat.OpenXml.InkML;
-using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace CyberPulseUso.Backend.Repositories.Implementations.Lnpa;
@@ -52,144 +50,170 @@ public class PayrollSettlementRepository : GenericRepository<PayrollSettlement>,
         }
     }
 
+    //public override async Task<ActionResponse<IEnumerable<PayrollSettlement>>> GetAsync(PaginationDTO pagination)
+    //{
+    //    if (!string.IsNullOrWhiteSpace(pagination.Email))
+    //    {
+    //        var queryable = _context.PayrollSettlements
+    //            .AsNoTracking()
+    //            .Where(x => x.UserId == pagination.Email);
+
+    //        if (!string.IsNullOrWhiteSpace(pagination.Filter))
+    //        {
+    //            var filter = pagination.Filter.Trim();
+
+    //            if (DateTime.TryParse(filter, out DateTime date))
+    //            {
+    //                // Si es una fecha, busca exclusivamente por fecha.
+    //                var startDate = date.Date;
+    //                var endDate = startDate.AddDays(1);
+
+    //                queryable = queryable.Where(x =>
+    //                    x.Date >= startDate &&
+    //                    x.Date < endDate);
+    //            }
+    //            else
+    //            {
+    //                // Si no es una fecha, busca por cargo, nombre o apellido.
+    //                var search = filter.ToLower();
+
+    //                queryable = queryable.Where(x =>
+    //                    (x.Charge != null &&
+    //                     x.Charge.Name != null &&
+    //                     x.Charge.Name.ToLower().Contains(search)) ||
+
+    //                    (x.User != null &&
+    //                     x.User.FirstName != null &&
+    //                     x.User.FirstName.ToLower().Contains(search)) ||
+
+    //                    (x.User != null &&
+    //                     x.User.LastName != null &&
+    //                     x.User.LastName.ToLower().Contains(search))
+    //                );
+    //            }
+    //        }
+
+    //        var result = await queryable
+    //            .GroupBy(x => new { x.Date, x.ChargeId })
+    //            .Select(g => new PayrollSettlement
+    //            {
+    //                Id = 0,
+    //                Date = g.Key.Date,
+    //                UserId = g.First().UserId,
+    //                ChargeId = g.Key.ChargeId,
+    //                PayrollConceptId = 0,
+    //                Amount = 0,
+    //                UnitValue = 0,
+    //                AccruedValue = g.Sum(p => p.AccruedValue),
+    //                DeductedValue = g.Sum(p => p.DeductedValue),
+    //                Charge = g.First().Charge,
+    //                User = g.First().User
+    //            })
+    //            .OrderBy(x => x.Date)
+    //            .ToListAsync();
+
+    //        return new ActionResponse<IEnumerable<PayrollSettlement>>
+    //        {
+    //            WasSuccess = true,
+    //            Result = result
+    //        };
+
+    //    }
+    //    else
+    //    {
+    //        var queryable = _context.PayrollSettlements
+    //            .AsNoTracking()
+    //            .Include(x => x.User)
+    //            .Include(x => x.Charge)
+    //            .AsQueryable();
+
+    //        if (!string.IsNullOrWhiteSpace(pagination.Filter))
+    //        {
+    //            var filter = pagination.Filter.Trim();
+
+    //            if (DateTime.TryParse(filter, out DateTime date))
+    //            {
+    //                // Buscar exclusivamente por fecha.
+    //                var startDate = date.Date;
+    //                var endDate = startDate.AddDays(1);
+
+    //                queryable = queryable.Where(x =>
+    //                    x.Date >= startDate &&
+    //                    x.Date < endDate);
+    //            }
+    //            else
+    //            {
+    //                // Buscar exclusivamente por nombre del cargo.
+    //                var search = filter.ToLower();
+
+    //                queryable = queryable.Where(x =>
+    //                    (x.Charge != null &&
+    //                    x.Charge.Name != null &&
+    //                    x.Charge.Name.ToLower().Contains(search)) ||
+
+    //                    (x.User != null &&
+    //                     x.User.FirstName != null &&
+    //                     x.User.FirstName.ToLower().Contains(search)) ||
+
+    //                    (x.User != null &&
+    //                     x.User.LastName != null &&
+    //                     x.User.LastName.ToLower().Contains(search))
+    //                );
+    //            }
+    //        }
+
+    //        var result = await queryable
+    //            .GroupBy(x => new { x.Date, x.ChargeId })
+    //            .Select(g => new PayrollSettlement
+    //            {
+    //                Id = 0,
+    //                Date = g.Key.Date,
+    //                UserId = g.First().UserId,
+    //                ChargeId = g.Key.ChargeId,
+    //                PayrollConceptId = 0,
+    //                Amount = 0,
+    //                UnitValue = 0,
+    //                AccruedValue = g.Sum(p => p.AccruedValue),
+    //                DeductedValue = g.Sum(p => p.DeductedValue),
+    //                Charge = g.First().Charge,
+    //                User = g.First().User
+    //            })
+    //            .OrderBy(x => x.Date)
+    //            .ToListAsync();
+
+    //        return new ActionResponse<IEnumerable<PayrollSettlement>>
+    //        {
+    //            WasSuccess = true,
+    //            Result = result
+    //        };
+
+    //    }
+    //}
+
     public override async Task<ActionResponse<IEnumerable<PayrollSettlement>>> GetAsync(PaginationDTO pagination)
     {
-        if (!string.IsNullOrWhiteSpace(pagination.Email))
+        var stopwatch = Stopwatch.StartNew();
+        var query = GetGroupedQuery(pagination);
+
+        query = query
+            .OrderByDescending(x => x.Date)
+            .ThenBy(x => x.ChargeId)
+            .ThenBy(x => x.UserId);
+
+        var result = await query
+            .Paginate(pagination)
+            .ToListAsync();
+
+        stopwatch.Stop();
+
+        Console.WriteLine(
+            $"PayrollSettlement GetAsync: {stopwatch.ElapsedMilliseconds} ms");
+
+        return new ActionResponse<IEnumerable<PayrollSettlement>>
         {
-            var queryable = _context.PayrollSettlements
-                .AsNoTracking()
-                .Where(x => x.UserId == pagination.Email);
-
-            if (!string.IsNullOrWhiteSpace(pagination.Filter))
-            {
-                var filter = pagination.Filter.Trim();
-
-                if (DateTime.TryParse(filter, out DateTime date))
-                {
-                    // Si es una fecha, busca exclusivamente por fecha.
-                    var startDate = date.Date;
-                    var endDate = startDate.AddDays(1);
-
-                    queryable = queryable.Where(x =>
-                        x.Date >= startDate &&
-                        x.Date < endDate);
-                }
-                else
-                {
-                    // Si no es una fecha, busca por cargo, nombre o apellido.
-                    var search = filter.ToLower();
-
-                    queryable = queryable.Where(x =>
-                        (x.Charge != null &&
-                         x.Charge.Name != null &&
-                         x.Charge.Name.ToLower().Contains(search)) ||
-
-                        (x.User != null &&
-                         x.User.FirstName != null &&
-                         x.User.FirstName.ToLower().Contains(search)) ||
-
-                        (x.User != null &&
-                         x.User.LastName != null &&
-                         x.User.LastName.ToLower().Contains(search))
-                    );
-                }
-            }
-
-            var result = await queryable
-                .GroupBy(x => new { x.Date, x.ChargeId })
-                .Select(g => new PayrollSettlement
-                {
-                    Id = 0,
-                    Date = g.Key.Date,
-                    UserId = g.First().UserId,
-                    ChargeId = g.Key.ChargeId,
-                    PayrollConceptId = 0,
-                    Amount = 0,
-                    UnitValue = 0,
-                    AccruedValue = g.Sum(p => p.AccruedValue),
-                    DeductedValue = g.Sum(p => p.DeductedValue),
-                    Charge = g.First().Charge,
-                    User = g.First().User
-                })
-                .OrderBy(x => x.Date)
-                .ToListAsync();
-
-            return new ActionResponse<IEnumerable<PayrollSettlement>>
-            {
-                WasSuccess = true,
-                Result = result
-            };
-
-        }
-        else
-        {
-            var queryable = _context.PayrollSettlements
-                .AsNoTracking()
-                .Include(x => x.User)
-                .Include(x => x.Charge)
-                .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(pagination.Filter))
-            {
-                var filter = pagination.Filter.Trim();
-
-                if (DateTime.TryParse(filter, out DateTime date))
-                {
-                    // Buscar exclusivamente por fecha.
-                    var startDate = date.Date;
-                    var endDate = startDate.AddDays(1);
-
-                    queryable = queryable.Where(x =>
-                        x.Date >= startDate &&
-                        x.Date < endDate);
-                }
-                else
-                {
-                    // Buscar exclusivamente por nombre del cargo.
-                    var search = filter.ToLower();
-
-                    queryable = queryable.Where(x =>
-                        (x.Charge != null &&
-                        x.Charge.Name != null &&
-                        x.Charge.Name.ToLower().Contains(search)) ||
-
-                        (x.User != null &&
-                         x.User.FirstName != null &&
-                         x.User.FirstName.ToLower().Contains(search)) ||
-
-                        (x.User != null &&
-                         x.User.LastName != null &&
-                         x.User.LastName.ToLower().Contains(search))
-                    );
-                }
-            }
-
-            var result = await queryable
-                .GroupBy(x => new { x.Date, x.ChargeId })
-                .Select(g => new PayrollSettlement
-                {
-                    Id = 0,
-                    Date = g.Key.Date,
-                    UserId = g.First().UserId,
-                    ChargeId = g.Key.ChargeId,
-                    PayrollConceptId = 0,
-                    Amount = 0,
-                    UnitValue = 0,
-                    AccruedValue = g.Sum(p => p.AccruedValue),
-                    DeductedValue = g.Sum(p => p.DeductedValue),
-                    Charge = g.First().Charge,
-                    User = g.First().User
-                })
-                .OrderBy(x => x.Date)
-                .ToListAsync();
-
-            return new ActionResponse<IEnumerable<PayrollSettlement>>
-            {
-                WasSuccess = true,
-                Result = result
-            };
-
-        }
+            WasSuccess = true,
+            Result = result
+        };
     }
 
     public async Task<ActionResponse<IEnumerable<PayrollSettlement>>> AddAsync(IEnumerable<PayrollSettlementDTO> entity)
@@ -221,53 +245,71 @@ public class PayrollSettlementRepository : GenericRepository<PayrollSettlement>,
             .OrderBy(x => x.Id).ToListAsync();
     }
 
+    //public async Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination)
+    //{
+    //    //DateTime Fecha = DateTime.Parse(pagination.Filter!);
+
+    //    if (!string.IsNullOrWhiteSpace(pagination.Email))
+    //    {
+    //        var queryable = !string.IsNullOrWhiteSpace(pagination.Filter) ?
+    //                                _context.PayrollSettlements
+    //                                            .AsNoTracking()
+    //                                            .Where(x => x.UserId == pagination.Email && x.Charge!.Name!.Contains(pagination.Filter))
+    //                                            .GroupBy(x => new { x.Date, x.ChargeId })
+    //                                            .Select(g => g.Sum(p => (decimal?)p.AccruedValue) - g.Sum(p => (decimal?)p.DeductedValue))
+    //                                            .AsQueryable() :
+    //                                _context.PayrollSettlements
+    //                                            .AsNoTracking()
+    //                                            .Where(x => x.UserId == pagination.Email)
+    //                                            .GroupBy(x => new { x.Date, x.ChargeId })
+    //                                            .Select(g => g.Sum(p => (decimal?)p.AccruedValue) - g.Sum(p => (decimal?)p.DeductedValue))
+    //                                            .AsQueryable();
+    //        int count = await queryable.CountAsync();
+    //        return new ActionResponse<int>
+    //        {
+    //            WasSuccess = true,
+    //            Result = count
+    //        };
+    //    }
+    //    else
+    //    {
+    //        var queryable = !string.IsNullOrWhiteSpace(pagination.Filter) ?
+    //                                _context.PayrollSettlements
+    //                                            .AsNoTracking()
+    //                                            .Where(x=>x.Charge!.Name!.Contains(pagination.Filter))
+    //                                            .GroupBy(x => new { x.Date, x.ChargeId })
+    //                                            .Select(g => g.Sum(p => (decimal?)p.AccruedValue) - g.Sum(p => (decimal?)p.DeductedValue))
+    //                                            .AsQueryable() :
+    //                                _context.PayrollSettlements
+    //                                            .AsNoTracking()
+    //                                            .GroupBy(x => new { x.Date, x.ChargeId })
+    //                                            .Select(g => g.Sum(p => (decimal?)p.AccruedValue) - g.Sum(p => (decimal?)p.DeductedValue))
+    //                                            .AsQueryable();
+    //        int count = await queryable.CountAsync();
+    //        return new ActionResponse<int>
+    //        {
+    //            WasSuccess = true,
+    //            Result = count
+    //        };
+    //    }
+    //}
+
     public async Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination)
     {
-        //DateTime Fecha = DateTime.Parse(pagination.Filter!);
+        var stopwatch = Stopwatch.StartNew();
 
-        if (!string.IsNullOrWhiteSpace(pagination.Email))
+        var query = GetGroupedQuery(pagination);
+
+        var totalRecords = await query.CountAsync();
+        stopwatch.Stop();
+
+        Console.WriteLine(
+            $"PayrollSettlement GetTotalRecordsAsync: {stopwatch.ElapsedMilliseconds} ms");
+        return new ActionResponse<int>
         {
-            var queryable = !string.IsNullOrWhiteSpace(pagination.Filter) ?
-                                    _context.PayrollSettlements
-                                                .AsNoTracking()
-                                                .Where(x => x.UserId == pagination.Email && x.Charge!.Name!.Contains(pagination.Filter))
-                                                .GroupBy(x => new { x.Date, x.ChargeId })
-                                                .Select(g => g.Sum(p => (decimal?)p.AccruedValue) - g.Sum(p => (decimal?)p.DeductedValue))
-                                                .AsQueryable() :
-                                    _context.PayrollSettlements
-                                                .AsNoTracking()
-                                                .Where(x => x.UserId == pagination.Email)
-                                                .GroupBy(x => new { x.Date, x.ChargeId })
-                                                .Select(g => g.Sum(p => (decimal?)p.AccruedValue) - g.Sum(p => (decimal?)p.DeductedValue))
-                                                .AsQueryable();
-            int count = await queryable.CountAsync();
-            return new ActionResponse<int>
-            {
-                WasSuccess = true,
-                Result = count
-            };
-        }
-        else
-        {
-            var queryable = !string.IsNullOrWhiteSpace(pagination.Filter) ?
-                                    _context.PayrollSettlements
-                                                .AsNoTracking()
-                                                .Where(x=>x.Charge!.Name!.Contains(pagination.Filter))
-                                                .GroupBy(x => new { x.Date, x.ChargeId })
-                                                .Select(g => g.Sum(p => (decimal?)p.AccruedValue) - g.Sum(p => (decimal?)p.DeductedValue))
-                                                .AsQueryable() :
-                                    _context.PayrollSettlements
-                                                .AsNoTracking()
-                                                .GroupBy(x => new { x.Date, x.ChargeId })
-                                                .Select(g => g.Sum(p => (decimal?)p.AccruedValue) - g.Sum(p => (decimal?)p.DeductedValue))
-                                                .AsQueryable();
-            int count = await queryable.CountAsync();
-            return new ActionResponse<int>
-            {
-                WasSuccess = true,
-                Result = count
-            };
-        }
+            WasSuccess = true,
+            Result = totalRecords
+        };
     }
 
     public async Task<ActionResponse<List<PayrollSettlement>>> UpdateAsync(List<PayrollSettlementDTO> entity)
@@ -279,17 +321,17 @@ public class PayrollSettlementRepository : GenericRepository<PayrollSettlement>,
 
         var model = await _context.Set<PayrollSettlement>().Where(
             x => x.ChargeId == firstEntity.ChargeId &&
-            x.UserId == firstEntity.UserId && 
-            x.Date.Year== firstEntity.Date.Year &&
-            x.Date.Month== firstEntity.Date.Month &&
-            x.Date.Day== firstEntity.Date.Day &&
-            x.Date.Hour==firstEntity.Date.Hour &&
-            x.Date.Minute== firstEntity.Date.Minute
+            x.UserId == firstEntity.UserId &&
+            x.Date.Year == firstEntity.Date.Year &&
+            x.Date.Month == firstEntity.Date.Month &&
+            x.Date.Day == firstEntity.Date.Day &&
+            x.Date.Hour == firstEntity.Date.Hour &&
+            x.Date.Minute == firstEntity.Date.Minute
             ).ToListAsync();
 
-        if (model == null || model.Count()==0)
+        if (model == null || model.Count() == 0)
             return new ActionResponse<List<PayrollSettlement>> { WasSuccess = false, Message = "ERR005" };
-        
+
         var entityDict = entity.ToDictionary(x => x.Id);
 
         foreach (var item in model)
@@ -431,7 +473,45 @@ public class PayrollSettlementRepository : GenericRepository<PayrollSettlement>,
         if (concept13 != null)
         {
             // Usamos sufijos 'm' si UnitValue es de tipo decimal para evitar divisiones de enteros/dobles
-            concept13.UnitValue = valorTotal*2;
+            concept13.UnitValue = valorTotal * 2;
+        }
+
+        var concept16 = combinedResult.FirstOrDefault(x => x.PayrollConceptId == 16);
+
+        if (concept16 != null)
+        {
+            // Usamos sufijos 'm' si UnitValue es de tipo decimal para evitar divisiones de enteros/dobles
+            concept16.Amount = 2;
+        }
+
+        var concept17 = combinedResult.FirstOrDefault(x => x.PayrollConceptId == 17);
+
+        if (concept17 != null)
+        {
+            // Usamos sufijos 'm' si UnitValue es de tipo decimal para evitar divisiones de enteros/dobles
+            concept17.Amount = 4;
+        }
+
+        var concept18 = combinedResult.FirstOrDefault(x => x.PayrollConceptId == 18);
+
+        if (concept18 != null)
+        {
+            // Usamos sufijos 'm' si UnitValue es de tipo decimal para evitar divisiones de enteros/dobles
+            concept18.Amount = 4;
+        }
+        var concept19 = combinedResult.FirstOrDefault(x => x.PayrollConceptId == 19);
+
+        if (concept19 != null)
+        {
+            // Usamos sufijos 'm' si UnitValue es de tipo decimal para evitar divisiones de enteros/dobles
+            concept19.Amount = 2;
+        }
+        var concept20 = combinedResult.FirstOrDefault(x => x.PayrollConceptId == 20);
+
+        if (concept20 != null)
+        {
+            // Usamos sufijos 'm' si UnitValue es de tipo decimal para evitar divisiones de enteros/dobles
+            concept20.Amount = 2;
         }
 
 
@@ -487,9 +567,9 @@ public class PayrollSettlementRepository : GenericRepository<PayrollSettlement>,
 
     public async Task<ActionResponse<IEnumerable<PayrollSettlementListDTO>>> GetAsync(string Id)
     {
-        var _model = await _context.PayrollSettlements.AsNoTracking().Include(x=>x.Charge).Include(x=>x.User)
+        var _model = await _context.PayrollSettlements.AsNoTracking().Include(x => x.Charge).Include(x => x.User)
             .Where(p => p.UserId == Id)
-            .GroupBy(p => new { p.Date,p.UserId,p.User!.FullName, p.Charge!.Name,p.ChargeId })
+            .GroupBy(p => new { p.Date, p.UserId, p.User!.FullName, p.Charge!.Name, p.ChargeId })
             .Select(g => new
             {
                 Date = g.Key.Date,
@@ -509,7 +589,7 @@ public class PayrollSettlementRepository : GenericRepository<PayrollSettlement>,
             UserName = x.UserName,
             ChargeId = x.ChargeId,
             ChargeName = x.ChargeName,
-            TotaltotalToPay=x.TotalPagar
+            TotaltotalToPay = x.TotalPagar
         }).ToList();
 
         return new ActionResponse<IEnumerable<PayrollSettlementListDTO>>
@@ -555,7 +635,7 @@ public class PayrollSettlementRepository : GenericRepository<PayrollSettlement>,
     }
     public async Task<ActionResponse<LiquidacionReportModel>> GetAsync(DateTime fecha, int Id, string id, bool esta)
     {
-        var _result= await _context.PayrollSettlements.AsNoTracking()
+        var _result = await _context.PayrollSettlements.AsNoTracking()
                                          .Include(x => x.Charge).ThenInclude(x => x!.Group)
                                          .Include(x => x.User)
                                          .Include(x => x.PayrollConcept)
@@ -581,19 +661,20 @@ public class PayrollSettlementRepository : GenericRepository<PayrollSettlement>,
 
         var result = new LiquidacionReportModel()
         {
-            Cargo=_result.First().Charge!.Name!,
-            Fecha=_result.First().Date,
-            Grupo=_result.First().Charge!.Group!.Name!,
-            RealizadoPor= $"{_result.First().User!.FirstName} {_result.First().User!.LastName}",
-            RetencionFuente=2,
-            RetencionSaludPension=1,
-            Items= _result.Select(x => new ItemLiquidacion {
-                PayrollConceptId=x.PayrollConceptId,
-                Cantidad=x.Amount,
-                Concepto=x.PayrollConcept!.Name!,
-                ValorUnitario=x.UnitValue,
-                Deducido=x.DeductedValue,
-                DevengadoTotal=x.AccruedValue
+            Cargo = _result.First().Charge!.Name!,
+            Fecha = _result.First().Date,
+            Grupo = _result.First().Charge!.Group!.Name!,
+            RealizadoPor = $"{_result.First().User!.FirstName} {_result.First().User!.LastName}",
+            RetencionFuente = 2,
+            RetencionSaludPension = 1,
+            Items = _result.Select(x => new ItemLiquidacion
+            {
+                PayrollConceptId = x.PayrollConceptId,
+                Cantidad = x.Amount,
+                Concepto = x.PayrollConcept!.Name!,
+                ValorUnitario = x.UnitValue,
+                Deducido = x.DeductedValue,
+                DevengadoTotal = x.AccruedValue
             }).ToList()
         };
 
@@ -734,5 +815,75 @@ public class PayrollSettlementRepository : GenericRepository<PayrollSettlement>,
                 Message = ex.Message
             };
         }
+    }
+    private IQueryable<PayrollSettlement> GetGroupedQuery(PaginationDTO pagination)
+    {
+        IQueryable<PayrollSettlement> query = _context.PayrollSettlements
+            .AsNoTracking();
+
+        // Filtrar por trabajador cuando corresponda.
+        if (!string.IsNullOrWhiteSpace(pagination.Email))
+        {
+            query = query.Where(x => x.UserId == pagination.Email);
+        }
+
+        // Aplicar filtro.
+        if (!string.IsNullOrWhiteSpace(pagination.Filter))
+        {
+            var filter = pagination.Filter.Trim();
+
+            if (DateTime.TryParse(filter, out DateTime date))
+            {
+                var startDate = date.Date;
+                var endDate = startDate.AddDays(1);
+
+                query = query.Where(x =>
+                    x.Date >= startDate &&
+                    x.Date < endDate);
+            }
+            else
+            {
+                query = query.Where(x =>
+                    (x.Charge != null &&
+                     x.Charge.Name != null &&
+                     x.Charge.Name.Contains(filter)) ||
+
+                    (x.User != null &&
+                     x.User.FirstName != null &&
+                     x.User.FirstName.Contains(filter)) ||
+
+                    (x.User != null &&
+                     x.User.LastName != null &&
+                     x.User.LastName.Contains(filter))
+                );
+            }
+        }
+
+        // Agrupar las liquidaciones.
+        var groupedQuery = query
+            .GroupBy(x => new
+            {
+                x.Date,
+                x.ChargeId,
+                x.UserId
+            })
+            .Select(g => new PayrollSettlement
+            {
+                Id = 0,
+                Date = g.Key.Date,
+                UserId = g.Key.UserId,
+                ChargeId = g.Key.ChargeId,
+                PayrollConceptId = 0,
+                Amount = 0,
+                UnitValue = 0,
+
+                AccruedValue = g.Sum(p => p.AccruedValue),
+                DeductedValue = g.Sum(p => p.DeductedValue),
+
+                Charge = g.First().Charge,
+                User = g.First().User
+            });
+
+        return groupedQuery;
     }
 }
