@@ -22,13 +22,18 @@ public class LaborRemunerationParametersOtherValueRepository : GenericRepository
 
     public override async Task<ActionResponse<IEnumerable<LaborRemunerationParametersOtherValue>>> GetAsync()
     {
-        var excludedIds = new int[] { 1, 2, 3, 14 };
+        //var excludedIds = new int[] { 1, 2, 3, 14 };
+        //var entity = await _context.Set<LaborRemunerationParametersOtherValue>()
+        //                                    .AsNoTracking()
+        //                                    .Include(x => x.LRP)
+        //                                    .OrderBy(x => x.LRPId)
+        //                                    .Where(x => x.StatuId == 1 && !excludedIds.Contains(x.Id)).ToListAsync();
         var entity = await _context.Set<LaborRemunerationParametersOtherValue>()
                                             .AsNoTracking()
                                             .Include(x => x.LRP)
                                             .OrderBy(x => x.LRPId)
-                                            .Where(x => x.StatuId == 1 && !excludedIds.Contains(x.Id)).ToListAsync();
-        return new ActionResponse<IEnumerable<LaborRemunerationParametersOtherValue>> { WasSuccess = true, Result = entity.ToList() };
+                                            .Where(x => x.StatuId == 1).ToListAsync();
+        return new ActionResponse<IEnumerable<LaborRemunerationParametersOtherValue>> { WasSuccess = true, Result = entity.OrderBy(x=>x.Id).ToList() };
     }
 
     public override async Task<ActionResponse<LaborRemunerationParametersOtherValue>> GetAsync(int id)
@@ -75,16 +80,20 @@ public class LaborRemunerationParametersOtherValueRepository : GenericRepository
 
     public async Task<ActionResponse<IEnumerable<LaborRemunerationParametersOtherValueCRUDDTO>>> AddAsync(IEnumerable<LaborRemunerationParametersOtherValueCRUDDTO> entity)
     {
-        var excludedIds = new int[] { 1, 2, 3, 14 };
+        //var excludedIds = new int[] { 1, 2, 3, 14 };
 
         try
         {
             await using var transaction = await _context.Database.BeginTransactionAsync();
 
             // 1. Obtener los registros actualmente activos
+            //var currentRecords = await _context
+            //    .Set<LaborRemunerationParametersOtherValue>()
+            //    .Where(x => x.StatuId == 1 && !excludedIds.Contains(x.Id))
+            //    .ToListAsync();
             var currentRecords = await _context
                 .Set<LaborRemunerationParametersOtherValue>()
-                .Where(x => x.StatuId == 1 && !excludedIds.Contains(x.Id))
+                .Where(x => x.StatuId == 1)
                 .ToListAsync();
 
 
@@ -105,6 +114,10 @@ public class LaborRemunerationParametersOtherValueRepository : GenericRepository
             _context.AddRange(model);
 
             await _context.SaveChangesAsync();
+
+            // 5. Ejecutar el procedimiento almacenado
+            await _context.Database.ExecuteSqlRawAsync(
+                "EXEC Lnpa.GenerateLaborRemunerationParametersValues");
 
             await transaction.CommitAsync();
 

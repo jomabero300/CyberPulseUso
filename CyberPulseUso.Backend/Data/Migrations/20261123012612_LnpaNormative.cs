@@ -117,16 +117,34 @@ namespace CyberPulseUso.Backend.Data.Migrations
                 column: "LastName");
 
             migrationBuilder.CreateIndex(
+                name: "IX_NormativeArticles_Name_NormativeChapterId",
+                schema: "Lnpa",
+                table: "NormativeArticles",
+                columns: new[] { "Name", "NormativeChapterId" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_NormativeArticles_NormativeChapterId_SortOrder",
                 schema: "Lnpa",
                 table: "NormativeArticles",
                 columns: new[] { "NormativeChapterId", "SortOrder" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_NormativeChapters_Name_NormativeId",
+                schema: "Lnpa",
+                table: "NormativeChapters",
+                columns: new[] { "Name", "NormativeId" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_NormativeChapters_NormativeId_SortOrder",
                 schema: "Lnpa",
                 table: "NormativeChapters",
                 columns: new[] { "NormativeId", "SortOrder" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Normatives_Name",
+                schema: "Lnpa",
+                table: "Normatives",
+                column: "Name");
         }
 
         /// <inheritdoc />

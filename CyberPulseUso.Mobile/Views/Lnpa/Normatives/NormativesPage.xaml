@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="CyberPulseUso.Mobile.Views.Lnpa.Normatives.NormativesPage"
+    Title="Documentos normativos">
+
+    <Grid RowDefinitions="Auto,*"
+          Padding="15"
+          RowSpacing="12">
+
+        <Label Grid.Row="0"
+               Text="VISOR DE DOCUMENTOS NORMATIVOS"
+               FontSize="20"
+               FontAttributes="Bold"
+               HorizontalOptions="Center" />
+
+        <VerticalStackLayout Grid.Row="1"
+                             Spacing="12">
+
+            <Picker
+                x:Name="NormativesPicker"
+                Title="Seleccione un documento"
+                ItemsSource="{Binding Normatives}"
+                ItemDisplayBinding="{Binding Name}"
+                SelectedItem="{Binding SelectedNormative}" />
+            
+            <ActivityIndicator
+                IsRunning="{Binding IsBusy}"
+                IsVisible="{Binding IsBusy}"
+                HorizontalOptions="Center" />
+
+            <Label
+                Text="{Binding ErrorMessage}"
+                TextColor="Red"
+                IsVisible="False" />
+
+
+            <ScrollView>
+                <VerticalStackLayout
+                    x:Name="ChaptersContainer"
+                    Spacing="8" />
+            </ScrollView>
+
+
+
+
+        </VerticalStackLayout>
+
+    </Grid>
+
+</ContentPage>

@@ -35,7 +35,7 @@ public class LaborRemunerationParametersOtherValuesController : GenericControlle
     [HttpPost("full")]
     public async Task<IActionResult> PostAsync([FromBody] List<LaborRemunerationParametersOtherValueCRUDDTO> entity)
     {
-            var response = await _modelUnitOfWork.AddAsync(entity);
+        var response = await _modelUnitOfWork.AddAsync(entity);
         return response.WasSuccess ? Ok(response.Result) : BadRequest(response.Message);
     }
 }

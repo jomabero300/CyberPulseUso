@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CyberPulseUso.Backend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20261122170909_LnpaNormative")]
+    [Migration("20261123012612_LnpaNormative")]
     partial class LnpaNormative
     {
         /// <inheritdoc />
@@ -631,6 +631,8 @@ namespace CyberPulseUso.Backend.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name");
+
                     b.ToTable("Normatives", "Lnpa");
                 });
 
@@ -665,6 +667,8 @@ namespace CyberPulseUso.Backend.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name", "NormativeChapterId");
+
                     b.HasIndex("NormativeChapterId", "SortOrder");
 
                     b.ToTable("NormativeArticles", "Lnpa");
@@ -695,6 +699,8 @@ namespace CyberPulseUso.Backend.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name", "NormativeId");
 
                     b.HasIndex("NormativeId", "SortOrder");
 

@@ -1,0 +1,87 @@
+﻿@page "/normatives"
+
+<AuthorizeView>
+    <Authorized>
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+            <MudText Typo="Typo.h5" Class="mb-4">
+                VISOR DE DOCUMENTOS NORMATIVOS
+            </MudText>
+
+            @if (loading)
+            {
+                <MudProgressCircular Indeterminate="true"
+                                     Color="Color.Primary" />
+            }
+            else
+            {
+                <MudSelect T="int?"
+                           Label="Seleccione un documento"
+                           Variant="Variant.Outlined"
+                           Clearable="true"
+                           Value="@selectedNormativeId"
+                           ValueChanged="OnNormativeChanged">
+
+                    @foreach (var normative in normatives)
+                    {
+                        <MudSelectItem T="int?" Value="@((int?)normative.Id)">
+                            @normative.Name
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+
+                @if (selectedNormative != null)
+                {
+                    <MudAlert Severity="Severity.Success" Class="mt-4">
+                        Documento cargado: @selectedNormative.Name
+
+                        <br />
+
+                        Capítulos encontrados: @selectedNormative.Chapters.Count
+                    </MudAlert>
+                }
+
+                @if (selectedNormative != null)
+                {
+                    <MudPaper Class="pa-4 mt-4" Elevation="1">
+                        <MudText Typo="Typo.h6" Class="mb-3">
+                            @selectedNormative.Name
+                        </MudText>
+
+                        <MudTreeView T="string" Dense="true" Hover="true">
+
+                            @foreach (var chapter in selectedNormative.Chapters.OrderBy(x => x.SortOrder))
+                            {
+                                <MudTreeViewItem T="string"
+                                                 Value="@($"chapter-{chapter.Id}")"
+                                                 Text="@chapter.Name"
+                                                 Icon="@Icons.Material.Filled.Folder">
+
+                                    @foreach (var article in chapter.Articles.OrderBy(x => x.SortOrder))
+                                    {
+                                        <MudTreeViewItem T="string"
+                                                         Value="@($"article-{article.Id}")"
+                                                         Text="@article.Name"
+                                                         Icon="@Icons.Material.Filled.Description"
+                                                         OnClick="@(() => ShowArticleAsync(chapter, article))" />
+                                    }
+
+                                </MudTreeViewItem>
+                            }
+
+                        </MudTreeView>
+                    </MudPaper>
+                }
+
+            }
+
+            @* Aquí construiremos el árbol jerárquico. *@
+
+        </MudContainer>
+    </Authorized>
+
+    <NotAuthorized>
+        <MudAlert Severity="Severity.Warning">
+            Debe iniciar sesión para consultar los documentos normativos.
+        </MudAlert>
+    </NotAuthorized>
+</AuthorizeView>
