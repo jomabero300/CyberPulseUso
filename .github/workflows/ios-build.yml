@@ -29,13 +29,14 @@ jobs:
         run: dotnet workload install maui-ios
 
       - name: Restore dependencies
-        run: dotnet restore CyberPulseUso.Mobile/CyberPulseUso.Mobile.csproj
+        run: dotnet restore CyberPulseUso.Mobile/CyberPulseUso.Mobile.csproj -p:TargetFrameworks=net10.0-ios
         
       - name: Build iOS (unsigned)
         run: >
           dotnet build CyberPulseUso.Mobile/CyberPulseUso.Mobile.csproj
           -f net10.0-ios
           -c Release
+          -p:TargetFrameworks=net10.0-ios
           -p:BuildIpa=false
           -p:EnableCodeSigning=false
           --no-restore
