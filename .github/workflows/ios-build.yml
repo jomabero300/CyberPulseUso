@@ -29,8 +29,12 @@ jobs:
         run: dotnet workload install maui-ios --version 10.0.401
 
       - name: Restore iOS dependencies
-        run: dotnet restore CyberPulseUso.Mobile/CyberPulseUso.Mobile.csproj -p:TargetFrameworks=net10.0-ios -p:RestoreProjectReferences=false
-
+        run: >
+          dotnet restore CyberPulseUso.Mobile/CyberPulseUso.Mobile.csproj
+          -p:TargetFrameworks=net10.0-ios
+          -p:RestoreProjectReferences=false
+          -r ios-arm64
+          
       - name: Restore Shared dependencies
         run: dotnet restore CyberPulseUso.Shared/CyberPulseUso.Shared.csproj --force --no-cache -p:TargetFramework=net10.0
 
@@ -43,12 +47,13 @@ jobs:
           grep -q '"net10.0"' CyberPulseUso.Shared/obj/project.assets.json
           echo "Shared: dependencia net10.0 encontrada."
 
-      - name: Build iOS (unsigned)
+      - name: Build iOS device (unsigned)
         run: >
           dotnet build CyberPulseUso.Mobile/CyberPulseUso.Mobile.csproj
           -f net10.0-ios
           -c Release
           -p:TargetFrameworks=net10.0-ios
+          -p:RuntimeIdentifier=ios-arm64
           -p:BuildProjectReferences=false
           -p:BuildIpa=false
           -p:EnableCodeSigning=false
