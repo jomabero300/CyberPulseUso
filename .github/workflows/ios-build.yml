@@ -68,3 +68,15 @@ jobs:
           echo "Buscando paquetes IPA..."
           find CyberPulseUso.Mobile/bin/Release/net10.0-ios/ios-arm64 -name "*.ipa" -print
 
+      - name: Package unsigned IPA
+        run: |
+          mkdir -p Payload
+          cp -R CyberPulseUso.Mobile/bin/Release/net10.0-ios/ios-arm64/CyberPulseUso.Mobile.app Payload/
+          zip -r CyberPulseUso.Mobile.ipa Payload
+
+      - name: Upload unsigned IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: CyberPulseUso-iOS-unsigned
+          path: CyberPulseUso.Mobile.ipa
+          if-no-files-found: error
