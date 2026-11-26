@@ -47,14 +47,28 @@ jobs:
           grep -q '"net10.0"' CyberPulseUso.Shared/obj/project.assets.json
           echo "Shared: dependencia net10.0 encontrada."
 
-      - name: Build iOS device (unsigned)
+
+      - name: Publish iOS IPA (unsigned)
         run: >
-          dotnet build CyberPulseUso.Mobile/CyberPulseUso.Mobile.csproj
+          dotnet publish CyberPulseUso.Mobile/CyberPulseUso.Mobile.csproj
           -f net10.0-ios
           -c Release
           -p:TargetFrameworks=net10.0-ios
           -p:RuntimeIdentifier=ios-arm64
           -p:BuildProjectReferences=false
-          -p:BuildIpa=false
+          -p:ArchiveOnBuild=true
           -p:EnableCodeSigning=false
           --no-restore
+
+      - name: Verify IPA
+        run: |
+          find CyberPulseUso.Mobile/bin/Release/net10.0-ios/ios-arm64 -name "*.ipa" -print
+          test -n "$(find CyberPulseUso.Mobile/bin/Release/net10.0-ios/ios-arm64 -name '*.ipa' -print -quit)"
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: CyberPulseUso-iOS-unsigned
+          path: CyberPulseUso.Mobile/bin/Release/net10.0-ios/ios-arm64/publish/*.ipa
+          if-no-files-found: error
+
